@@ -37,6 +37,7 @@ public class Camera_Controller : MonoBehaviour
     // --------------------------------------------------
     void Start()
     {
+        _camera = GetComponent<Camera>();
         _movement = GetComponent<Camera_Movement>();
     }
     void LateUpdate()
@@ -45,7 +46,14 @@ public class Camera_Controller : MonoBehaviour
 
         CameraTargetData targetData = _characterController.GetCameraTargetData();
 
+        // ----- Movement -----
         _movement.UpdateCamera(targetData, dt);
+
+        // ----- FOV -----
+        float baseFov = _movement.CurrentBaseFov;
+        float shakeFov = 0.0f; // 今後追加予定
+        float finalFov = baseFov + shakeFov;
+        _camera.fieldOfView = finalFov;
 
     }
 }

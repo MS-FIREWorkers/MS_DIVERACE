@@ -51,6 +51,20 @@ public class Camera_Movement : MonoBehaviour
     [SerializeField] private float _approachMaxFallSpeed = 60.0f;
 
     // --------------------------------------------------
+    // ----- FOV -----
+    // --------------------------------------------------
+    [Header("FOV")]
+    [Tooltip("落下速度によるFOVの最小値")]
+    [SerializeField] private float _minFov = 65.0f;
+    [Tooltip("落下速度によるFOVの最大値")]
+    [SerializeField] private float _maxFov = 80.0f;
+    [Tooltip("FOVの変化を開始する落下速度")]
+    [SerializeField] private float _fovStartFallSpeed = 30.0f;
+    [Tooltip("FOVが最大になる落下速度")]
+    [SerializeField] private float _fovMaxFallSpeed = 60.0f;
+
+
+    // --------------------------------------------------
     // ----- Debug -----
     // --------------------------------------------------
     [Header("Debug")]
@@ -65,6 +79,7 @@ public class Camera_Movement : MonoBehaviour
     private Vector3 _followPivotPosition;
     private Vector3 _positionVelocity;
     private bool _initialized;
+    public float CurrentBaseFov { get; private set; }
 
 
     // --------------------------------------------------
@@ -129,6 +144,9 @@ public class Camera_Movement : MonoBehaviour
         
         // ----- Rotate -----
         UpdateRotation(lookTarget, targetData.Forward, deltaTime);
+
+        // ----- FOV -----
+        CurrentBaseFov = CalculateBaseFov(targetData.Velocity);
 
         // Debug
         _debugPlayerPosition = targetData.Position;
@@ -244,5 +262,17 @@ public class Camera_Movement : MonoBehaviour
 
         return distance;
     }
+    private float CalculateBaseFov(Vector3 velocity)
+    {
+        // 落下速度（正の値）
+        float fallSpeed = Mathf.Max(0.0f, -velocity.y);
+
+        // 落下速度を 0~1 に変換
+        float speedRatio = Mathf.InverseLerp(_fovStartFallSpeed, _fovMaxFallSpeed, fallSpeed);
+
+        // FOV を補間
+        return Mathf.Lerp(_minFov, _maxFov, speedRatio);
+    }
+
 
 }
