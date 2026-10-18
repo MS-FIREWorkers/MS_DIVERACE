@@ -58,4 +58,22 @@ public class Player_CharacterController : MonoBehaviour
     {
         
     }
+
+
+    // --------------------------------------------------
+    // ----- CameraTargetData -----
+    // --------------------------------------------------
+    public CameraTargetData GetCameraTargetData()
+    {
+        CameraTargetData data = new CameraTargetData();
+
+        data.Position = transform.position;
+        data.Forward = transform.forward;
+        data.Right = transform.right;
+
+        data.Velocity = Movement.CurrentVelocity;
+        data.Posture = InputHandler.PoseInput;
+
+        return data;
+    }
 }

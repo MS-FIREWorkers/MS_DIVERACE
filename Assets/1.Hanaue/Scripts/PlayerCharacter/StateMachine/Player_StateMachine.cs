@@ -3,6 +3,7 @@
     20261004  hanaue sho
  */
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public enum PlayerStateName
 {
@@ -37,8 +38,9 @@ public class Player_StateMachine : MonoBehaviour
     // --------------------------------------------------
     [Header("CurrentStateName")]
     [Tooltip("CurrentStateName")]
+#pragma warning disable CS0414
     [SerializeField] PlayerStateName _currentStateName;
-
+#pragma warning restore CS0414
     // --------------------------------------------------
     // ----- ControlData -----
     // --------------------------------------------------
@@ -54,6 +56,7 @@ public class Player_StateMachine : MonoBehaviour
     // --------------------------------------------------
     private void Start()
     {
+        // 初期化
         _characterController = GetComponent<Player_CharacterController>();
         _stateFreeFall = new PlayerState_FreeFall(_characterController, _freeFallControlData);
         _stateDamage = new PlayerState_Damage(_characterController, _damageControlData);

@@ -44,11 +44,11 @@ public class PlayerState_Damage : PlayerState_Base
         switch (_impactInfo.ImpactType)
         {
             case PlayerImpactType.Top:
-                Debug.Log("Top");
+                //Debug.Log("Top");
                 CalculateVelocityOnTop();
                 break;
             case PlayerImpactType.Side:
-                Debug.Log("Side");
+                //Debug.Log("Side");
                 CalculateVelocityOnSide();
                 break;
         }
