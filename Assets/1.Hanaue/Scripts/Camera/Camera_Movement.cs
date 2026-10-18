@@ -14,11 +14,11 @@ public class Camera_Movement : MonoBehaviour
     [SerializeField] private Transform _cameraTransform;
 
     // --------------------------------------------------
-    // ----- Propaty -----
+    // ----- Property -----
     // --------------------------------------------------
     [Header("Look Ahead")]
     [Tooltip("プレイヤーよりどこまで先を注視点にするか")]
-    [SerializeField] private float _horizontalLookAhead = 3.0f;
+    [SerializeField] private float _horizontalLookAhead = 8.0f;
     [SerializeField] private float _verticalLookAhead = 8.0f;
 
     [Header("Smooth")]
