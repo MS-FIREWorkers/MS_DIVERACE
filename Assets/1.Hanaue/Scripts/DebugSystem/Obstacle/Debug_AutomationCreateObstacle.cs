@@ -1,12 +1,23 @@
+﻿
 /*
     Debug_AutomationCreateObstacle.cs
-    20261008  hanaue sho
-    �I�u�W�F�N�g�v���t�@�u�A���������A�Ԋu�A���A�����͈͂��w�肵�ă����_���z�u
- */
+    20261020
+
+    プレイヤーの落下に合わせて障害物を自動生成
+    プレイヤーより上の不要な障害物を削除
+*/
+
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Debug_AutomationCreateObstacle : MonoBehaviour
 {
+    // --------------------------------------------------
+    // ----- Player -----
+    // --------------------------------------------------
+    [Header("Player")]
+    [SerializeField] private Transform _player;
+
     // --------------------------------------------------
     // ----- Obstacle Prefab -----
     // --------------------------------------------------
@@ -17,10 +28,24 @@ public class Debug_AutomationCreateObstacle : MonoBehaviour
     // ----- Parameters -----
     // --------------------------------------------------
     [Header("Parameters")]
+    [Tooltip("プレイヤーの現在位置から下方向に、何m先まで障害物を生成しておくかを指定")]
     [SerializeField] private float _verticalDistance = 100.0f;
+
+    [Tooltip("障害物をランダム配置するXZ平面上の半径（m）、プレイヤーのXZ座標を中心とした円形範囲内に生成")]
     [SerializeField] private float _radius = 20.0f;
+
+    [Tooltip("障害物を生成する層の垂直方向の間隔（m）。10を指定すると10mごとに障害物の層を生成する")]
     [SerializeField] private float _intervalDistance = 10.0f;
+
+    [Tooltip("1層あたりにランダム生成する障害物の個数")]
     [SerializeField] private int _obstacleCount = 10;
+
+    // --------------------------------------------------
+    // ----- Delete -----
+    // --------------------------------------------------
+    [Header("Delete")]
+    [Tooltip("プレイヤーより何m上にある障害物の層を削除するかを指定")]
+    [SerializeField] private float _deleteDistance = 30.0f;
 
     // --------------------------------------------------
     // ----- Random -----
@@ -28,58 +53,144 @@ public class Debug_AutomationCreateObstacle : MonoBehaviour
     [Header("Random")]
     [SerializeField] private int _seed = 0;
 
+    // --------------------------------------------------
+    // ----- Runtime -----
+    // --------------------------------------------------
+    // 次に障害物を生成するY座標
+    private float _nextGenerateY;
+    // 生成済み障害物の管理
+    private readonly Queue<ObstacleLayer> _layers = new();
+    // 1層分の障害物
+    private class ObstacleLayer
+    {
+        public float y;
+        public List<GameObject> obstacles = new();
+    }
 
     // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
     private void Start()
     {
-        // �`�F�b�N
-        if (_obstaclePrefab == null)
+        if (_player == null || _obstaclePrefab == null)
         {
-            return;
-        }
-        if (_obstacleCount == 0)
-        {
+            Debug.LogError("Player または Obstacle Prefab が未設定です。");
+            enabled = false;
             return;
         }
 
-        // �����_���V�[�h�ݒ�
+        if (_intervalDistance <= 0.0f ||
+            _verticalDistance <= 0.0f ||
+            _obstacleCount <= 0)
+        {
+            Debug.LogError("生成パラメータが不正です。");
+            enabled = false;
+            return;
+        }
+
+        // ランダムシード設定
         Random.InitState(_seed);
 
-        // ��������
-        for (
-             float verticalDistance = _intervalDistance;
-             verticalDistance <= _verticalDistance;
-             verticalDistance += _intervalDistance
-            )
+        // 最初の生成位置
+        _nextGenerateY = _player.position.y - _intervalDistance;
+
+        // 初期生成
+        GenerateObstacles();
+    }
+
+    private void Update()
+    {
+        if (_player == null)
         {
-            // 1�w�ɔz�u�����Q��
-            for (int i = 0; i < _obstacleCount; i++)
-            {
-                // XZ���ʏ�̔��a�����烉���_���Ȉʒu���擾
-                Vector2 randomPosition = Random.insideUnitCircle * _radius;
-
-                // ���[�J�����W�Ő����ʒu������
-                Vector3 localPosition = new Vector3(
-                    randomPosition.x,
-                    -verticalDistance,
-                    randomPosition.y
-                );
-
-                // �v���t�@�u����
-                GameObject obstacle = Instantiate(
-                    _obstaclePrefab,
-                    transform
-                );
-
-                // �e�I�u�W�F�N�g����Ƃ����ʒu�ɐݒ�
-                obstacle.transform.localPosition = localPosition;
-                obstacle.transform.localRotation = _obstaclePrefab.transform.localRotation;
-            }
+            return;
         }
 
+        // プレイヤーの下方向に障害物を追加
+        GenerateObstacles();
 
+        // 上方向の不要な障害物を削除
+        DeleteObstacles();
+    }
 
+    // --------------------------------------------------
+    // ----- Generate -----
+    // --------------------------------------------------
+    private void GenerateObstacles()
+    {
+        // 生成する最下端のY座標
+        float targetY = _player.position.y - _verticalDistance;
+
+        // 生成範囲に達するまで追加
+        while (_nextGenerateY >= targetY)
+        {
+            GenerateLayer(_nextGenerateY);
+
+            // 次の生成位置を下に移動
+            _nextGenerateY -= _intervalDistance;
+        }
+    }
+
+    private void GenerateLayer(float y)
+    {
+        ObstacleLayer layer = new ObstacleLayer();
+        layer.y = y;
+
+        for (int i = 0; i < _obstacleCount; i++)
+        {
+            // XZ平面上のランダム位置
+            Vector2 randomPosition = Random.insideUnitCircle * _radius;
+
+            // プレイヤーの現在のXZ座標を中心に配置
+            Vector3 position = new Vector3(
+                _player.position.x + randomPosition.x,
+                y,
+                _player.position.z + randomPosition.y
+            );
+
+            // プレファブ生成
+            GameObject obstacle = Instantiate(
+                _obstaclePrefab,
+                position,
+                _obstaclePrefab.transform.rotation,
+                transform
+            );
+
+            // 管理リストに登録
+            layer.obstacles.Add(obstacle);
+        }
+
+        // 生成した層を登録
+        _layers.Enqueue(layer);
+    }
+
+    // --------------------------------------------------
+    // ----- Delete -----
+    // --------------------------------------------------
+    private void DeleteObstacles()
+    {
+        // プレイヤーより一定距離上の障害物を削除
+        float deleteY = _player.position.y + _deleteDistance;
+
+        while (_layers.Count > 0)
+        {
+            ObstacleLayer layer = _layers.Peek();
+
+            // まだ削除範囲に達していない
+            if (layer.y <= deleteY)
+            {
+                break;
+            }
+
+            // 1層分の障害物を削除
+            foreach (GameObject obstacle in layer.obstacles)
+            {
+                if (obstacle != null)
+                {
+                    Destroy(obstacle);
+                }
+            }
+
+            _layers.Dequeue();
+        }
     }
 }
