@@ -76,4 +76,13 @@ public class Player_CharacterController : MonoBehaviour
 
         return data;
     }
+
+    // --------------------------------------------------
+    // ----- RequestBoost -----
+    // --------------------------------------------------
+    public void ApplyBoost(BoostRequest request)
+    {
+        _movement.ApplyBoost(request);
+    }
+
 }

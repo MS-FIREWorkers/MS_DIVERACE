@@ -109,7 +109,7 @@ public class PlayerState_Damage : PlayerState_Base
     private void CalculateVelocityOnTop()
     {
         // 真上へ返すだけ
-        _controller.Movement.SetVelocity(new Vector3(0.0f, 20.0f, 0.0f));
+        _controller.Movement.SetVelocity(new Vector3(0.0f, 40.0f, 0.0f));
     }
     private void CalculateVelocityOnSide()
     {

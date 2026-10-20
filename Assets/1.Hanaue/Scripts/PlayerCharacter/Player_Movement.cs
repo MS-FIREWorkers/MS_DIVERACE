@@ -25,6 +25,17 @@ public class Player_Movement : MonoBehaviour
     public Vector3 CurrentVelocity => _currentVelocity;
 
     // --------------------------------------------------
+    // ----- Boost Runtime -----
+    // --------------------------------------------------
+    private bool _isBoosting;
+    private float _boostRemainingTime;
+    private Vector3 _boostDirection;
+    private float _boostTargetSpeed;
+    private float _boostAcceleration;
+    public bool IsBoosting => _isBoosting;
+
+
+    // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
     private void Awake()
@@ -59,6 +70,9 @@ public class Player_Movement : MonoBehaviour
             float verticalAcceleration = CalculateVerticalAcceleration(posture, controlData);
             _currentVelocity.y += verticalAcceleration * deltaTime;
         }
+
+        // 4. Boost補正
+        UpdateBoost(posture, deltaTime);
     }
 
     // --------------------------------------------------
@@ -155,8 +169,55 @@ public class Player_Movement : MonoBehaviour
         // 現在速度に対する抵抗
         float dragAcceleration = -_currentVelocity.y * verticalDrag;
 
-        return gravityAcceleration + dragAcceleration;
+        // 姿勢ごとの収束速度
+        float fallResponse = Mathf.Lerp(_parameterData.Horizontal_FallResponse, _parameterData.Vertical_FallResponse, posture);
+
+        return (gravityAcceleration + dragAcceleration) * fallResponse;
     }
+
+    // --------------------------------------------------
+    // ----- Update Boost -----
+    // 水平姿勢に近いほどブースト速度、加速時間が半分になる。
+    // --------------------------------------------------
+    private void UpdateBoost(float posture, float deltaTime)
+    {
+        if (!_isBoosting)
+        {
+            return;
+        }
+
+        // 姿勢による補正
+        float speedMultiplier = Mathf.Lerp(0.5f, 1.0f, posture);
+        float timeMultiplier = Mathf.Lerp(2.0f, 1.0f, posture);
+
+        // 目標速度の補正
+        float targetSpeed = _boostTargetSpeed * speedMultiplier;
+
+        // Boostの残り時間から、実際に有効な時間を算出
+        float boostDeltaTime = Mathf.Min(deltaTime, _boostRemainingTime / timeMultiplier);
+
+        // Boost方向への現在速度
+        float currentSpeed = Vector3.Dot( _currentVelocity, _boostDirection);
+
+        // 目標速度まで加速
+        if (currentSpeed < targetSpeed)
+        {
+            float nextSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, _boostAcceleration * boostDeltaTime);
+
+            // Boost方向の速度成分だけ補正
+            _currentVelocity += _boostDirection * (nextSpeed - currentSpeed);
+        }
+
+        // Boost時間消費
+        _boostRemainingTime -= boostDeltaTime * timeMultiplier;
+
+        if (_boostRemainingTime <= 0.0f)
+        {
+            _isBoosting = false;
+            _boostRemainingTime = 0.0f;
+        }
+    }
+
 
     // --------------------------------------------------
     // ----- Public Events -----
@@ -169,5 +230,32 @@ public class Player_Movement : MonoBehaviour
     {
         _currentVelocity += velocity;
     }
+    public void ApplyBoost(BoostRequest request)
+    {
+        if (request.Duration <= 0.0f || request.Direction.magnitude <= 0.0001f)
+        {
+            return;
+        }
 
+        // 加速時間を加算
+        _boostRemainingTime += request.Duration;
+
+        // 目標速度は最大値を採用
+        _boostTargetSpeed = Mathf.Max( _isBoosting ? _boostTargetSpeed : 0.0f, request.TargetSpeed);
+
+        // 加速方向と加速度を更新
+        _boostDirection = request.Direction.normalized;
+        _boostAcceleration = Mathf.Max(0.0f, request.Acceleration);
+
+        _isBoosting = true;
+    }
+    public void CancelBoost()
+    {
+        _isBoosting = false;
+        _boostRemainingTime = 0.0f;
+
+        _boostTargetSpeed = 0.0f;
+        _boostAcceleration = 0.0f;
+        _boostDirection = Vector3.zero;
+    }
 }

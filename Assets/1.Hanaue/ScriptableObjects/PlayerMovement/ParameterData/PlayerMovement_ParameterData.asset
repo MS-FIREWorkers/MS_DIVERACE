@@ -15,6 +15,8 @@ MonoBehaviour:
   GravityAcceleration: 50
   Horizontal_TerminalFallSpeed: 20
   Vertical_TerminalFallSpeed: 100
+  Horizontal_FallResponse: 0.75
+  Vertical_FallResponse: 0.75
   Horizontal_ForwardAcceleration: 40
   Horizontal_SideAcceleration: 20
   Horizontal_BackAcceleration: 10

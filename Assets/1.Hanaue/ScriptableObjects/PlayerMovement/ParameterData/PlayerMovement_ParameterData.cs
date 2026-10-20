@@ -1,7 +1,7 @@
-/*
+ï»¿/*
     PlayerMovement_ParameterData
     20261008  hanaue sho
-    ƒvƒŒƒCƒ„[ƒLƒƒƒ‰ƒNƒ^[‚ÌŠî‘bƒpƒ‰ƒ[ƒ^ƒf[ƒ^
+    ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®åŸºç¤ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ‡ãƒ¼ã‚¿
  */
 using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerMovement_ParameterData", menuName = "Player/Movement Parameter Data")]
@@ -11,45 +11,50 @@ public class PlayerMovement_ParameterData : ScriptableObject
     // ----- Fall -----
     // --------------------------------------------------
     [Header("Fall")]
-    [Tooltip("d—Í‰Á‘¬“x")]
+    [Tooltip("é‡åŠ›åŠ é€Ÿåº¦")]
     public float GravityAcceleration = 30.0f;
 
-    [Tooltip("…•½p¨@I’[‘¬“x")]
+    [Tooltip("æ°´å¹³å§¿å‹¢ã€€çµ‚ç«¯é€Ÿåº¦")]
     public float Horizontal_TerminalFallSpeed = 20.0f;
-    [Tooltip("‰”’¼p¨@I’[‘¬“x")]
+    [Tooltip("é‰›ç›´å§¿å‹¢ã€€çµ‚ç«¯é€Ÿåº¦")]
     public float Vertical_TerminalFallSpeed = 50.0f;
+
+    [Tooltip("æ°´å¹³å§¿å‹¢ è½ä¸‹é€Ÿåº¦ã¸ã®åæŸé€Ÿåº¦")]
+    public float Horizontal_FallResponse = 0.5f;
+    [Tooltip("é‰›ç›´å§¿å‹¢ è½ä¸‹é€Ÿåº¦ã¸ã®åæŸé€Ÿåº¦")]
+    public float Vertical_FallResponse = 0.5f;
 
     // --------------------------------------------------
     // ----- HorizontalMove -----
     // --------------------------------------------------
     [Header("HorizontalMove")]
-    [Tooltip("…•½p¨@“ª•ûŒü‰Á‘¬“x")]
+    [Tooltip("æ°´å¹³å§¿å‹¢ã€€é ­æ–¹å‘åŠ é€Ÿåº¦")]
     public float Horizontal_ForwardAcceleration = 20.0f;
-    [Tooltip("…•½p¨@¶‰E•ûŒü‰Á‘¬“x")]
+    [Tooltip("æ°´å¹³å§¿å‹¢ã€€å·¦å³æ–¹å‘åŠ é€Ÿåº¦")]
     public float Horizontal_SideAcceleration = 15.0f;
-    [Tooltip("…•½p¨@‘«•ûŒü‰Á‘¬“x")]
+    [Tooltip("æ°´å¹³å§¿å‹¢ã€€è¶³æ–¹å‘åŠ é€Ÿåº¦")]
     public float Horizontal_BackAcceleration = 10.0f;
-    [Tooltip("‰”’¼p¨@“ª•ûŒü‰Á‘¬“x")]
+    [Tooltip("é‰›ç›´å§¿å‹¢ã€€é ­æ–¹å‘åŠ é€Ÿåº¦")]
     public float Vertical_ForwardAcceleration = 10.0f;
-    [Tooltip("‰”’¼p¨@¶‰E•ûŒü‰Á‘¬“x")]
+    [Tooltip("é‰›ç›´å§¿å‹¢ã€€å·¦å³æ–¹å‘åŠ é€Ÿåº¦")]
     public float Vertical_SideAcceleration = 8.0f;
-    [Tooltip("‰”’¼p¨@‘«•ûŒü‰Á‘¬“x")]
+    [Tooltip("é‰›ç›´å§¿å‹¢ã€€è¶³æ–¹å‘åŠ é€Ÿåº¦")]
     public float Vertical_BackAcceleration = 5.0f;
 
     // --------------------------------------------------
     // ----- Resistance -----
     // --------------------------------------------------
     [Header("Resistance")]
-    [Tooltip("…•½p¨@…•½•ûŒüR—Í")]
+    [Tooltip("æ°´å¹³å§¿å‹¢ã€€æ°´å¹³æ–¹å‘æŠ—åŠ›")]
     public float Horizontal_HorizontalDrag = 1.0f;
-    [Tooltip("‰”’¼p¨@…•½•ûŒüR—Í")]
+    [Tooltip("é‰›ç›´å§¿å‹¢ã€€æ°´å¹³æ–¹å‘æŠ—åŠ›")]
     public float Vertical_HorizontalDrag = 2.0f;
     
     // --------------------------------------------------
     // ----- Rotation -----
     // --------------------------------------------------
     [Header("Rotation")]
-    [Tooltip("p¨‰ñ“]‘¬“x")]
+    [Tooltip("å§¿å‹¢å›è»¢é€Ÿåº¦")]
     public float YawSpeed = 90.0f;
 
 }
