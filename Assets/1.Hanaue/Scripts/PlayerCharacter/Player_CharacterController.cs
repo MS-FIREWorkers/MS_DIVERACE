@@ -85,4 +85,12 @@ public class Player_CharacterController : MonoBehaviour
         _movement.ApplyBoost(request);
     }
 
+    // --------------------------------------------------
+    // ----- Public Event -----
+    // --------------------------------------------------
+    public void StartPlay()
+    {
+        _currentControllerMode = ControllerMode.Manual;
+    }
+
 }

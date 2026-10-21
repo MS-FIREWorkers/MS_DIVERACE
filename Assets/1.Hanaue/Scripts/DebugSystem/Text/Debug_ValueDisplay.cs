@@ -124,7 +124,18 @@ public class Debug_ValueDisplay : MonoBehaviour
             // 取得した値を文字列に変換し、前後に指定した文章を追加して表示
             // ?. : valueがnullでなければToString()を実行
             // ?? : valueがnullの場合は文字列"null"を使用
-            _targetText.text = _preText + (value?.ToString() ?? "null") + _sufText;
+            // float型の場合のみ小数第2位まで表示
+            string valueText;
+            if (value is float floatValue)
+            {
+                valueText = floatValue.ToString("F2");
+            }
+            else
+            {
+                valueText = value?.ToString() ?? "null";
+            }
+            // 前後の文章を追加して表示
+            _targetText.text = _preText + valueText + _sufText;
         }
         catch (Exception)
         {

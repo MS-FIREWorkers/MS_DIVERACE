@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/0.Scenes/Scene_Result.unity
     guid: 750a27e3b7e5b7a41ac190a06dc621e3
+  - enabled: 1
+    path: Assets/1.Hanaue/Scenes/Scene_Level_Hanaue.unity
+    guid: 3c8e89e9e4920fa48a6bdae30a493f97
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
