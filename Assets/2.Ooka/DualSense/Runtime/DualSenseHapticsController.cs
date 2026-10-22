@@ -1,12 +1,39 @@
+/*
+    DualSenseHapticsController.cs
+    DualSense の基本振動と振動パターンを管理する
+*/
+
 using System.Collections;
 using UnityEngine;
 using GamepadCore.Unity;
 
 public class DualSenseHapticsController : MonoBehaviour
 {
-    private const int DeviceIndex = 0;
+    // ==================================================
+    // ----- Private Field -----
+    // ==================================================
+    private const int _deviceIndex = 0;
 
-    private Coroutine patternCoroutine;
+    private Coroutine _patternCoroutine;
+
+
+    // ==================================================
+    // ----- Unity Events -----
+    // ==================================================
+    private void OnDisable()
+    {
+        Stop();
+    }
+
+    private void OnApplicationQuit()
+    {
+        Stop();
+    }
+
+
+    // ==================================================
+    // ----- Motor Control -----
+    // ==================================================
 
     /// <summary>
     /// 左右のモーターを指定した強度で動かす。
@@ -15,12 +42,14 @@ public class DualSenseHapticsController : MonoBehaviour
     public void SetMotors(float left, float right)
     {
         if (!CanControlDevice())
+        {
             return;
+        }
 
         left = Mathf.Clamp01(left);
         right = Mathf.Clamp01(right);
 
-        GamepadCoreApi.SetVibration(DeviceIndex, left, right);
+        GamepadCoreApi.SetVibration(_deviceIndex, left, right);
     }
 
     /// <summary>
@@ -32,9 +61,14 @@ public class DualSenseHapticsController : MonoBehaviour
 
         if (CanControlDevice())
         {
-            GamepadCoreApi.SetVibration(DeviceIndex, 0f, 0f);
+            GamepadCoreApi.SetVibration(_deviceIndex, 0f, 0f);
         }
     }
+
+
+    // ==================================================
+    // ----- Haptics Pattern -----
+    // ==================================================
 
     /// <summary>
     /// 指定時間だけ振動させる。
@@ -44,9 +78,11 @@ public class DualSenseHapticsController : MonoBehaviour
         StopPattern();
 
         if (!CanControlDevice())
+        {
             return;
+        }
 
-        patternCoroutine = StartCoroutine(PulseRoutine(left, right, duration));
+        _patternCoroutine = StartCoroutine(PulseRoutine(left, right, duration));
     }
 
     /// <summary>
@@ -57,10 +93,17 @@ public class DualSenseHapticsController : MonoBehaviour
         StopPattern();
 
         if (!CanControlDevice())
+        {
             return;
+        }
 
-        patternCoroutine = StartCoroutine(AlternatingRoutine(left, right, duration, pause, repeatCount));
+        _patternCoroutine = StartCoroutine(AlternatingRoutine(left, right, duration, pause, repeatCount));
     }
+
+
+    // ==================================================
+    // ----- Coroutine -----
+    // ==================================================
 
     private IEnumerator PulseRoutine(float left, float right, float duration)
     {
@@ -69,7 +112,7 @@ public class DualSenseHapticsController : MonoBehaviour
         yield return new WaitForSecondsRealtime(Mathf.Max(0.01f, duration));
 
         SetMotors(0f, 0f);
-        patternCoroutine = null;
+        _patternCoroutine = null;
     }
 
     private IEnumerator AlternatingRoutine(float left, float right, float duration, float pause, int repeatCount)
@@ -87,7 +130,9 @@ public class DualSenseHapticsController : MonoBehaviour
             SetMotors(0f, 0f);
 
             if (pause > 0f)
+            {
                 yield return new WaitForSecondsRealtime(pause);
+            }
 
             SetMotors(0f, right);
 
@@ -96,34 +141,30 @@ public class DualSenseHapticsController : MonoBehaviour
             SetMotors(0f, 0f);
 
             if (i < repeatCount - 1 && pause > 0f)
+            {
                 yield return new WaitForSecondsRealtime(pause);
+            }
         }
 
-        patternCoroutine = null;
+        _patternCoroutine = null;
+    }
+
+
+    // ==================================================
+    // ----- Device Check -----
+    // ==================================================
+
+    private bool CanControlDevice()
+    {
+        return GamepadCoreApi.IsInitialized && GamepadCoreApi.ConnectedCount > _deviceIndex;
     }
 
     private void StopPattern()
     {
-        if (patternCoroutine != null)
+        if (_patternCoroutine != null)
         {
-            StopCoroutine(patternCoroutine);
-            patternCoroutine = null;
+            StopCoroutine(_patternCoroutine);
+            _patternCoroutine = null;
         }
-    }
-
-    private bool CanControlDevice()
-    {
-        return GamepadCoreApi.IsInitialized
-            && GamepadCoreApi.ConnectedCount > DeviceIndex;
-    }
-
-    private void OnDisable()
-    {
-        Stop();
-    }
-
-    private void OnApplicationQuit()
-    {
-        Stop();
     }
 }
