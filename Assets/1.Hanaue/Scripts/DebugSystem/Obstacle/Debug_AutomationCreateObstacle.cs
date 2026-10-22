@@ -1,14 +1,20 @@
 ﻿
 /*
     Debug_AutomationCreateObstacle.cs
-    20261020
-
+    20261020  hanaue sho
     プレイヤーの落下に合わせて障害物を自動生成
     プレイヤーより上の不要な障害物を削除
 */
-
 using System.Collections.Generic;
 using UnityEngine;
+
+// 生成モード
+public enum ObstacleGenerateMode
+{
+    Random,
+    RandomWithClearArea
+}
+
 
 public class Debug_AutomationCreateObstacle : MonoBehaviour
 {
@@ -46,6 +52,17 @@ public class Debug_AutomationCreateObstacle : MonoBehaviour
     [Header("Delete")]
     [Tooltip("プレイヤーより何m上にある障害物の層を削除するかを指定")]
     [SerializeField] private float _deleteDistance = 30.0f;
+
+    // --------------------------------------------------
+    // ----- Generate Mode -----
+    // --------------------------------------------------
+    [Header("Generate Mode")]
+    [SerializeField]
+    private ObstacleGenerateMode _generateMode = ObstacleGenerateMode.Random;
+
+    [Tooltip("障害物を配置しない円形領域の半径")]
+    [SerializeField]
+    private float _clearRadius = 5.0f;
 
     // --------------------------------------------------
     // ----- Random -----
@@ -135,17 +152,29 @@ public class Debug_AutomationCreateObstacle : MonoBehaviour
         ObstacleLayer layer = new ObstacleLayer();
         layer.y = y;
 
+        // 空白領域の中心点を決定
+        Vector2 clearCenter = Vector2.zero;
+
+        if (_generateMode == ObstacleGenerateMode.RandomWithClearArea)
+        {
+            // 空白領域が配置範囲からはみ出さないようにする
+            float centerRadius = Mathf.Max(0.0f, _radius - _clearRadius);
+
+            clearCenter = Random.insideUnitCircle * centerRadius;
+        }
+
         for (int i = 0; i < _obstacleCount; i++)
         {
-            // XZ平面上のランダム位置
-            Vector2 randomPosition = Random.insideUnitCircle * _radius;
+            Vector2 randomPosition;
+
+            // 条件を満たす位置が見つかるまで抽選
+            do
+            {
+                randomPosition = Random.insideUnitCircle * _radius;
+            } while ( _generateMode == ObstacleGenerateMode.RandomWithClearArea && Vector2.Distance(randomPosition, clearCenter) < _clearRadius);
 
             // プレイヤーの現在のXZ座標を中心に配置
-            Vector3 position = new Vector3(
-                _player.position.x + randomPosition.x,
-                y,
-                _player.position.z + randomPosition.y
-            );
+            Vector3 position = new Vector3(_player.position.x + randomPosition.x, y, _player.position.z + randomPosition.y);
 
             // プレファブ生成
             GameObject obstacle = Instantiate(
@@ -155,11 +184,9 @@ public class Debug_AutomationCreateObstacle : MonoBehaviour
                 transform
             );
 
-            // 管理リストに登録
             layer.obstacles.Add(obstacle);
         }
 
-        // 生成した層を登録
         _layers.Enqueue(layer);
     }
 

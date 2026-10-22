@@ -19,6 +19,7 @@ public class BoostRing_Controller : MonoBehaviour
     // --------------------------------------------------
     // ----- BoosRingData -----
     // --------------------------------------------------
+    [Header("Data")]
     [SerializeField] private BoostRingData _data;
     [SerializeField] private float _effectiveRadius = 2.0f;
 
@@ -33,7 +34,6 @@ public class BoostRing_Controller : MonoBehaviour
             Debug.LogWarning("BoostRingData Not Found !!");
         }
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if (_data == null)

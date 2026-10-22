@@ -42,23 +42,26 @@ public class Camera_Shake : MonoBehaviour
     // --------------------------------------------------
     // ----- PlayShake -----
     // --------------------------------------------------
-    public void PlayShake(CameraShake_Data data, CameraShakePlayMode playMode = CameraShakePlayMode.Replace )
+    public CameraShake_Handle PlayShake(CameraShake_Data data, CameraShakePlayMode playMode = CameraShakePlayMode.Replace )
     {
         if (data == null)
         {
-            return;
+            return null;
         }
 
         // 同じグループのシェイクを置き換える
         if (playMode == CameraShakePlayMode.Replace )
         {
-            StopGroup(data.Group);
+            RemoveGroupImmediately(data.Group);
         }
 
         // 新しいシェイクを生成
         CameraShake_Instance instance = new CameraShake_Instance(data);
 
         _activeShakes.Add(instance);
+
+        // 再生ハンドルを返す
+        return new CameraShake_Handle(instance);
     }
 
     // --------------------------------------------------
@@ -87,9 +90,30 @@ public class Camera_Shake : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // ----- StopGroup -----
+    // ----- StopShake -----
     // --------------------------------------------------
-    public void StopGroup(CameraShakeGroup group)
+    public void StopShake(CameraShake_Handle handle)
+    {
+        if (handle == null)
+        {
+            return;
+        }
+
+        CameraShake_Instance instance = handle.Instance;
+
+        // 自分が管理しているInstanceか確認
+        if (!_activeShakes.Contains(instance))
+        {
+            return;
+        }
+
+        instance.Stop();
+    }
+
+    // --------------------------------------------------
+    // ----- Remove Group Immediately -----
+    // --------------------------------------------------
+    private void RemoveGroupImmediately(CameraShakeGroup group)
     {
         for (int i = _activeShakes.Count - 1; i >= 0; i--)
         {

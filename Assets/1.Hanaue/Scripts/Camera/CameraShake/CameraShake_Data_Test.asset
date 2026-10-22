@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: CameraShake_Data_Test
   m_EditorClassIdentifier: Assembly-CSharp::CameraShake_Data
   Group: 0
-  Pattern: 2
+  Pattern: 0
+  DurationMode: 1
   Duration: 1
   FadeIn: 0.05
   FadeOut: 0.2
-  PositionAmplitude: {x: 0.1, y: 0, z: 0}
-  PositionFrequency: {x: 8, y: 0, z: 0}
+  PositionAmplitude: {x: 0.02, y: 0.02, z: 0}
+  PositionFrequency: {x: 5, y: 5, z: 0}
   RotationAmplitude: {x: 0, y: 0, z: 0}
   RotationFrequency: {x: 0, y: 0, z: 0}
-  FovAmplitude: 10
-  FovFrequency: 3
+  FovAmplitude: 0
+  FovFrequency: 0
   FovAttackTime: 0.1
   FovHoldTime: 0.4
   FovReleaseTime: 0.3

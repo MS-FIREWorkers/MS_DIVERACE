@@ -49,6 +49,7 @@ public class Camera_Controller : MonoBehaviour
     // --------------------------------------------------
     [Header("Debug")]
     [SerializeField] private CameraShake_Data _testShakeData;
+    [SerializeField] private CameraShake_Handle _testShakeHandle;
 
     // --------------------------------------------------
     // ----- Unity Events -----
@@ -93,10 +94,11 @@ public class Camera_Controller : MonoBehaviour
         // Tキーでシェイクを再生（Debug）
         if (Keyboard.current.tKey.wasPressedThisFrame)
         {
-            PlayShake(
-                _testShakeData,
-                CameraShakePlayMode.Replace
-            );
+            _testShakeHandle = PlayShake(_testShakeData, CameraShakePlayMode.Replace);
+        }        
+        if (Keyboard.current.yKey.wasPressedThisFrame)
+        {
+            StopShake(_testShakeHandle);
         }
     }
 
@@ -122,15 +124,25 @@ public class Camera_Controller : MonoBehaviour
     }
 
     // --------------------------------------------------
-    // ----- PlayShake -----
+    // ----- Shake -----
     // --------------------------------------------------
-    public void PlayShake(CameraShake_Data shakeData, CameraShakePlayMode mode = CameraShakePlayMode.Replace)
+    public CameraShake_Handle PlayShake(CameraShake_Data shakeData, CameraShakePlayMode mode = CameraShakePlayMode.Replace)
+    {
+        if (_shake == null)
+        {
+            return null;
+        }
+
+        return _shake.PlayShake(shakeData, mode);
+    }
+    public void StopShake(CameraShake_Handle handle)
     {
         if (_shake == null)
         {
             return;
         }
 
-        _shake.PlayShake(shakeData, mode);
+        _shake.StopShake(handle);
     }
+
 }

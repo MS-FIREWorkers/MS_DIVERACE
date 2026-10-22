@@ -1493,6 +1493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1301359783}
   - component: {fileID: 1301359782}
+  - component: {fileID: 1301359785}
   - component: {fileID: 1301359784}
   m_Layer: 0
   m_Name: Obstacle_Root
@@ -1520,6 +1521,8 @@ MonoBehaviour:
   _intervalDistance: 20
   _obstacleCount: 10
   _deleteDistance: 30
+  _generateMode: 0
+  _clearRadius: 5
   _seed: 12345
 --- !u!4 &1301359783
 Transform:
@@ -1555,7 +1558,31 @@ MonoBehaviour:
   _intervalDistance: 100
   _obstacleCount: 1
   _deleteDistance: 30
+  _generateMode: 0
+  _clearRadius: 5
   _seed: 0
+--- !u!114 &1301359785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1301359781}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 022952a6827afd041b5cff6c755b374a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Debug_AutomationCreateObstacle
+  _player: {fileID: 0}
+  _obstaclePrefab: {fileID: 0}
+  _verticalDistance: 100
+  _radius: 20
+  _intervalDistance: 10
+  _obstacleCount: 10
+  _deleteDistance: 30
+  _generateMode: 0
+  _clearRadius: 5
+  _seed: 12345
 --- !u!1 &1469653894
 GameObject:
   m_ObjectHideFlags: 0

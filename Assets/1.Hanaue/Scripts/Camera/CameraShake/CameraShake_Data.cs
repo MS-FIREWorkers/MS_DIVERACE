@@ -16,6 +16,11 @@ public enum CameraShakeGroup
     Boost,      // 加速時の振動
     Environment // 環境振動
 }
+public enum CameraShakeDurationMode
+{
+    Fixed,      // 指定時間で終了
+    Infinite,   // 停止命令まで継続
+}
 
 [CreateAssetMenu(fileName = "CameraShake_Data", menuName = "Camera/CameraShake_Data")]
 public class CameraShake_Data : ScriptableObject
@@ -28,6 +33,8 @@ public class CameraShake_Data : ScriptableObject
     public CameraShakeGroup Group = CameraShakeGroup.Impact;
     [Tooltip("シェイクのパターン")]
     public CameraShakePattern Pattern = CameraShakePattern.Sine;
+    [Tooltip("カメラシェイクの時間形式")]
+    public CameraShakeDurationMode DurationMode = CameraShakeDurationMode.Fixed;
 
     // --------------------------------------------------
     // ----- Timing -----

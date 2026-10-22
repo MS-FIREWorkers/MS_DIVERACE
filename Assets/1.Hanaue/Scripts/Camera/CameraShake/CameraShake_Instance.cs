@@ -5,6 +5,13 @@
  */
 using UnityEngine;
 
+public enum CameraShakeState
+{
+    Playing,    // 再生中
+    Stopping,   // 停止中（フェードアウト）
+    Finished,   // 完全停止
+}
+
 public class CameraShake_Instance
 {
     // --------------------------------------------------
@@ -12,11 +19,14 @@ public class CameraShake_Instance
     // --------------------------------------------------
     private readonly CameraShake_Data _data;
 
-
     // --------------------------------------------------
     // ----- Runtime -----
     // --------------------------------------------------
     private float _elapsedTime;
+    private float _stopElapsedTime;
+    private float _fadeAtStop;
+
+
     private readonly Vector3 _positionSeed;
     private readonly Vector3 _rotationSeed;
     private readonly float _fovSeed;
@@ -25,7 +35,8 @@ public class CameraShake_Instance
     // ----- Public Property -----
     // --------------------------------------------------
     public CameraShakeGroup Group { get; }
-    public bool IsFinished { get; private set; }
+    public CameraShakeState State { get; private set; }
+    public bool IsFinished => State == CameraShakeState.Finished;
     public CameraShakeOffset CurrentOffset { get; private set; }
 
     // --------------------------------------------------
@@ -37,7 +48,10 @@ public class CameraShake_Instance
         Group = _data.Group;
 
         _elapsedTime = 0.0f;
-        IsFinished = false;
+        _stopElapsedTime = 0.0f;
+        _fadeAtStop = 1.0f;
+
+        State = CameraShakeState.Playing;
         CurrentOffset = default;
 
         // 各成分を異なる位相で開始
@@ -59,12 +73,12 @@ public class CameraShake_Instance
 
         _elapsedTime += Mathf.Max(0.0f, deltaTime);
 
-        float duration = Mathf.Max(0.0f, _data.TotalDuration);
+        // 時間、状態の更新
+        UpdateTime(deltaTime);
 
         // 再生終了
-        if (_elapsedTime >= duration)
+        if (IsFinished)
         {
-            IsFinished = true;
             CurrentOffset = default;
             return;
         }
@@ -86,6 +100,41 @@ public class CameraShake_Instance
                 break;
         }
 
+    }
+
+    // --------------------------------------------------
+    // ----- UpdateTime -----
+    // --------------------------------------------------
+    private void UpdateTime(float deltaTime)
+    {
+        // 波形用の時間は停止中も進める
+        _elapsedTime += deltaTime;
+
+        // ----- Stopping ----- 
+        if (State == CameraShakeState.Stopping)
+        {
+            _stopElapsedTime += deltaTime;
+            if (_stopElapsedTime >= Mathf.Max(0.0f, _data.FadeOut))
+            {
+                State = CameraShakeState.Finished;
+            }
+            return;
+        }
+
+        // ----- Fixed ----- 
+        bool isFixed = _data.DurationMode == CameraShakeDurationMode.Fixed ||
+                       _data.Pattern == CameraShakePattern.FovPulse; // FovPluse 専用
+        if (isFixed)
+        {
+            float duration = Mathf.Max(0.0f, _data.TotalDuration);
+
+            if (_elapsedTime >= duration)
+            {
+                State = CameraShakeState.Finished;
+            }
+        }
+
+        // Infinity では停止命令が来るまで Playing を維持
     }
 
     // --------------------------------------------------
@@ -129,13 +178,27 @@ public class CameraShake_Instance
     // --------------------------------------------------
     private float CalculateFade()
     {
-        float duration = _data.Duration;
-
         float fadeIn = Mathf.Max(0.0f, _data.FadeIn);
         float fadeOut = Mathf.Max(0.0f, _data.FadeOut);
 
+        // ----- Stopping -----
+        if (State == CameraShakeState.Stopping)
+        {
+            float stopRatio = fadeOut > 0.0f ? Mathf.Clamp01(_stopElapsedTime / fadeOut) : 1.0f;
+            return _fadeAtStop * (1.0f - stopRatio);
+        }
+
+        // ----- FadeIn -----
         float inRatio = fadeIn > 0.0f ? Mathf.Clamp01(_elapsedTime / fadeIn) : 1.0f;
 
+        // ----- Infinite -----
+        if (_data.DurationMode == CameraShakeDurationMode.Infinite)
+        {
+            return inRatio;
+        }
+
+        // ----- Fixed -----
+        float duration = Mathf.Max(0.0f, _data.Duration);
         float remainingTime = duration - _elapsedTime;
 
         float outRatio = fadeOut > 0.0f ? Mathf.Clamp01(remainingTime / fadeOut) : 1.0f;
@@ -224,6 +287,32 @@ public class CameraShake_Instance
                            Random.Range(0.0f, 1000.0f),
                            Random.Range(0.0f, 1000.0f)
                           );
+    }
+
+    // --------------------------------------------------
+    // ----- Stop -----
+    // --------------------------------------------------
+    public void Stop()
+    {
+        if (State != CameraShakeState.Playing)
+        {
+            return;
+        }
+
+        // 停止開始時点のフェード倍率を保持
+        _fadeAtStop = CalculateFade();
+
+        _stopElapsedTime = 0.0f;
+
+        // FadeOutがない場合は即終了
+        if (_data.FadeOut <= 0.0f)
+        {
+            State = CameraShakeState.Finished;
+            CurrentOffset = default;
+            return;
+        }
+
+        State = CameraShakeState.Stopping;
     }
 
 }
