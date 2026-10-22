@@ -264,6 +264,9 @@ GameObject:
   - component: {fileID: 267833729}
   - component: {fileID: 267833730}
   - component: {fileID: 267833731}
+  - component: {fileID: 267833732}
+  - component: {fileID: 267833733}
+  - component: {fileID: 267833734}
   m_Layer: 0
   m_Name: DualSenseHapticsTest
   m_TagString: Untagged
@@ -401,7 +404,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 267833721}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f70f4fa6930f9942b006ccdc63d14e9, type: 3}
   m_Name: 
@@ -415,13 +418,52 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 267833721}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efb64ab0a51c5954ca8ad88727fc8560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HapticsHorizontalTest
   hapticsManager: {fileID: 1152704495}
   intensity: 0.8
+--- !u!114 &267833732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267833721}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c05292f667b1645b98411156c5d900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HapticsObstacleApproachTest
+  hapticsManager: {fileID: 1152704495}
+--- !u!114 &267833733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267833721}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c78e3fd10789c47bec55f3de4d8653, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HapticsObstacleCollisionTest
+  hapticsManager: {fileID: 1152704495}
+--- !u!114 &267833734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267833721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d78d235fca3411469838a1124e2caae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HapticsObstaclePassingTest
+  hapticsManager: {fileID: 1152704495}
 --- !u!1 &331042896
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,6 +700,18 @@ MonoBehaviour:
   minHorizontalAmplitude: 0.15
   maxHorizontalAmplitude: 0.6
   horizontalFrequencyHz: 50
+  horizontalSecondaryWeight: 0.35
+  approachAmplitude: 0.15
+  approachFrequencyHz: 50
+  approachPulseDuration: 0.08
+  approachInterval: 0.35
+  collisionAmplitude: 0.25
+  collisionFrequencyHz: 50
+  collisionPulseDuration: 0.12
+  passingAmplitude: 0.25
+  passingFrequencyHz: 50
+  passingDuration: 0.6
+  passingSecondaryWeight: 0.35
 --- !u!4 &1152704496
 Transform:
   m_ObjectHideFlags: 0
