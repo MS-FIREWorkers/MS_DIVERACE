@@ -63,6 +63,16 @@ public class Camera_Movement : MonoBehaviour
     [Tooltip("FOVが最大になる落下速度")]
     [SerializeField] private float _fovMaxFallSpeed = 60.0f;
 
+    // --------------------------------------------------
+    // ----- Camera Speed Filter -----
+    // --------------------------------------------------
+    [Header("Camera Speed Filter")]
+    [Tooltip("Distanceの加速・減速追従速度")]
+    [SerializeField] private float _distanceAccelerationFollowRate = 100.0f;
+    [SerializeField] private float _distanceDecelerationFollowRate = 100.0f;
+    [Tooltip("FOVの加速・減速追従速度")]
+    [SerializeField] private float _fovAccelerationFollowRate = 60.0f;
+    [SerializeField] private float _fovDecelerationFollowRate = 10.0f;
 
     // --------------------------------------------------
     // ----- Debug -----
@@ -81,6 +91,9 @@ public class Camera_Movement : MonoBehaviour
     private bool _initialized;
     public float CurrentBaseFov { get; private set; }
 
+    private float _distanceFallSpeed;
+    private float _fovFallSpeed;
+
 
     // --------------------------------------------------
     // ----- Unity Events -----
@@ -91,6 +104,9 @@ public class Camera_Movement : MonoBehaviour
         {
             _cameraTransform = transform;
         }
+
+
+
     }
     private void OnDrawGizmos()
     {
@@ -130,8 +146,15 @@ public class Camera_Movement : MonoBehaviour
 
         UpdateFollowPivot(targetData.Position, posture);
 
+        float actualFallSpeed = Mathf.Max(0.0f, -targetData.Velocity.y);
+        float targetDistanceSpeed = Mathf.Min(actualFallSpeed, _approachMaxFallSpeed);
+        float targetFovSpeed = Mathf.Min(actualFallSpeed, _fovMaxFallSpeed);
+        _distanceFallSpeed = CalculateFilteredFallSpeed(_distanceFallSpeed, targetDistanceSpeed, _distanceAccelerationFollowRate, _distanceDecelerationFollowRate, deltaTime);
+        _fovFallSpeed = CalculateFilteredFallSpeed(_fovFallSpeed, targetFovSpeed, _fovAccelerationFollowRate, _fovDecelerationFollowRate, deltaTime);
+
+
         // ----- CameraDistance -----
-        float cameraDistance = CalculateCameraDistance(targetData.Velocity);
+        float cameraDistance = CalculateCameraDistance(_distanceFallSpeed);
 
         // ----- CameraPosition -----
         Vector3 desiredPosition = CalculateCameraPosition(cameraDistance);
@@ -146,7 +169,7 @@ public class Camera_Movement : MonoBehaviour
         UpdateRotation(lookTarget, targetData.Forward, deltaTime);
 
         // ----- FOV -----
-        CurrentBaseFov = CalculateBaseFov(targetData.Velocity);
+        CurrentBaseFov = CalculateBaseFov(_fovFallSpeed);
 
         // Debug
         _debugPlayerPosition = targetData.Position;
@@ -160,6 +183,13 @@ public class Camera_Movement : MonoBehaviour
     private void Initialize(CameraTargetData targetData)
     {
         _followPivotPosition = targetData.Position;
+
+        float fallSpeed = Mathf.Max(0.0f, -targetData.Velocity.y);
+
+        _distanceFallSpeed = Mathf.Min(fallSpeed, _approachMaxFallSpeed);
+
+        _fovFallSpeed = Mathf.Min(fallSpeed, _fovMaxFallSpeed);
+
         _initialized = true;
     }
 
@@ -205,7 +235,6 @@ public class Camera_Movement : MonoBehaviour
         Vector3 currentHorizontal = new Vector3(currentPosition.x, 0.0f, currentPosition.z);
         Vector3 targetHorizontal = new Vector3(targetPosition.x, 0.0f, targetPosition.z);
 
-
         Vector3 smoothHorizontal = Vector3.SmoothDamp(
                                                        currentHorizontal,
                                                        targetHorizontal,
@@ -249,11 +278,8 @@ public class Camera_Movement : MonoBehaviour
 
         return playerPosition - Vector3.up * lookAhead;
     }
-    private float CalculateCameraDistance(Vector3 velocity)
+    private float CalculateCameraDistance(float fallSpeed)
     {
-        // 落下速度
-        float fallSpeed = Mathf.Max(0.0f, -velocity.y);
-
         // 速度を０～１に変換
         float speedRatio = Mathf.InverseLerp(_approachStartFallSpeed, _approachMaxFallSpeed, fallSpeed);
 
@@ -262,17 +288,19 @@ public class Camera_Movement : MonoBehaviour
 
         return distance;
     }
-    private float CalculateBaseFov(Vector3 velocity)
+    private float CalculateBaseFov(float fallSpeed)
     {
-        // 落下速度（正の値）
-        float fallSpeed = Mathf.Max(0.0f, -velocity.y);
-
         // 落下速度を 0~1 に変換
         float speedRatio = Mathf.InverseLerp(_fovStartFallSpeed, _fovMaxFallSpeed, fallSpeed);
 
         // FOV を補間
         return Mathf.Lerp(_minFov, _maxFov, speedRatio);
     }
+    private float CalculateFilteredFallSpeed(float currentSpeed, float targetSpeed, float accelerationRate, float decelerationRate, float deltaTime)
+    {
+        float followRate = targetSpeed > currentSpeed ? accelerationRate : decelerationRate;
 
+        return Mathf.MoveTowards(currentSpeed, targetSpeed, Mathf.Max(0.0f, followRate) * deltaTime);
+    }
 
 }

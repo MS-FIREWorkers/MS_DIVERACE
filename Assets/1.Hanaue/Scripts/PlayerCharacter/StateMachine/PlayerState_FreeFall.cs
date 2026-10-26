@@ -49,6 +49,10 @@ public class PlayerState_FreeFall : PlayerState_Base
             {
                 _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
             }
+            else if (impactInfo.ImpactType == PlayerImpactType.TopEdge)
+            {
+                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
+            }
             _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
             _controller.Movement.CancelBoost();
             return;

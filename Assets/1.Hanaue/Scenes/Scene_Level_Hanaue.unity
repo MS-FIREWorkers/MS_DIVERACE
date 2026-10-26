@@ -1430,8 +1430,8 @@ MonoBehaviour:
   _verticalLookAhead: 8
   _positionSmoothTime: 0.1
   _rotationSmoothSpeed: 8
-  _horizontalDeadZoneX: 2
-  _horizontalDeadZoneZ: 2
+  _horizontalDeadZoneX: 1.5
+  _horizontalDeadZoneZ: 1.5
   _verticalDeadZoneX: 0.5
   _verticalDeadZoneZ: 0.5
   _maxCameraDistance: 9
@@ -1442,6 +1442,10 @@ MonoBehaviour:
   _maxFov: 80
   _fovStartFallSpeed: 30
   _fovMaxFallSpeed: 60
+  _distanceAccelerationFollowRate: 100
+  _distanceDecelerationFollowRate: 100
+  _fovAccelerationFollowRate: 100
+  _fovDecelerationFollowRate: 100
   _showDebugGizmo: 1
   _debugDownVectorLength: 10
 --- !u!114 &1096625504

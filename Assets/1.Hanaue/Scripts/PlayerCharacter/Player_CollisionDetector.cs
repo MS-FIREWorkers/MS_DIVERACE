@@ -8,6 +8,7 @@ public enum PlayerImpactType
 {
     None,
     Top,
+    TopEdge,
     Side,
 }
 public struct PlayerImpactInfo
@@ -20,6 +21,9 @@ public struct PlayerImpactInfo
     public Collider Collider;
 
     public float Distance;
+
+    // TopEdge時の反発方向（水平・正規化済み）
+    public Vector3 EdgeDirection;
 }
 
 public class Player_CollisionDetector : MonoBehaviour
@@ -118,10 +122,20 @@ public class Player_CollisionDetector : MonoBehaviour
         }
         RaycastHit targetHit = nearestHit.Value;
 
+        // 衝突時点のプレイヤーCollider中心
+        Vector3 impactCenter = center + direction * targetHit.distance;
+        // 衝突タイプと反発方向を取得
+        PlayerImpactType impactType = JudgeImpactType(
+                                                      targetHit.normal,
+                                                      targetHit.collider,
+                                                      impactCenter,
+                                                      out Vector3 edgeDirection
+                                                     );
+
         // PlayerImpactType の構築
         impactInfo = new PlayerImpactInfo
         {
-            ImpactType = JudgeImpactType(targetHit.normal),
+            ImpactType = impactType,
 
             Point = targetHit.point,
             Normal = targetHit.normal,
@@ -129,6 +143,8 @@ public class Player_CollisionDetector : MonoBehaviour
             Collider = targetHit.collider,
 
             Distance = targetHit.distance,
+
+            EdgeDirection = edgeDirection,
         };
 
         return true;
@@ -139,15 +155,96 @@ public class Player_CollisionDetector : MonoBehaviour
             target.CompareTag("Obstacle") ||
             target.CompareTag("Terrain");
     }
-    private PlayerImpactType JudgeImpactType(Vector3 normal)
+    private PlayerImpactType JudgeImpactType(Vector3 normal, Collider targetCollider, Vector3 impactCenter, out Vector3 edgeDirection)
     {
+        edgeDirection = Vector3.zero;
+
         float upDot = Vector3.Dot(normal.normalized, Vector3.up);
-        if (upDot >= _topNormalThreshold)
+        // 上面以外の衝突
+        if (upDot < _topNormalThreshold)
+        {
+            return PlayerImpactType.Side;
+        }
+        // BoxColldier 以外は従来の Top 判定
+        if (targetCollider is not BoxCollider box)
         {
             return PlayerImpactType.Top;
         }
 
-        return PlayerImpactType.Side;
+
+        // ----- プレイヤーのBoxCollider -----
+        Vector3 halfSize = _boxCollider.size * 0.5f;
+        Quaternion rotation = _boxCollider.transform.rotation;
+        Vector3 scale = _boxCollider.transform.lossyScale;
+
+        // ----- 障害物の範囲 -----
+        Bounds targetBounds = box.bounds;
+
+        // 各方向への最大はみ出し量
+        float overflowPositiveX = 0.0f;
+        float overflowNegativeX = 0.0f;
+        float overflowPositiveZ = 0.0f;
+        float overflowNegativeZ = 0.0f;
+
+        // プレイヤーの8頂点を確認
+        for (int x = -1; x <= 1; x += 2)
+        {
+            for (int y = -1; y <= 1; y += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    Vector3 localOffset = new Vector3(halfSize.x * x, halfSize.y * y, halfSize.z * z);
+
+                    Vector3 scaledOffset = Vector3.Scale(localOffset, scale);
+
+                    Vector3 worldVertex = impactCenter + rotation * scaledOffset;
+
+                    // X方向
+                    overflowPositiveX = Mathf.Max(overflowPositiveX, worldVertex.x - targetBounds.max.x);
+
+                    overflowNegativeX = Mathf.Max(overflowNegativeX, targetBounds.min.x - worldVertex.x);
+
+                    // Z方向
+                    overflowPositiveZ = Mathf.Max(overflowPositiveZ, worldVertex.z - targetBounds.max.z);
+
+                    overflowNegativeZ = Mathf.Max(overflowNegativeZ, targetBounds.min.z - worldVertex.z);
+                }
+            }
+        }
+
+        // ----- 最大はみ出し量 -----
+        float maxOverflow = Mathf.Max(
+            overflowPositiveX,
+            overflowNegativeX,
+            overflowPositiveZ,
+            overflowNegativeZ
+        );
+
+        // 全体が障害物内に収まっている
+        if (maxOverflow <= 0.0f)
+        {
+            return PlayerImpactType.Top;
+        }
+
+        // ----- TopEdge -----
+        if (maxOverflow == overflowPositiveX)
+        {
+            edgeDirection = Vector3.right;
+        }
+        else if (maxOverflow == overflowNegativeX)
+        {
+            edgeDirection = Vector3.left;
+        }
+        else if (maxOverflow == overflowPositiveZ)
+        {
+            edgeDirection = Vector3.forward;
+        }
+        else
+        {
+            edgeDirection = Vector3.back;
+        }
+
+        return PlayerImpactType.TopEdge;
     }
 
     // --------------------------------------------------

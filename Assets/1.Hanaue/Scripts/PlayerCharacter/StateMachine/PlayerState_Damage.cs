@@ -39,13 +39,16 @@ public class PlayerState_Damage : PlayerState_Base
     {
         // 初期化
         _elapsedTime = 0.0f;
-
         // 速度を与える
         switch (_impactInfo.ImpactType)
         {
             case PlayerImpactType.Top:
                 //Debug.Log("Top");
                 CalculateVelocityOnTop();
+                break;
+            case PlayerImpactType.TopEdge:
+                //Debug.Log("TopEdge");
+                CalculateVelocityOnTopEdge();
                 break;
             case PlayerImpactType.Side:
                 //Debug.Log("Side");
@@ -82,6 +85,10 @@ public class PlayerState_Damage : PlayerState_Base
             {
                 _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
             }
+            else if (impactInfo.ImpactType == PlayerImpactType.TopEdge)
+            {
+                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
+            }
             _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
             return;
         }
@@ -110,6 +117,31 @@ public class PlayerState_Damage : PlayerState_Base
     {
         // 真上へ返すだけ
         _controller.Movement.SetVelocity(new Vector3(0.0f, 40.0f, 0.0f));
+    }
+    private void CalculateVelocityOnTopEdge()
+    {
+        // ----- Parameter -----
+        float upwardSpeed = 5.0f;
+        float outwardSpeed = 12.0f;
+
+        // ----- 現在速度 -----
+        Vector3 currentVelocity = _controller.Movement.CurrentVelocity;
+
+        // ----- 水平速度 -----
+        Vector3 horizontalVelocity = new Vector3(currentVelocity.x, 0.0f, currentVelocity.z);
+
+        // ----- 外向き速度を加算 -----
+        Vector3 outwardVelocity = _impactInfo.EdgeDirection * outwardSpeed;
+
+        horizontalVelocity += outwardVelocity;
+
+        // ----- 垂直速度 -----
+        float verticalVelocity = upwardSpeed;
+
+        // ----- 速度を設定 -----
+        Vector3 newVelocity = new Vector3(horizontalVelocity.x, verticalVelocity, horizontalVelocity.z);
+
+        _controller.Movement.SetVelocity(newVelocity);
     }
     private void CalculateVelocityOnSide()
     {
