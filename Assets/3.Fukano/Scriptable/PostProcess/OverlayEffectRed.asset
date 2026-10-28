@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8307cab02195a2a428263c129c0ad128, type: 3}
-  m_Name: OverlayEffect
+  m_Name: OverlayEffectRed
   m_EditorClassIdentifier: Assembly-CSharp::OverlayEffect
   _isEnabled: 1
   _material: {fileID: 2100000, guid: 076d86aeb2faba143b112183e3dcca30, type: 2}

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea34182c238cc24ea596178492887b2, type: 3}
   m_Name: CustomPostProcessFeature
   m_EditorClassIdentifier: Assembly-CSharp::CustomPostProcessFeature
-  m_Active: 1
-  _settings: {fileID: 11400000, guid: 1077490fcc9b91249bc99d1f30eed158, type: 2}
+  m_Active: 0
+  _settings: {fileID: 11400000, guid: 06e68621e2bd63c41937fe7ae9883b3a, type: 2}
   _renderPassEvent: 550
 --- !u!114 &-1084839507100714777
 MonoBehaviour:
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 2
   m_DepthPrimingMode: 0
-  m_CopyDepthMode: 0
+  m_CopyDepthMode: 2
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0

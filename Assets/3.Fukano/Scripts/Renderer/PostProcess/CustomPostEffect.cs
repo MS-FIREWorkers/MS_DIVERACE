@@ -1,11 +1,13 @@
 // ==================================================
 // File: CustomPostEffect.cs
 // Created: 2026/10/21
-// Author: MS41
+// Author: Fukano
 // Summary: ポストエフェクト共通基底クラス
 // ==================================================
 
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.RenderGraphModule;
 
 // ==================================================
 // CustomPostEffect
@@ -26,7 +28,6 @@ public abstract class CustomPostEffect : ScriptableObject
     [SerializeField]
     private Material _material;
 
-    // Effectアセット専用の実行用Material
     [System.NonSerialized]
     private Material _runtimeMaterial;
 
@@ -36,6 +37,9 @@ public abstract class CustomPostEffect : ScriptableObject
     public bool IsEnabled => _isEnabled;
 
     public Material EffectMaterial => GetRuntimeMaterial();
+
+    // 深度テクスチャが必要か
+    public virtual bool RequiresDepth => false;
 
     // ==================================================
     // Unity Functions
@@ -50,13 +54,11 @@ public abstract class CustomPostEffect : ScriptableObject
     // Custom Functions
     // ==================================================
 
-    // エフェクトが実行可能か確認
     public virtual bool IsActive()
     {
         return _isEnabled && _material != null;
     }
 
-    // 実行用Materialを取得
     public Material GetRuntimeMaterial()
     {
         if (_material == null)
@@ -65,7 +67,6 @@ public abstract class CustomPostEffect : ScriptableObject
             return null;
         }
 
-        // 元Materialが変更された場合は再生成
         if (_runtimeMaterial != null &&
             _cachedSourceMaterial != _material)
         {
@@ -86,33 +87,82 @@ public abstract class CustomPostEffect : ScriptableObject
         return _runtimeMaterial;
     }
 
-    // Shaderパラメータ設定
     public virtual void SetupMaterial()
     {
     }
 
-    // 使用するShader Pass番号
+    public virtual void SetupMaterial(Material material)
+    {
+    }
+
     public virtual int GetMaterialPass()
     {
         return 0;
     }
 
-    // 実行用Materialを解放
     private void ReleaseMaterial()
     {
         if (_runtimeMaterial == null)
             return;
 
         if (Application.isPlaying)
-        {
             Destroy(_runtimeMaterial);
-        }
         else
-        {
             DestroyImmediate(_runtimeMaterial);
-        }
 
         _runtimeMaterial = null;
         _cachedSourceMaterial = null;
+    }
+
+    // ==================================================
+    // Render Graph Functions
+    // ==================================================
+
+    // 通常のColor専用Effect
+    public virtual TextureHandle RecordEffect(
+        RenderGraph renderGraph,
+        TextureHandle source,
+        RenderTextureDescriptor descriptor,
+        int effectIndex)
+    {
+        Material material = EffectMaterial;
+
+        if (material == null)
+            return source;
+
+        int materialPass = GetMaterialPass();
+
+        if (materialPass < 0 ||
+            materialPass >= material.passCount)
+            return source;
+
+        SetupMaterial();
+        //SetupMaterial(material);
+
+        return CustomPostProcessBlitter.AddBlitPass(
+            renderGraph,
+            source,
+            descriptor,
+            material,
+            materialPass,
+            $"CustomPostEffect_{effectIndex}_{name}"
+        );
+    }
+
+    // Depth対応Effect用
+    public virtual TextureHandle RecordEffect(
+        RenderGraph renderGraph,
+        TextureHandle source,
+        TextureHandle depth,
+        RenderTextureDescriptor descriptor,
+        int effectIndex)
+    {
+        // デフォルトは従来の処理へ転送
+        return RecordEffect(
+            renderGraph,
+            source,
+            descriptor,
+            effectIndex
+        );
     }
 }
