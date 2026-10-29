@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2794114143666529681}
   - component: {fileID: 831514653126742961}
   m_Layer: 7
-  m_Name: Effect_BosstRing
+  m_Name: Effect_BoostRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
