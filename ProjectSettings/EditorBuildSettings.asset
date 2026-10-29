@@ -21,8 +21,23 @@ EditorBuildSettings:
     path: Assets/0.Scenes/Scene_Result.unity
     guid: 750a27e3b7e5b7a41ac190a06dc621e3
   - enabled: 1
-    path: Assets/1.Hanaue/Scenes/Scene_Level_Hanaue.unity
-    guid: 3c8e89e9e4920fa48a6bdae30a493f97
+    path: Assets/4.Hsieh/Scenes/Test_Scene_Level_03.unity
+    guid: 1e54e4d54e409714ab86b8bc60ec4b72
+  - enabled: 1
+    path: Assets/4.Hsieh/Scenes/Test_Scene_Level_02.unity
+    guid: 5aab4043fde10644cadfb0bb3c366f30
+  - enabled: 1
+    path: Assets/4.Hsieh/Scenes/Test_Scene_Level_01.unity
+    guid: d277e231b80379c48aaf7f5c1a2605b7
+  - enabled: 1
+    path: Assets/4.Hsieh/Scenes/Test_Scene_Level_04.unity
+    guid: 9826b0d4d4b86a3419c1ddce9e0c3720
+  - enabled: 1
+    path: Assets/4.Hsieh/Scenes/Test_Scene_Level_05.unity
+    guid: 37e2d2682dad33948b6bce108e1edf1d
+  - enabled: 1
+    path: Assets/4.Hsieh/Scenes/Test_Scene_Level_Main.unity
+    guid: b987e21540f675546a3cca26c90e46b7
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
