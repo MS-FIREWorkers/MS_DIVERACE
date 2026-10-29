@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 132905374963078967}
   - component: {fileID: 8862753299831143305}
   - component: {fileID: 1776241027504014913}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PerformanceMonitor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,3 +61,7 @@ MonoBehaviour:
   _isVisibleOnStart: 1
   _goodFpsThreshold: 60
   _warningFpsThreshold: 30
+  _windowPosition: {x: 10, y: 10}
+  _windowWidth: 350
+  _fontSize: 16
+  _backgroundColor: {r: 0, g: 0, b: 0, a: 0.55}

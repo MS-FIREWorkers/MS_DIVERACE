@@ -2661,6 +2661,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PerformanceMonitor
       objectReference: {fileID: 0}
+    - target: {fileID: 2379187837678884877, guid: acce13b7198deb2459511640e70b70ad, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

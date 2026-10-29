@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: CustomPostProcessSettings 1
   m_EditorClassIdentifier: Assembly-CSharp::CustomPostProcessSettings
   _effects:
-  - isEnabled: 0
+  - isEnabled: 1
     effect: {fileID: 11400000, guid: 5387423dfcf4d6146a6d41c72e7d3dc4, type: 2}
-  - isEnabled: 0
+  - isEnabled: 1
     effect: {fileID: 11400000, guid: 4d8cf8c35660b0c44952706b9cd3d8bc, type: 2}
   - isEnabled: 0
     effect: {fileID: 11400000, guid: b82fd7eeb8f209d498e29d3b7b04f146, type: 2}
