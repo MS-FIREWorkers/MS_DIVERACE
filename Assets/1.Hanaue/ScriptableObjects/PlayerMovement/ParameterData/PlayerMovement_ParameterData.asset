@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48b9cdfc03c427e4c8b16843e2aec611, type: 3}
+  m_Name: PlayerMovement_ParameterData
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement_ParameterData
+  GravityAcceleration: 50
+  Horizontal_TerminalFallSpeed: 20
+  Vertical_TerminalFallSpeed: 100
+  Horizontal_FallResponse: 0.75
+  Vertical_FallResponse: 0.75
+  Horizontal_ForwardAcceleration: 40
+  Horizontal_SideAcceleration: 20
+  Horizontal_BackAcceleration: 10
+  Vertical_ForwardAcceleration: 20
+  Vertical_SideAcceleration: 10
+  Vertical_BackAcceleration: 10
+  Horizontal_HorizontalDrag: 1
+  Vertical_HorizontalDrag: 2
+  YawSpeed: 90
