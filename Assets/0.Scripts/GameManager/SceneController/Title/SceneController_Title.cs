@@ -2,11 +2,27 @@
     SceneController_Title
     20261103  hanaue sho
     タイトルシーンを管理するスクリプト
+    Update の処理は基本的に StateMachine にまとめる。
  */
 using UnityEngine;
 
 public class SceneController_Title : SceneController_Base
 {
+    // --------------------------------------------------
+    // ----- Components -----
+    // --------------------------------------------------
+    [Header("Components")]
+    private TitleScene_StateMachine _stateMachine;
+    private TitleScene_PresentationController _presentationController;
+    private TitleScene_InputHandler _inputHandler;
+
+    // --------------------------------------------------
+    // ----- Public Property -----
+    // --------------------------------------------------
+    public TitleScene_StateMachine StateMachine => _stateMachine;
+    public TitleScene_PresentationController PresentationController => _presentationController;
+    public TitleScene_InputHandler InputHandler => _inputHandler;
+
     // --------------------------------------------------
     // ----- Lifecycle -----
     // --------------------------------------------------
