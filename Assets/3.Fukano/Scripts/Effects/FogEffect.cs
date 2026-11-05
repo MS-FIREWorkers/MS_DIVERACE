@@ -61,24 +61,12 @@ public class FogEffect : CustomPostEffect
     [SerializeField, Range(0.0f, 1.0f)]
     private float _intensity = 1.0f;
 
-    private static readonly int FogModeId =
-        Shader.PropertyToID("_FogMode");
-
-    private static readonly int FogColorId =
-        Shader.PropertyToID("_FogColor");
-
-    private static readonly int FogStartId =
-        Shader.PropertyToID("_FogStart");
-
-    private static readonly int FogEndId =
-        Shader.PropertyToID("_FogEnd");
-
-    private static readonly int FogDensityId =
-        Shader.PropertyToID("_FogDensity");
-
-    private static readonly int FogIntensityId =
-        Shader.PropertyToID("_FogIntensity");
-
+    private static readonly int FogModeId = Shader.PropertyToID("_FogMode");
+    private static readonly int FogColorId = Shader.PropertyToID("_FogColor");
+    private static readonly int FogStartId = Shader.PropertyToID("_FogStart");
+    private static readonly int FogEndId = Shader.PropertyToID("_FogEnd");
+    private static readonly int FogDensityId = Shader.PropertyToID("_FogDensity");
+    private static readonly int FogIntensityId = Shader.PropertyToID("_FogIntensity");
     public override bool RequiresDepth => true;
 
     // ==================================================
@@ -138,6 +126,42 @@ public class FogEffect : CustomPostEffect
         );
     }
 
+    // ==================================================
+    // Runtime Control
+    // ==================================================
+
+    // ----- Properties -----
+
+    public float Intensity => _intensity;
+
+    // ----- Parameters -----
+
+    public void SetFogParameters(
+        FogMode fogMode,
+        Color fogColor,
+        float startDistance,
+        float endDistance,
+        float density)
+    {
+        _fogMode = fogMode;
+        _fogColor = fogColor;
+
+        _startDistance = Mathf.Max(0.0f, startDistance);
+
+        _endDistance = Mathf.Max(
+            _startDistance + 0.001f,
+            endDistance
+        );
+
+        _density = Mathf.Clamp(density, 0.0f, 0.2f);
+    }
+
+    // ----- Intensity -----
+
+    public void SetIntensity(float intensity)
+    {
+        _intensity = Mathf.Clamp01(intensity);
+    }
     // ==================================================
     // Render Graph Functions
     // ==================================================

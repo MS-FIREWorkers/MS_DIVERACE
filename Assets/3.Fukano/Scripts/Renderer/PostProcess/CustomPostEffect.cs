@@ -165,4 +165,11 @@ public abstract class CustomPostEffect : ScriptableObject
             effectIndex
         );
     }
+
+    // ----- Runtime Control -----
+
+    public virtual void SetEnabled(bool isEnabled)
+    {
+        _isEnabled = isEnabled;
+    }
 }

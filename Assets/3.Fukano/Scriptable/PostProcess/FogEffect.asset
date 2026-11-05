@@ -15,8 +15,8 @@ MonoBehaviour:
   _isEnabled: 1
   _material: {fileID: 2100000, guid: 45cc2e798aeb52f4ea5b58d13b6f3c7f, type: 2}
   _fogMode: 2
-  _fogColor: {r: 0, g: 0.5886569, b: 1, a: 1}
+  _fogColor: {r: 0, g: 0.4928112, b: 1, a: 1}
   _startDistance: 10
-  _endDistance: 60
-  _density: 0.15
-  _intensity: 0.5
+  _endDistance: 600
+  _density: 0.094
+  _intensity: 0.3

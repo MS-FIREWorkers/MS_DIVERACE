@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RadialBlurEffect
   _isEnabled: 1
   _material: {fileID: 2100000, guid: fe37193d2aa3aba4bbcb947181e5f519, type: 2}
-  _intensity: 0.158
+  _intensity: 0.171
   _center: {x: 0.5, y: 0.5}
   _innerRadius: 0.15
   _outerRadius: 1

@@ -18,7 +18,7 @@ MonoBehaviour:
   _isExclusionEnabled: 1
   _excludedLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   _exclusionMaskMaterial: {fileID: 2100000, guid: d7d032f2c7c855841aa8ae412f5802c4, type: 2}
   _exclusionCompositeMaterial: {fileID: 2100000, guid: 7e9fc55b8ae5d244f8210f3398ecda99, type: 2}
   _isExclusionDebugEnabled: 0
