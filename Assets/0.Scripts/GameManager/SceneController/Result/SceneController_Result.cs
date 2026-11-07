@@ -23,6 +23,14 @@ public class SceneController_Result : SceneController_Base
     public ResultScene_InputHandler InputHandler => _inputHandler;
 
     // --------------------------------------------------
+    // ----- ChangeSceneName -----
+    // --------------------------------------------------
+    [Header("ChangeScene Name")]
+    [Tooltip("タイトル遷移ボタンでの遷移先シーン名")]
+    [SerializeField] private string _nameToTitleScene;
+
+
+    // --------------------------------------------------
     // ----- Lifecycle -----
     // --------------------------------------------------
     public override void Enter()
@@ -32,5 +40,15 @@ public class SceneController_Result : SceneController_Base
     public override void Exit()
     {
         Debug.Log("Result Exit");
+    }
+
+
+    // --------------------------------------------------
+    // ----- OnClick Events -----
+    // --------------------------------------------------
+    public void OnClick_ToTitle()
+    {
+        // チュートリアルシーン遷移
+        GameManager.Instance.ChangeScene(_nameToTitleScene);
     }
 }

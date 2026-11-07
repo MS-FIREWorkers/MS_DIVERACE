@@ -24,6 +24,16 @@ public class SceneController_Title : SceneController_Base
     public TitleScene_InputHandler InputHandler => _inputHandler;
 
     // --------------------------------------------------
+    // ----- ChangeSceneName -----
+    // --------------------------------------------------
+    [Header("ChangeScene Name")]
+    [Tooltip("チュートリアル遷移ボタンでの遷移先シーン名")]
+    [SerializeField] private string _nameToTutorialScene;
+    [Tooltip("レベル遷移ボタンでの遷移先シーン名")]
+    [SerializeField] private string _nameToLevelScene;
+
+
+    // --------------------------------------------------
     // ----- Lifecycle -----
     // --------------------------------------------------
     public override void Enter()
@@ -33,6 +43,26 @@ public class SceneController_Title : SceneController_Base
     public override void Exit()
     {
         Debug.Log("Title Exit");
+    }
+
+
+    // --------------------------------------------------
+    // ----- OnClick Events -----
+    // --------------------------------------------------
+    public void OnClick_Totutorial()
+    {
+        // チュートリアルシーン遷移
+        GameManager.Instance.ChangeScene(_nameToTutorialScene);
+    }
+    public void OnClick_ToLevel()
+    {
+        // レベルシーン遷移
+        GameManager.Instance.ChangeScene(_nameToLevelScene);
+    }
+    public void OnClick_Exit()
+    {
+        // アプリケーション終了
+        Application.Quit();
     }
 
 }

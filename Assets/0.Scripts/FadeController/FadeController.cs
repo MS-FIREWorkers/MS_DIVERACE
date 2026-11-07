@@ -45,7 +45,7 @@ public class FadeController : MonoBehaviour
         // Canvas
         if (_fadeCanvas == null)
         {
-            _fadeCanvas = GetComponentInChildren<CanvasGroup>();
+            _fadeCanvas = GetComponentInChildren<CanvasGroup>(true);
         }
         if (_fadeCanvas == null)
         {
@@ -53,6 +53,9 @@ public class FadeController : MonoBehaviour
         }
         else
         {
+            // 有効化
+            _fadeCanvas.gameObject.SetActive(true);
+            // 初期化
             _fadeCanvas.alpha = 0.0f;
             _fadeCanvas.blocksRaycasts = false;
         }

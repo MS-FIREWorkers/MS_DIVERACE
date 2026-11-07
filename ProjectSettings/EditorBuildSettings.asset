@@ -38,6 +38,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/4.Hsieh/Scenes/Test_Scene_Level_Main.unity
     guid: b987e21540f675546a3cca26c90e46b7
+  - enabled: 1
+    path: Assets/0.Scenes/Scene_Levels/Scene_Level_01.unity
+    guid: 9bcc1d851909d874ca67f404efe14044
+  - enabled: 1
+    path: Assets/0.Scenes/Scene_Levels/Scene_Level_02.unity
+    guid: 59eabd78a8060b04991892694c9bd392
+  - enabled: 1
+    path: Assets/0.Scenes/Scene_Levels/Scene_Level_03.unity
+    guid: 81d3a9b43268dd346b4fb1bfe5d2d197
+  - enabled: 1
+    path: Assets/0.Scenes/Scene_Levels/Scene_Level_04.unity
+    guid: ac4759d6d34a2d54d99403bfe5492bb6
+  - enabled: 1
+    path: Assets/0.Scenes/Scene_Levels/Scene_Level_05.unity
+    guid: e4931c4b4ba11e449a5df8c408e8364e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
