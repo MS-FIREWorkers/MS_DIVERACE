@@ -23,7 +23,7 @@ public class Camera_Movement : MonoBehaviour
 
     [Header("Smooth")]
     [Tooltip("補完時間")]
-    [SerializeField] private float _positionSmoothTime = 0.15f;
+    [SerializeField] private float _positionSmoothTime = 0.10f;
     [SerializeField] private float _rotationSmoothSpeed = 8.0f;
 
     // --------------------------------------------------
@@ -31,8 +31,8 @@ public class Camera_Movement : MonoBehaviour
     // --------------------------------------------------
     [Header("DeadZone")]
     [Tooltip("デッドゾーン")]
-    [SerializeField] private float _horizontalDeadZoneX = 2.0f;
-    [SerializeField] private float _horizontalDeadZoneZ = 2.0f;
+    [SerializeField] private float _horizontalDeadZoneX = 1.5f;
+    [SerializeField] private float _horizontalDeadZoneZ = 1.5f;
     [SerializeField] private float _verticalDeadZoneX = 0.5f;
     [SerializeField] private float _verticalDeadZoneZ = 0.5f;
 
@@ -71,8 +71,8 @@ public class Camera_Movement : MonoBehaviour
     [SerializeField] private float _distanceAccelerationFollowRate = 100.0f;
     [SerializeField] private float _distanceDecelerationFollowRate = 100.0f;
     [Tooltip("FOVの加速・減速追従速度")]
-    [SerializeField] private float _fovAccelerationFollowRate = 60.0f;
-    [SerializeField] private float _fovDecelerationFollowRate = 10.0f;
+    [SerializeField] private float _fovAccelerationFollowRate = 100.0f;
+    [SerializeField] private float _fovDecelerationFollowRate = 100.0f;
 
     // --------------------------------------------------
     // ----- Debug -----
