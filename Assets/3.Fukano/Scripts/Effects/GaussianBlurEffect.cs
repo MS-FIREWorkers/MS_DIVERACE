@@ -166,4 +166,38 @@ public class GaussianBlurEffect : CustomPostEffect
             passName
         );
     }
+
+    // ==================================================
+    // Runtime Control
+    // ==================================================
+
+    // ----- Properties -----
+
+    public float BlurStrength => _blurStrength;
+
+    // ----- Set Parameters -----
+
+    public void SetBlurParameters(
+        float blurRadius,
+        int iterations)
+    {
+        _blurRadius = Mathf.Clamp(
+            blurRadius,
+            0.0f,
+            10.0f
+        );
+
+        _iterations = Mathf.Clamp(
+            iterations,
+            1,
+            8
+        );
+    }
+
+    // ----- Set Strength -----
+
+    public void SetBlurStrength(float strength)
+    {
+        _blurStrength = Mathf.Clamp01(strength);
+    }
 }

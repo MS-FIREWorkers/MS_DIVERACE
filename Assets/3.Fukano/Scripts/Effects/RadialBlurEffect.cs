@@ -95,4 +95,41 @@ public class RadialBlurEffect : CustomPostEffect
     {
         return 0;
     }
+
+    // ==================================================
+    // Runtime Control
+    // ==================================================
+
+    // ----- Properties -----
+
+    public float Intensity => _intensity;
+
+    // ----- Set Parameters -----
+
+    // ----- Set Parameters -----
+
+    public void SetRadialBlurParameters(
+        Vector2 center,
+        float innerRadius,
+        float outerRadius,
+        int sampleCount,
+        float falloff)
+    {
+        _center = new Vector2(
+            Mathf.Clamp01(center.x),
+            Mathf.Clamp01(center.y)
+        );
+
+        _innerRadius = Mathf.Clamp01(innerRadius);
+        _outerRadius = Mathf.Clamp(outerRadius, _innerRadius + 0.001f, 2.0f);
+        _sampleCount = Mathf.Clamp(sampleCount, 4, 32);
+        _falloff = Mathf.Clamp(falloff, 0.001f, 0.5f);
+    }
+
+    // ----- Set Intensity -----
+
+    public void SetIntensity(float intensity)
+    {
+        _intensity = Mathf.Clamp01(intensity);
+    }
 }

@@ -80,4 +80,29 @@ public class OverlayEffect : CustomPostEffect
             (float)_blendMode
         );
     }
+
+    // ==================================================
+    // Runtime Control
+    // ==================================================
+
+    // ----- Properties -----
+
+    public float Intensity => _intensity;
+
+    // ----- Set Parameters -----
+
+    public void SetOverlayParameters(
+        Color overlayColor,
+        BlendMode blendMode)
+    {
+        _overlayColor = overlayColor;
+        _blendMode = blendMode;
+    }
+
+    // ----- Set Intensity -----
+
+    public void SetIntensity(float intensity)
+    {
+        _intensity = Mathf.Clamp01(intensity);
+    }
 }

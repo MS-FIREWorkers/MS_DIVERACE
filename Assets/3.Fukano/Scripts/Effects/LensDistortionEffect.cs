@@ -103,4 +103,47 @@ public class LensDistortionEffect : CustomPostEffect
         material.SetFloat(InnerRadiusId, Mathf.Min(_innerRadius, _rangeRadius));
         material.SetFloat(EdgeSoftnessId, _edgeSoftness);
     }
+
+    // ----- Set Parameters -----
+
+    // ----- Set Parameters -----
+
+    public void SetLensDistortionParameters(
+        Vector2 center,
+        float scale,
+        RangeMode rangeMode,
+        float rangeRadius,
+        float innerRadius,
+        float edgeSoftness)
+    {
+        // ----- Distortion Settings -----
+
+        _center = new Vector2(
+            Mathf.Clamp01(center.x),
+            Mathf.Clamp01(center.y)
+        );
+
+        _scale = Mathf.Clamp(scale, 0.1f, 2.0f);
+
+        // ----- Range Settings -----
+
+        _rangeMode = rangeMode;
+        _rangeRadius = Mathf.Clamp(rangeRadius, 0.0f, 2.0f);
+        _innerRadius = Mathf.Clamp(innerRadius, 0.0f, _rangeRadius);
+        _edgeSoftness = Mathf.Clamp(edgeSoftness, 0.0f, 0.5f);
+    }
+    // ==================================================
+    // Runtime Control
+    // ==================================================
+
+    // ----- Properties -----
+
+    public float Intensity => _intensity;
+
+    // ----- Set Intensity -----
+
+    public void SetIntensity(float intensity)
+    {
+        _intensity = Mathf.Clamp(intensity, -1.0f, 1.0f);
+    }
 }
