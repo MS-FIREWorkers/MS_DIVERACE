@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fa6cb87ddc0d9f4d89b9b7b75503b4f, type: 3}
   m_Name: OutlineRendererFeature
   m_EditorClassIdentifier: Assembly-CSharp::OutlineRendererFeature
-  m_Active: 0
+  m_Active: 1
   _outlineLayer:
     serializedVersion: 2
     m_Bits: 1024

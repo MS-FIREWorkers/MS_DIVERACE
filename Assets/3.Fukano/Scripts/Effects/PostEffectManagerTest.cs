@@ -287,6 +287,43 @@ public class PostEffectManagerTest : MonoBehaviour
         {
             PostEffectManager.StopRadialBlur();
         }
+
+
+        // ----- Multiple Overlay Test -----
+
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            PostEffectManager.PlayOverlay(
+                "Damage",
+                10,
+                300,
+                30,
+                Color.red,
+                0.8f
+            );
+        }
+
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            PostEffectManager.PlayOverlay(
+                "Warning",
+                30,
+                300,
+                30,
+                Color.yellow,
+                0.5f
+            );
+        }
+
+        if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        {
+            PostEffectManager.StopOverlay("Damage");
+        }
+
+        if (Keyboard.current.digit4Key.wasPressedThisFrame)
+        {
+            PostEffectManager.StopOverlay("Warning");
+        }
     }
 
     // ==================================================
