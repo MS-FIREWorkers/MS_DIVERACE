@@ -566,6 +566,78 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_DefaultActionMap
+      value: 8e641907-ecbb-442b-b44d-b927efcedc41
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionId
+      value: 96fa6652-a4d5-4eda-8ee7-0f923f4a1b35
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_ActionId
+      value: 86fedabc-6e6a-4534-ba32-a6fd3cbb6be1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[7].m_ActionId
+      value: 3bb2cff0-66b2-41c5-826c-cefdc74310f8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[8].m_ActionId
+      value: 566720bb-36f1-441f-82f8-792c08311781
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[9].m_ActionId
+      value: 080cc2d6-8343-4399-b244-efc94aece544
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionId
+      value: c57dfb85-68f4-4868-89ff-08e99c30b845
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[11].m_ActionId
+      value: d25e2094-a8d3-4119-af40-325a2afcdd3c
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[12].m_ActionId
+      value: 4e58fa12-cdc7-41e4-a763-17786d2a72ec
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionName
+      value: 'UI/Navigate[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_ActionName
+      value: UI/Submit
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[7].m_ActionName
+      value: UI/Cancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[8].m_ActionName
+      value: 'UI/Point[/Mouse/position]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[9].m_ActionName
+      value: 'UI/LeftClick[/Mouse/leftButton]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionName
+      value: 'UI/MiddleClick[/Mouse/middleButton]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[11].m_ActionName
+      value: 'UI/RightClick[/Mouse/rightButton]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[12].m_ActionName
+      value: 'UI/ScrollWheel[/Mouse/scroll]'
+      objectReference: {fileID: 0}
     - target: {fileID: 3684849824088822187, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter_Root
@@ -641,6 +713,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1192245335}
   - component: {fileID: 1192245336}
+  - component: {fileID: 1192245340}
+  - component: {fileID: 1192245339}
+  - component: {fileID: 1192245338}
+  - component: {fileID: 1192245337}
   m_Layer: 0
   m_Name: SceneController_Level
   m_TagString: Untagged
@@ -675,6 +751,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e412e0c9d54b8da43970990bae648e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneController_Level
+--- !u!114 &1192245337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192245333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2849658708ce9544b96500de4f4075c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelScene_GuidView
+--- !u!114 &1192245338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192245333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed473de4d4d8e8c48b29641262658e5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelScene_PauseWindowHandler
+--- !u!114 &1192245339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192245333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db88eae2ca41cb04e910c2e7e113b49c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelScene_InputHandler
+--- !u!114 &1192245340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192245333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639e5e87a9b73d047bebddf95513dafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelScene_StateMachine
 --- !u!1 &1306945370
 GameObject:
   m_ObjectHideFlags: 0

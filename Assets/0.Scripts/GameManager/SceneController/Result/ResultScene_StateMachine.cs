@@ -15,6 +15,10 @@ public class ResultScene_StateMachine : MonoBehaviour
     // --------------------------------------------------
     private SceneController_Result _controller;
 
+    // --------------------------------------------------
+    // ----- InputHandler -----
+    // --------------------------------------------------
+    private ResultScene_InputHandler _inputHandler;
 
     // --------------------------------------------------
     // ----- Unity Events -----
@@ -22,10 +26,37 @@ public class ResultScene_StateMachine : MonoBehaviour
     private void Start()
     {
         _controller = GetComponent<SceneController_Result>();
-
+        _inputHandler = _controller?.InputHandler;
     }
     private void Update()
     {
-        
+        // 入力取得の例（消しても大丈夫です）
+        if (_inputHandler.ConsumeSubmitPressed())
+        {
+            // 決定ボタンが押された処理
+            GameManager.Instance.ChangeScene(_controller.NameToTitleScene);
+        }
+        if (_inputHandler.ConsumeCancelPressed())
+        {
+            // キャンセルボタンが押された処理
+
+        }
+        if (_inputHandler.Navigate.y > 0.0f)
+        {
+            // 上入力
+        }
+        if (_inputHandler.Navigate.y < 0.0f)
+        {
+            // 下入力
+        }
+        if (_inputHandler.Navigate.x > 0.0f)
+        {
+            // 右入力
+        }
+        if (_inputHandler.Navigate.x < 0.0f)
+        {
+            // 左入力
+        }
+
     }
 }

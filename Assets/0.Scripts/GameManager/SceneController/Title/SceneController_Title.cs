@@ -34,6 +34,16 @@ public class SceneController_Title : SceneController_Base
 
 
     // --------------------------------------------------
+    // ----- Unity Events -----
+    // --------------------------------------------------
+    private void Awake()
+    {
+        _stateMachine = GetComponent<TitleScene_StateMachine>();
+        _presentationController = GetComponent<TitleScene_PresentationController>();
+        _inputHandler = GetComponent<TitleScene_InputHandler>();
+    }
+
+    // --------------------------------------------------
     // ----- Lifecycle -----
     // --------------------------------------------------
     public override void Enter()
