@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8249738644260451111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8193159550097214792}
+  - component: {fileID: 1072221676926659807}
+  m_Layer: 0
+  m_Name: PostEffectManagerTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8193159550097214792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8249738644260451111}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1072221676926659807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8249738644260451111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd32a3525b75fdc49bd75c1547d4a893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PostEffectManagerTest
+  _fadeInFrames: 120
+  _holdFrames: 540
+  _fadeOutFrames: 120
+  _fogColor: {r: 1, g: 0, b: 0, a: 1}
+  _startDistance: 0
+  _endDistance: 60
+  _density: 0.03
+  _intensity: 0.8
+  _fogMode: 0
+  _overlayFadeInFrames: 30
+  _overlayHoldFrames: 60
+  _overlayFadeOutFrames: 30
+  _overlayColor: {r: 1, g: 0, b: 0, a: 1}
+  _overlayIntensity: 0.8
+  _overlayBlendMode: 0
+  _blurFadeInFrames: 30
+  _blurHoldFrames: 60
+  _blurFadeOutFrames: 30
+  _blurRadius: 4
+  _blurStrength: 0.8
+  _blurIterations: 2
+  _lensFadeInFrames: 30
+  _lensHoldFrames: 60
+  _lensFadeOutFrames: 30
+  _lensIntensity: 0.5
+  _lensCenter: {x: 0.5, y: 0.5}
+  _lensScale: 1
+  _lensRangeMode: 3
+  _lensRangeRadius: 0.5
+  _lensInnerRadius: 0.2
+  _lensEdgeSoftness: 0.05
+  _radialFadeInFrames: 30
+  _radialHoldFrames: 60
+  _radialFadeOutFrames: 30
+  _radialIntensity: 0.7
+  _radialCenter: {x: 0.5, y: 0.5}
+  _radialInnerRadius: 0.2
+  _radialOuterRadius: 1
+  _radialSampleCount: 12
+  _radialFalloff: 0.15
