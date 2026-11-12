@@ -1,34 +1,60 @@
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [DisallowMultipleComponent]
 public class HUD3DLeanController : MonoBehaviour
 {
     // ==========================================
-    // ----- References -----
+    // ----- HUD References -----
     // ==========================================
 
-    [Header("References")]
-    [SerializeField] private RectTransform visorRoot;
-    [SerializeField] private RectTransform hudRoot;
-    [SerializeField] private Player_Movement playerMovement;
-    [SerializeField] private Player_InputHandler playerInput;
+    [Header("HUDの設定")]
+
+    [FormerlySerializedAs("visorRoot")]
+    [InspectorName("動くHUD（回転・縮小）")]
+    [Tooltip("プレイヤーの加速度で傾き、高速落下時に縮小するHUD")]
+    [SerializeField]
+    private RectTransform rotatingHUD;
+
+    [FormerlySerializedAs("hudRoot")]
+    [InspectorName("固定情報HUD（動かない）")]
+    [Tooltip("HPや速度などの情報HUD。このスクリプトでは動かさない")]
+    [SerializeField]
+    private RectTransform staticInfoHUD;
+
+    // プレイヤー関連コンポーネントは自動取得
+    // Inspectorには表示しない
+    private Player_Movement playerMovement;
+    private Player_InputHandler playerInput;
+
+    // Inspectorの取得状況表示用
+    public bool HasAutoPlayerReferences =>
+        playerMovement != null && playerInput != null;
 
     // ==========================================
     // ----- Acceleration Settings -----
     // ==========================================
 
-    [Header("Acceleration Settings")]
+    [Header("HUDの揺れ：反応設定")]
 
+    [InspectorName("左右の揺れやすさ")]
+    [Tooltip("小さいほど左右に大きく傾きやすい")]
     [SerializeField, Min(0.1f)]
     private float sideAccelerationForMaxTilt = 15f;
 
+    [InspectorName("前後の揺れやすさ")]
+    [Tooltip("小さいほど前後に大きく傾きやすい")]
     [SerializeField, Min(0.1f)]
     private float forwardAccelerationForMaxTilt = 20f;
 
+    [InspectorName("小さな揺れを無視")]
+    [Tooltip("この値より小さな加速度を無視する")]
     [SerializeField, Min(0f)]
     private float accelerationDeadZone = 0.5f;
 
+    [InspectorName("揺れの反応速度")]
+    [Tooltip("大きいほど加速度の変化に素早く反応する")]
     [SerializeField, Min(0.1f)]
     private float accelerationFilterSpeed = 12f;
 
@@ -36,26 +62,31 @@ public class HUD3DLeanController : MonoBehaviour
     // ----- 3D Tilt Settings -----
     // ==========================================
 
-    [Header("3D Tilt Settings")]
+    [Header("HUDの揺れ：角度設定")]
 
+    [InspectorName("左右の最大角度")]
+    [Tooltip("左右移動による最大回転角度")]
     [SerializeField, Range(0f, 30f)]
     private float horizontalTiltAngle = 8f;
 
+    [InspectorName("前後の最大角度")]
+    [Tooltip("前後移動による最大回転角度")]
     [SerializeField, Range(0f, 30f)]
     private float verticalTiltAngle = 5f;
-
-    [SerializeField, Range(0f, 1f)]
-    private float hudTiltStrength = 0.25f;
 
     // ==========================================
     // ----- Tilt Smooth Settings -----
     // ==========================================
 
-    [Header("Tilt Smooth Settings")]
+    [Header("HUDの揺れ：なめらかさ")]
 
+    [InspectorName("揺れる時の時間")]
+    [Tooltip("傾きが大きくなる時の補間時間")]
     [SerializeField, Min(0.01f)]
     private float tiltSmoothTime = 0.16f;
 
+    [InspectorName("戻る時の時間")]
+    [Tooltip("傾きが小さくなる時の補間時間")]
     [SerializeField, Min(0.01f)]
     private float returnSmoothTime = 0.25f;
 
@@ -63,65 +94,97 @@ public class HUD3DLeanController : MonoBehaviour
     // ----- Vertical Fall Scale Settings -----
     // ==========================================
 
-    [Header("Vertical Fall Scale Settings")]
+    [Header("高速落下時のHUD縮小")]
 
-    [Tooltip("縦姿勢と判断し始める入力値")]
+    [InspectorName("縦姿勢の判定値")]
+    [Tooltip("この姿勢入力値を超えると縮小を開始できる")]
     [SerializeField, Range(0f, 1f)]
     private float verticalPostureThreshold = 0.75f;
 
-    [Tooltip("HUDの縮小を開始する落下速度")]
+    [InspectorName("縮小開始速度")]
+    [Tooltip("HUDが縮小し始める落下速度")]
     [SerializeField, Min(0f)]
     private float shrinkStartFallSpeed = 20f;
 
-    [Tooltip("HUDが最大縮小になる落下速度")]
+    [InspectorName("最大縮小速度")]
+    [Tooltip("HUDが最小サイズになる落下速度")]
     [SerializeField, Min(0f)]
     private float shrinkMaxFallSpeed = 45f;
 
-    [Tooltip("最大落下速度時のHUD倍率")]
+    [InspectorName("最小サイズ")]
+    [Tooltip("0.97なら元の97%のサイズ")]
     [SerializeField, Range(0.8f, 1f)]
     private float verticalFallScale = 0.97f;
 
-    [Tooltip("縮小時の補間時間")]
+    [InspectorName("縮小する時間")]
+    [Tooltip("HUDが縮小する時の補間時間")]
     [SerializeField, Min(0.01f)]
     private float shrinkSmoothTime = 0.20f;
 
-    [Tooltip("通常サイズへ戻る時間")]
+    [InspectorName("元に戻る時間")]
+    [Tooltip("通常サイズへ戻る時の補間時間")]
     [SerializeField, Min(0.01f)]
     private float scaleReturnSmoothTime = 0.25f;
 
     // ==========================================
-    // ----- Debug -----
+    // ----- Acceleration Debug -----
     // ==========================================
 
-    [Header("Acceleration Debug")]
+    [Header("テスト：HUDの揺れ")]
 
-    [SerializeField] private bool debugOverride = false;
-    [SerializeField] private Vector2 debugAcceleration;
+    [InspectorName("手動テストを使う")]
+    [Tooltip("ONで下のテスト方向を使用する")]
+    [SerializeField]
+    private bool debugOverride = false;
 
-    [SerializeField] private Vector2 debugActualAcceleration;
-    [SerializeField] private Vector2 debugCurrentTilt;
+    [InspectorName("テスト方向（X:左右 / Y:前後）")]
+    [SerializeField]
+    private Vector2 debugAcceleration;
 
-    [Header("Vertical Fall Debug")]
+    [InspectorName("実際の加速度（確認用）")]
+    [SerializeField]
+    private Vector2 debugActualAcceleration;
 
-    [SerializeField] private bool debugFallOverride = false;
+    [InspectorName("現在の揺れ（確認用）")]
+    [SerializeField]
+    private Vector2 debugCurrentTilt;
 
+    // ==========================================
+    // ----- Vertical Fall Debug -----
+    // ==========================================
+
+    [Header("テスト：高速落下時の縮小")]
+
+    [InspectorName("手動テストを使う")]
+    [SerializeField]
+    private bool debugFallOverride = false;
+
+    [InspectorName("テスト姿勢（0:水平 / 1:縦）")]
     [SerializeField, Range(0f, 1f)]
     private float debugPoseInput = 1f;
 
+    [InspectorName("テスト落下速度")]
     [SerializeField, Min(0f)]
     private float debugFallSpeed = 40f;
 
-    [SerializeField] private float currentPosture;
-    [SerializeField] private float currentFallSpeed;
-    [SerializeField] private float currentHUDScale = 1f;
+    [InspectorName("現在の姿勢（確認用）")]
+    [SerializeField]
+    private float currentPosture;
+
+    [InspectorName("現在の落下速度（確認用）")]
+    [SerializeField]
+    private float currentFallSpeed;
+
+    [InspectorName("現在のHUDサイズ（確認用）")]
+    [SerializeField]
+    private float currentHUDScale = 1f;
 
     // ==========================================
     // ----- Runtime -----
     // ==========================================
 
-    private Quaternion initialVisorRotation;
-    private Quaternion initialHudRotation;
-    private Vector3 initialVisorScale;
+    private Quaternion initialRotatingHUDRotation;
+    private Vector3 initialRotatingHUDScale;
 
     private Vector3 previousHorizontalVelocity;
     private bool hasPreviousVelocity;
@@ -135,7 +198,6 @@ public class HUD3DLeanController : MonoBehaviour
 
     private float nextSearchTime;
     private bool initialized;
-    private bool controlHudRotation;
 
     // ==========================================
     // ----- Unity Events -----
@@ -143,10 +205,10 @@ public class HUD3DLeanController : MonoBehaviour
 
     private void Awake()
     {
-        if (visorRoot == null)
+        if (rotatingHUD == null)
         {
             Debug.LogError(
-                "HUD3DLeanController: VisorRoot is missing.",
+                "HUD3DLeanController: Rotating HUD is missing.",
                 this
             );
 
@@ -154,27 +216,12 @@ public class HUD3DLeanController : MonoBehaviour
             return;
         }
 
-        initialVisorRotation = visorRoot.localRotation;
-        initialVisorScale = visorRoot.localScale;
+        initialRotatingHUDRotation = rotatingHUD.localRotation;
+        initialRotatingHUDScale = rotatingHUD.localScale;
 
-        // HUD情報と外枠の二重回転を防止
-        if (hudRoot != null)
-        {
-            if (hudRoot == visorRoot ||
-                hudRoot.IsChildOf(visorRoot))
-            {
-                Debug.LogWarning(
-                    "HUDRoot must be separate from VisorRoot.",
-                    this
-                );
-            }
-            else
-            {
-                initialHudRotation = hudRoot.localRotation;
-                controlHudRotation = true;
-            }
-        }
+        ValidateHUDHierarchy();
 
+        // プレイヤーを自動取得
         FindPlayerReferences();
 
         initialized = true;
@@ -195,8 +242,7 @@ public class HUD3DLeanController : MonoBehaviour
         if (dt <= 0f)
             return;
 
-        // ----- Player Search -----
-
+        // プレイヤーが取得できなかった場合は再検索
         if ((playerMovement == null || playerInput == null) &&
             Time.unscaledTime >= nextSearchTime)
         {
@@ -204,13 +250,46 @@ public class HUD3DLeanController : MonoBehaviour
             nextSearchTime = Time.unscaledTime + 1f;
         }
 
-        // ----- 3D Inertia -----
-
         UpdateInertiaTilt(dt);
-
-        // ----- Vertical Fall Scale -----
-
         UpdateVerticalFallScale(dt);
+    }
+
+    // ==========================================
+    // ----- Validate HUD Hierarchy -----
+    // ==========================================
+
+    private void ValidateHUDHierarchy()
+    {
+        if (staticInfoHUD == null)
+            return;
+
+        if (staticInfoHUD == rotatingHUD ||
+            staticInfoHUD.IsChildOf(rotatingHUD) ||
+            rotatingHUD.IsChildOf(staticInfoHUD))
+        {
+            Debug.LogWarning(
+                "Rotating HUD and Static Info HUD " +
+                "should be separate sibling objects.",
+                this
+            );
+        }
+
+        Canvas rotatingCanvas =
+            rotatingHUD.GetComponentInParent<Canvas>();
+
+        Canvas staticCanvas =
+            staticInfoHUD.GetComponentInParent<Canvas>();
+
+        if (rotatingCanvas == null ||
+            staticCanvas == null ||
+            rotatingCanvas.rootCanvas != staticCanvas.rootCanvas)
+        {
+            Debug.LogWarning(
+                "Both HUD objects should belong " +
+                "to the same Canvas hierarchy.",
+                this
+            );
+        }
     }
 
     // ==========================================
@@ -227,11 +306,12 @@ public class HUD3DLeanController : MonoBehaviour
         if (debugOverride)
         {
             acceleration = Vector2.ClampMagnitude(
-                debugAcceleration, 1f
+                debugAcceleration,
+                1f
             );
         }
 
-        // 加速度を平滑化
+        // 加速度の変化を平滑化
         float filterFactor =
             1f - Mathf.Exp(-accelerationFilterSpeed * dt);
 
@@ -241,11 +321,12 @@ public class HUD3DLeanController : MonoBehaviour
             filterFactor
         );
 
-        // 加速度と逆方向に傾ける
+        // 加速度と逆方向へ傾ける
         Vector2 targetTilt = -filteredAcceleration;
 
         float smoothTime =
-            targetTilt.sqrMagnitude > currentTilt.sqrMagnitude
+            targetTilt.sqrMagnitude >
+            currentTilt.sqrMagnitude
             ? tiltSmoothTime
             : returnSmoothTime;
 
@@ -259,34 +340,22 @@ public class HUD3DLeanController : MonoBehaviour
         );
 
         currentTilt = Vector2.ClampMagnitude(
-            currentTilt, 1f
+            currentTilt,
+            1f
         );
 
         debugCurrentTilt = currentTilt;
 
-        // ----- 3D Rotation -----
-
+        // 3D回転
         float rotationX =
             -currentTilt.y * verticalTiltAngle;
 
         float rotationY =
             currentTilt.x * horizontalTiltAngle;
 
-        visorRoot.localRotation =
-            initialVisorRotation *
+        rotatingHUD.localRotation =
+            initialRotatingHUDRotation *
             Quaternion.Euler(rotationX, rotationY, 0f);
-
-        // 情報HUDは弱く傾ける
-        if (controlHudRotation && hudRoot != null)
-        {
-            hudRoot.localRotation =
-                initialHudRotation *
-                Quaternion.Euler(
-                    rotationX * hudTiltStrength,
-                    rotationY * hudTiltStrength,
-                    0f
-                );
-        }
     }
 
     // ==========================================
@@ -303,9 +372,10 @@ public class HUD3DLeanController : MonoBehaviour
 
         Vector3 velocity = playerMovement.CurrentVelocity;
 
-        // 重力によるY方向の速度を除外
+        // 落下速度を除外
         velocity.y = 0f;
 
+        // 初回は速度だけ保存
         if (!hasPreviousVelocity)
         {
             previousHorizontalVelocity = velocity;
@@ -338,6 +408,7 @@ public class HUD3DLeanController : MonoBehaviour
         float side = Vector3.Dot(acceleration, right);
         float front = Vector3.Dot(acceleration, forward);
 
+        // 小さい加速度を無視
         if (Mathf.Abs(side) < accelerationDeadZone)
             side = 0f;
 
@@ -361,12 +432,10 @@ public class HUD3DLeanController : MonoBehaviour
         float posture = 0f;
         float fallSpeed = 0f;
 
-        // ----- Debug or Real Player -----
-
         if (debugFallOverride)
         {
-            posture = debugPoseInput;
-            fallSpeed = debugFallSpeed;
+            posture = Mathf.Clamp01(debugPoseInput);
+            fallSpeed = Mathf.Max(0f, debugFallSpeed);
         }
         else
         {
@@ -379,7 +448,6 @@ public class HUD3DLeanController : MonoBehaviour
 
             if (playerMovement != null)
             {
-                // 下方向の速度を正の値に変換
                 fallSpeed = Mathf.Max(
                     0f,
                     -playerMovement.CurrentVelocity.y
@@ -390,18 +458,14 @@ public class HUD3DLeanController : MonoBehaviour
         currentPosture = posture;
         currentFallSpeed = fallSpeed;
 
-        // ----- Posture Factor -----
-
-        // 水平姿勢 = 0
-        // 垂直姿勢 = 1
+        // 縦姿勢の割合
         float postureFactor = Mathf.InverseLerp(
             verticalPostureThreshold,
             1f,
             posture
         );
 
-        // ----- Fall Speed Factor -----
-
+        // 落下速度の割合
         float maxSpeed = Mathf.Max(
             shrinkStartFallSpeed + 0.01f,
             shrinkMaxFallSpeed
@@ -413,9 +477,7 @@ public class HUD3DLeanController : MonoBehaviour
             fallSpeed
         );
 
-        // ----- Target Scale -----
-
-        // 垂直姿勢かつ高速落下時のみ縮小
+        // 縦姿勢かつ高速落下時のみ縮小
         float shrinkFactor = postureFactor * speedFactor;
 
         float targetScale = Mathf.Lerp(
@@ -424,8 +486,7 @@ public class HUD3DLeanController : MonoBehaviour
             shrinkFactor
         );
 
-        // ----- Smooth Scale -----
-
+        // 縮小・復帰の補間
         float smoothTime =
             targetScale < currentScale
             ? shrinkSmoothTime
@@ -440,22 +501,21 @@ public class HUD3DLeanController : MonoBehaviour
             dt
         );
 
-        // ----- Apply Scale -----
-
-        visorRoot.localScale =
-            initialVisorScale * currentScale;
+        rotatingHUD.localScale =
+            initialRotatingHUDScale * currentScale;
 
         currentHUDScale = currentScale;
     }
 
     // ==========================================
-    // ----- Find Player -----
+    // ----- Auto Find Player -----
     // ==========================================
 
     private void FindPlayerReferences()
     {
         Player_Movement previousPlayer = playerMovement;
 
+        // シーン内のPlayer_Movementを自動取得
         if (playerMovement == null)
         {
             playerMovement =
@@ -468,6 +528,7 @@ public class HUD3DLeanController : MonoBehaviour
             hasPreviousVelocity = false;
         }
 
+        // 同じプレイヤーのInputHandlerを取得
         if (playerInput == null && playerMovement != null)
         {
             playerInput =
@@ -484,19 +545,13 @@ public class HUD3DLeanController : MonoBehaviour
         if (!initialized)
             return;
 
-        if (visorRoot != null)
+        if (rotatingHUD != null)
         {
-            visorRoot.localRotation =
-                initialVisorRotation;
+            rotatingHUD.localRotation =
+                initialRotatingHUDRotation;
 
-            visorRoot.localScale =
-                initialVisorScale;
-        }
-
-        if (controlHudRotation && hudRoot != null)
-        {
-            hudRoot.localRotation =
-                initialHudRotation;
+            rotatingHUD.localScale =
+                initialRotatingHUDScale;
         }
 
         filteredAcceleration = Vector2.zero;
