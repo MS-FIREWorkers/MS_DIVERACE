@@ -62,6 +62,17 @@ public class LensDistortionEffect : CustomPostEffect
     [SerializeField, Range(0.0f, 0.5f)]
     private float _edgeSoftness = 0.05f;
 
+    // ----- Advanced Distortion Settings -----
+
+    [Header("Advanced Distortion Settings")]
+    [Tooltip("中心から外側に向かう歪みの強さの分布")]
+    [SerializeField, Range(0.5f, 6.0f)]
+    private float _distortionPower = 2.0f;
+
+    [Tooltip("画面端で歪みを弱める範囲。0で無効")]
+    [SerializeField, Range(0.0f, 0.5f)]
+    private float _edgeProtection = 0.1f;
+
     // ----- Shader Property IDs -----
     private static readonly int IntensityId = Shader.PropertyToID("_DistortionIntensity");
     private static readonly int CenterId = Shader.PropertyToID("_DistortionCenter");
@@ -70,6 +81,8 @@ public class LensDistortionEffect : CustomPostEffect
     private static readonly int RangeRadiusId = Shader.PropertyToID("_RangeRadius");
     private static readonly int InnerRadiusId = Shader.PropertyToID("_InnerRadius");
     private static readonly int EdgeSoftnessId = Shader.PropertyToID("_EdgeSoftness");
+    private static readonly int DistortionPowerId = Shader.PropertyToID("_DistortionPower");
+    private static readonly int EdgeProtectionId = Shader.PropertyToID("_EdgeProtection");
 
     // ==================================================
     // Custom Functions
@@ -102,9 +115,9 @@ public class LensDistortionEffect : CustomPostEffect
         material.SetFloat(RangeRadiusId, _rangeRadius);
         material.SetFloat(InnerRadiusId, Mathf.Min(_innerRadius, _rangeRadius));
         material.SetFloat(EdgeSoftnessId, _edgeSoftness);
+        material.SetFloat(DistortionPowerId, _distortionPower);
+        material.SetFloat(EdgeProtectionId, _edgeProtection);
     }
-
-    // ----- Set Parameters -----
 
     // ----- Set Parameters -----
 
@@ -132,6 +145,15 @@ public class LensDistortionEffect : CustomPostEffect
         _innerRadius = Mathf.Clamp(innerRadius, 0.0f, _rangeRadius);
         _edgeSoftness = Mathf.Clamp(edgeSoftness, 0.0f, 0.5f);
     }
+
+    // ----- Set Advanced Parameters -----
+
+    public void SetAdvancedDistortionParameters(float distortionPower, float edgeProtection)
+    {
+        _distortionPower = Mathf.Clamp(distortionPower, 0.5f, 6.0f);
+        _edgeProtection = Mathf.Clamp(edgeProtection, 0.0f, 0.5f);
+    }
+
     // ==================================================
     // Runtime Control
     // ==================================================

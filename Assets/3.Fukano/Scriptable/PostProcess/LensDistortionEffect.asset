@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LensDistortionEffect
   _isEnabled: 1
   _material: {fileID: 2100000, guid: a8ff31aae6324d241be9ab8bafd79f88, type: 2}
-  _intensity: 1
+  _intensity: -0.7
   _center: {x: 0.5, y: 0.5}
-  _scale: 1.5
-  _rangeMode: 1
-  _rangeRadius: 0.19
-  _innerRadius: 0.52
-  _edgeSoftness: 0.25
+  _scale: 1
+  _rangeMode: 2
+  _rangeRadius: 0.25
+  _innerRadius: 0
+  _edgeSoftness: 0.2
+  _distortionPower: 1.5
+  _edgeProtection: 0.12

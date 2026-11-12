@@ -2,7 +2,7 @@
 // File: LensDistortion.shader
 // Created: 2026/10/22
 // Author: MS41
-// Summary: 適用範囲を制御できるレンズ歪み
+// Summary: 範囲・強度・画面端保護に対応したレンズ歪み
 // ==================================================
 
 Shader "MS41/PostProcess/LensDistortion"
@@ -13,14 +13,13 @@ Shader "MS41/PostProcess/LensDistortion"
         _DistortionCenter("Center", Vector) = (0.5, 0.5, 0, 0)
         _DistortionScale("Scale", Range(0.1, 2)) = 1
 
-        // ==================================================
-        // Range Settings
-        // ==================================================
-
         _RangeMode("Range Mode", Float) = 0
         _RangeRadius("Range Radius", Range(0, 2)) = 0.5
         _InnerRadius("Inner Radius", Range(0, 2)) = 0.2
         _EdgeSoftness("Edge Softness", Range(0, 0.5)) = 0.05
+
+        _DistortionPower("Distortion Power", Range(0.5, 6)) = 2
+        _EdgeProtection("Edge Protection", Range(0, 0.5)) = 0.1
     }
 
     SubShader
@@ -56,6 +55,9 @@ Shader "MS41/PostProcess/LensDistortion"
                 float _RangeRadius;
                 float _InnerRadius;
                 float _EdgeSoftness;
+
+                float _DistortionPower;
+                float _EdgeProtection;
             CBUFFER_END
 
             // ==================================================
@@ -64,51 +66,53 @@ Shader "MS41/PostProcess/LensDistortion"
 
             // ----- Range Mask -----
 
-            float CalculateRangeMask(float2 uv, float aspect)
+            float CalculateRangeMask(float distanceFromCenter)
             {
-                float2 delta = uv - _DistortionCenter.xy;
-
-                // 画面の縦横比を補正
-                delta.x *= aspect;
-
-                float distanceFromCenter = length(delta);
-
                 float softness = max(_EdgeSoftness, 0.0001);
 
-                // 外径の内側を1、外側を0とする
                 float outerMask = 1.0 - smoothstep(
                     _RangeRadius - softness,
                     _RangeRadius + softness,
                     distanceFromCenter
                 );
 
-                // 内径の内側を0、外側を1とする
                 float innerMask = smoothstep(
                     _InnerRadius - softness,
                     _InnerRadius + softness,
                     distanceFromCenter
                 );
 
-                // Full
                 if (_RangeMode < 0.5)
-                {
                     return 1.0;
-                }
 
-                // Center
                 if (_RangeMode < 1.5)
-                {
                     return outerMask;
-                }
 
-                // Outer
                 if (_RangeMode < 2.5)
-                {
                     return 1.0 - outerMask;
-                }
 
-                // Ring
                 return innerMask * outerMask;
+            }
+
+            // ----- Edge Protection -----
+
+            float CalculateEdgeMask(float2 uv)
+            {
+                if (_EdgeProtection <= 0.0001)
+                    return 1.0;
+
+                float2 edgeDistance = min(uv, 1.0 - uv);
+
+                float nearestEdge = min(
+                    edgeDistance.x,
+                    edgeDistance.y
+                );
+
+                return smoothstep(
+                    0.0,
+                    _EdgeProtection,
+                    nearestEdge
+                );
             }
 
             // ==================================================
@@ -120,37 +124,74 @@ Shader "MS41/PostProcess/LensDistortion"
                 float2 uv = input.texcoord;
                 float2 center = _DistortionCenter.xy;
 
-                // 画面の縦横比を補正
-                float aspect = _BlitTexture_TexelSize.z / max(_BlitTexture_TexelSize.w, 1.0);
+                // ----- Aspect Ratio -----
+
+                float aspect = _BlitTexture_TexelSize.z /
+                               max(_BlitTexture_TexelSize.w, 1.0);
 
                 float2 delta = uv - center;
                 delta.x *= aspect;
 
-                // 中心からの距離
-                float radiusSquared = dot(delta, delta);
+                float distanceFromCenter = length(delta);
+
+                // ----- Distortion -----
+
+                // 距離を正規化
+                float maxRadius = length(
+                    float2(aspect, 1.0)
+                );
+
+                float normalizedRadius = saturate(
+                    distanceFromCenter / maxRadius
+                );
+
+                // 歪みの分布を調整
+                float distortionFactor = pow(
+                    normalizedRadius,
+                    _DistortionPower
+                );
 
                 // レンズ歪み
-                float distortion = 1.0 + _DistortionIntensity * radiusSquared;
+                float distortion =
+                    1.0 +
+                    _DistortionIntensity *
+                    distortionFactor;
 
                 float2 distorted = delta * distortion;
+
                 distorted.x /= max(aspect, 0.0001);
 
-                float2 distortedUV = center + distorted * _DistortionScale;
+                float2 distortedUV =
+                    center + distorted * _DistortionScale;
 
-                // ==================================================
-                // Range Mask
-                // ==================================================
+                // ----- Range Mask -----
 
-                float rangeMask = CalculateRangeMask(uv, aspect);
+                float rangeMask = CalculateRangeMask(
+                    distanceFromCenter
+                );
 
-                // 元のUVと歪んだUVを補間
-                float2 finalUV = lerp(uv, distortedUV, rangeMask);
+                // ----- Edge Protection -----
 
-                // 画面外は黒く表示
-                if (any(finalUV < 0.0) || any(finalUV > 1.0))
-                {
-                    return half4(0, 0, 0, 1);
-                }
+                float edgeMask = CalculateEdgeMask(uv);
+
+                float finalMask = rangeMask * edgeMask;
+
+                // ----- Final UV -----
+
+                float2 finalUV = lerp(
+                    uv,
+                    distortedUV,
+                    finalMask
+                );
+
+                // 画面外への参照を防止
+                float2 texel = _BlitTexture_TexelSize.xy;
+
+                finalUV = clamp(
+                    finalUV,
+                    texel * 0.5,
+                    1.0 - texel * 0.5
+                );
 
                 return SAMPLE_TEXTURE2D_X(
                     _BlitTexture,
