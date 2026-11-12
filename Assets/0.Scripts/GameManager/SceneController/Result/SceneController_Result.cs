@@ -11,6 +11,7 @@ public class SceneController_Result : SceneController_Base
     // --------------------------------------------------
     // ----- Components -----
     // --------------------------------------------------
+    [Header("Components")]
     private ResultScene_StateMachine _stateMachine;
     private ResultScene_PresentationController _presentationController;
     private ResultScene_InputHandler _inputHandler;
@@ -28,6 +29,17 @@ public class SceneController_Result : SceneController_Base
     [Header("ChangeScene Name")]
     [Tooltip("タイトル遷移ボタンでの遷移先シーン名")]
     [SerializeField] private string _nameToTitleScene;
+    public string NameToTitleScene => _nameToTitleScene;
+
+    // --------------------------------------------------
+    // ----- Unity Events -----
+    // --------------------------------------------------
+    private void Start()
+    {
+        _stateMachine = GetComponent<ResultScene_StateMachine>();
+        _presentationController = GetComponent<ResultScene_PresentationController>();
+        _inputHandler = GetComponent<ResultScene_InputHandler>();
+    }
 
 
     // --------------------------------------------------

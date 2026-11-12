@@ -11,8 +11,10 @@ public class SceneController_Level : SceneController_Base
     // --------------------------------------------------
     // ----- Components -----
     // --------------------------------------------------
+    [Header("Components")]
     private LevelScene_StateMachine _stateMachine;
     private LevelScene_PauseWindowHandler _pauseWindowHandler;
+    private LevelScene_GuidView _guidView;
     private LevelScene_InputHandler _inputHandler;
 
     // --------------------------------------------------
@@ -20,7 +22,20 @@ public class SceneController_Level : SceneController_Base
     // --------------------------------------------------
     public LevelScene_StateMachine StateMachine => _stateMachine;
     public LevelScene_PauseWindowHandler PauseWindowHandler => _pauseWindowHandler;
+    public LevelScene_GuidView GuidView => _guidView;
     public LevelScene_InputHandler InputHandler => _inputHandler;
+
+
+    // --------------------------------------------------
+    // ----- Unity Events -----
+    // --------------------------------------------------
+    private void Awake()
+    {
+        _stateMachine = GetComponent<LevelScene_StateMachine>();
+        _pauseWindowHandler = GetComponent<LevelScene_PauseWindowHandler>();
+        _guidView = GetComponent<LevelScene_GuidView>();
+        _inputHandler = GetComponent<LevelScene_InputHandler>();
+    }
 
     // --------------------------------------------------
     // ----- Lifecycle -----
