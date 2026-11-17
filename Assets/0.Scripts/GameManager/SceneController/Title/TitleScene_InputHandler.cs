@@ -1,8 +1,8 @@
-/*
+ï»¿/*
     TitleScene_InputHandler
     20261104  hanaue sho
-    ƒ^ƒCƒgƒ‹ƒV[ƒ“‚Å‚Ì“ü—Í‚ğó‚¯‚Æ‚éƒXƒNƒŠƒvƒg
-    ƒXƒ^[ƒgƒ{ƒ^ƒ“‰Ÿ‰º‚È‚Ç
+    ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã§ã®å…¥åŠ›ã‚’å—ã‘ã¨ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+    ã‚¹ã‚¿ãƒ¼ãƒˆãƒœã‚¿ãƒ³æŠ¼ä¸‹ãªã©
  */
 using UnityEngine;
 using UnityEngine.InputSystem;
