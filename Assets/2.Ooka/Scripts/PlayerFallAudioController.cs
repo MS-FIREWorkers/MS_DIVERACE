@@ -1,8 +1,11 @@
 using UnityEngine;
 
 // 落下速度に応じた音量・ピッチの変化を担当するScript
+// 音量はManagedAudioSourceの補正値として登録する (AudioSource.volumeは直接書き換えない)
+// ピッチはこのScriptだけが書き換える
+// ループ設定と再生開始は、ManagedAudioSource (AudioDataのloop / playOnStart) に任せる
 
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(ManagedAudioSource))]
 public class PlayerFallAudioController : MonoBehaviour
 {
     [Header("参照")]
@@ -12,7 +15,7 @@ public class PlayerFallAudioController : MonoBehaviour
     [SerializeField] private float minFallSpeed = 2f;
     [SerializeField] private float maxFallSpeed = 40f;
 
-    [Header("音量設定")]
+    [Header("音量設定 (AudioDataの基準音量に対する倍率)")]
     [SerializeField] private float minVolume = 0f;
     [SerializeField] private float maxVolume = 1f;
 
@@ -23,15 +26,27 @@ public class PlayerFallAudioController : MonoBehaviour
     [Header("音の変化速度")]
     [SerializeField] private float smoothSpeed = 3f;
 
+    private ManagedAudioSource managedAudioSource;
     private AudioSource audioSource;
 
-    private float targetVolume;
+    private float currentMultiplier;
+    private float targetMultiplier;
     private float targetPitch;
+
+    private void Awake()
+    {
+        managedAudioSource = GetComponent<ManagedAudioSource>();
+        audioSource = GetComponent<AudioSource>();
+
+        // 再生開始の時点で無音になるよう、Awakeのうちに補正値を0にしておく
+        currentMultiplier = minVolume;
+        managedAudioSource.SetVolumeMultiplier(this, currentMultiplier);
+
+        audioSource.pitch = minPitch;
+    }
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-
         if (playerRigidbody == null)
         {
             playerRigidbody = GetComponent<Rigidbody>();
@@ -45,15 +60,13 @@ public class PlayerFallAudioController : MonoBehaviour
             return;
         }
 
-        audioSource.loop = true;
-        audioSource.volume = 0f;
-        audioSource.pitch = minPitch;
+        // audioSource.pitch = minPitch;
 
-        targetVolume = 0f;
+        targetMultiplier = minVolume;
         targetPitch = minPitch;
-
-        audioSource.Play();
     }
+
+    // 無効になっても補正値は取り消さない (取り消すと風の音が基準音量まで戻ってしまうため)
 
     private void Update()
     {
@@ -66,15 +79,16 @@ public class PlayerFallAudioController : MonoBehaviour
         // 落下速度を0～1に正規化
         float speedRate = Mathf.InverseLerp(minFallSpeed, maxFallSpeed, fallSpeed);
 
-        // 落下速度に応じて音量を計算
-        targetVolume = Mathf.Lerp(minVolume, maxVolume, speedRate);
+        // 落下速度に応じて音量の倍率を計算
+        targetMultiplier = Mathf.Lerp(minVolume, maxVolume, speedRate);
 
         // 落下速度に応じてピッチを計算
         targetPitch = Mathf.Lerp(minPitch, maxPitch, speedRate);
 
-        // 音量とピッチを滑らかに変化させる
-        audioSource.volume = Mathf.Lerp(audioSource.volume, targetVolume,
+        // 音量の倍率とピッチを滑らかに変化させる
+        currentMultiplier = Mathf.Lerp(currentMultiplier, targetMultiplier,
             Time.deltaTime * smoothSpeed);
+        managedAudioSource.SetVolumeMultiplier(this, currentMultiplier);
 
         audioSource.pitch = Mathf.Lerp(audioSource.pitch, targetPitch,
             Time.deltaTime * smoothSpeed);

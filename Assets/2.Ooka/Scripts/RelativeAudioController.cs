@@ -1,8 +1,12 @@
 using UnityEngine;
 
 // 音源とListenerの相対速度に応じた音量補正を担当するScript
+// 音量はManagedAudioSourceの補正値として登録する (AudioSource.volumeは直接書き換えない)
+//
+// 接近ブーストで音量を上げるには、AudioDataのvolumeに余裕が必要
+// (最終的なAudioSource.volumeは1が上限のため。例: volume 0.6 × 最大1.5倍 = 0.9)
 
-[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(ManagedAudioSource))]
 public class RelativeAudioController : MonoBehaviour
 {
     [Header("参照")]
@@ -13,7 +17,7 @@ public class RelativeAudioController : MonoBehaviour
     [SerializeField] private float approachBoost = 0.5f;
     [SerializeField] private float volumeSmoothSpeed = 5f;
 
-    private AudioSource audioSource;
+    private ManagedAudioSource managedAudioSource;
 
     private Vector3 previousSourcePosition;
     private Vector3 previousListenerPosition;
@@ -21,12 +25,11 @@ public class RelativeAudioController : MonoBehaviour
     private Vector3 sourceVelocity;
     private Vector3 listenerVelocity;
 
-    private float baseVolume;
-    private float targetVolume;
+    private float currentMultiplier = 1f;
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        managedAudioSource = GetComponent<ManagedAudioSource>();
 
         if (listener == null)
         {
@@ -38,8 +41,25 @@ public class RelativeAudioController : MonoBehaviour
         previousSourcePosition = transform.position;
         previousListenerPosition = listener.position;
 
-        baseVolume = audioSource.volume;
-        targetVolume = baseVolume;
+        managedAudioSource.SetVolumeMultiplier(this, currentMultiplier);
+    }
+
+    private void OnDisable()
+    {
+        // 無効になったときは補正を取り消して、音量を元に戻す
+        if (managedAudioSource != null)
+        {
+            managedAudioSource.RemoveVolumeMultiplier(this);
+        }
+    }
+
+    private void OnEnable()
+    {
+        // 再度有効になったときは、現在の補正値を登録し直す
+        if (managedAudioSource != null)
+        {
+            managedAudioSource.SetVolumeMultiplier(this, currentMultiplier);
+        }
     }
 
     private void Update()
@@ -59,7 +79,7 @@ public class RelativeAudioController : MonoBehaviour
         previousSourcePosition = transform.position;
         previousListenerPosition = listener.position;
 
-        // 音源からプレイヤーへ向かう方向を計算
+        // プレイヤーから音源へ向かう方向を計算
         Vector3 directionToSource = (transform.position - listener.position).normalized;
 
         // 音源とプレイヤーの相対速度を計算
@@ -72,12 +92,12 @@ public class RelativeAudioController : MonoBehaviour
         float approachSpeed = Mathf.Max(0f, -radialSpeed);
         float speedRate = Mathf.Clamp01(approachSpeed / maxRelativeSpeed);
 
-        // 接近速度に応じて音量を強める
-        float volumeMultiplier = 1f + speedRate * approachBoost;
-        targetVolume = baseVolume * volumeMultiplier;
+        // 接近速度に応じて音量補正を強める
+        float targetMultiplier = 1f + speedRate * approachBoost;
 
-        // 音量を滑らかに変化させる
-        audioSource.volume = Mathf.Lerp(audioSource.volume, targetVolume,
+        // 音量補正を滑らかに変化させる
+        currentMultiplier = Mathf.Lerp(currentMultiplier, targetMultiplier,
             Time.deltaTime * volumeSmoothSpeed);
+        managedAudioSource.SetVolumeMultiplier(this, currentMultiplier);
     }
 }
