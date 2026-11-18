@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6851149501207340664
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7828221319632709283}
+  - component: {fileID: 9030790067672275788}
+  m_Layer: 0
+  m_Name: TestPostEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7828221319632709283
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6851149501207340664}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9030790067672275788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6851149501207340664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92e1d39371e6a4f439dd64c08b122413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PostEffectManagerTest
+  _keySettings:
+    fogKeys:
+      playFogKey: 20
+      stopFogKey: 21
+    overlayKeys:
+      playOverlayKey: 22
+      stopOverlayKey: 24
+    gaussianBlurKeys:
+      playGaussianBlurKey: 25
+      stopGaussianBlurKey: 26
+    lensDistortionKeys:
+      playLensDistortionKey: 28
+      stopLensDistortionKey: 16
+    radialBlurKeys:
+      playRadialBlurKey: 36
+      stopRadialBlurKey: 17
+    namedOverlayKeys:
+      playDamageOverlayKey: 41
+      playWarningOverlayKey: 42
+      stopDamageOverlayKey: 43
+      stopWarningOverlayKey: 44
+    combinedKeys:
+      playAllKey: 34
+      stopAllKey: 39
+      startSequenceKey: 35
+      cancelSequenceKey: 23
+  _effectSettings:
+    fogSettings:
+      fadeInFrames: 30
+      holdFrames: 60
+      fadeOutFrames: 30
+      fogColor: {r: 1, g: 0, b: 0, a: 1}
+      startDistance: 5
+      endDistance: 30
+      density: 0.03
+      intensity: 0.8
+      fogMode: 0
+    overlaySettings:
+      overlayFadeInFrames: 30
+      overlayHoldFrames: 60
+      overlayFadeOutFrames: 30
+      overlayColor: {r: 1, g: 0, b: 0, a: 1}
+      overlayIntensity: 0.8
+      overlayBlendMode: 0
+    gaussianBlurSettings:
+      blurFadeInFrames: 30
+      blurHoldFrames: 60
+      blurFadeOutFrames: 30
+      blurRadius: 4
+      blurStrength: 0.8
+      blurIterations: 2
+    lensDistortionSettings:
+      lensFadeInFrames: 30
+      lensHoldFrames: 60
+      lensFadeOutFrames: 30
+      lensIntensity: 0.5
+      lensCenter: {x: 0.5, y: 0.5}
+      lensScale: 1
+      lensRangeMode: 0
+      lensRangeRadius: 0.5
+      lensInnerRadius: 0.2
+      lensEdgeSoftness: 0.05
+    radialBlurSettings:
+      radialFadeInFrames: 30
+      radialHoldFrames: 60
+      radialFadeOutFrames: 30
+      radialIntensity: 0.7
+      radialCenter: {x: 0.5, y: 0.5}
+      radialInnerRadius: 0.2
+      radialOuterRadius: 1
+      radialSampleCount: 12
+      radialFalloff: 0.15
