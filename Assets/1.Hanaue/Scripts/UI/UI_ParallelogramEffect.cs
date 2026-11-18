@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
     UI_ParallelogramEffect
     20261117  hanaue sho
     UI_Parallelogram.shader へのエフェクトの指示を送る
@@ -17,9 +16,9 @@ public class UI_ParallelogramEffect : MonoBehaviour
     private Image _image;
     private Material _materialInstance;
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Awake -----
-    // ==================================================
+    // --------------------------------------------------
     private void Awake()
     {
         _image = GetComponent<Image>();
@@ -39,10 +38,10 @@ public class UI_ParallelogramEffect : MonoBehaviour
         _materialInstance.SetFloat(HighlightStartTimeID, -1.0f);
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Play Border Light -----
     // 枠線を一周する光を再生する
-    // ==================================================
+    // --------------------------------------------------
     public void PlayBorderLight()
     {
         if (_materialInstance == null)
@@ -54,10 +53,10 @@ public class UI_ParallelogramEffect : MonoBehaviour
         _materialInstance.SetFloat(BorderLightStartTimeID, Time.timeSinceLevelLoad);
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Play Highlight -----
     // 面のハイライトを左から右へ再生する
-    // ==================================================
+    // --------------------------------------------------
     public void PlayHighlight()
     {
         if (_materialInstance == null)
@@ -69,9 +68,9 @@ public class UI_ParallelogramEffect : MonoBehaviour
         _materialInstance.SetFloat(HighlightStartTimeID, Time.timeSinceLevelLoad);
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- On Destroy -----
-    // ==================================================
+    // --------------------------------------------------
     private void OnDestroy()
     {
         // 生成したマテリアルを破棄

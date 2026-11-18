@@ -8,9 +8,9 @@ using UnityEngine;
 [RequireComponent(typeof(RectTransform))]
 public class TitleCharacter_Movement : MonoBehaviour
 {
-    // ==================================================
+    // --------------------------------------------------
     // ----- Floating -----
-    // ==================================================
+    // --------------------------------------------------
     [Header("Floating")]
     [SerializeField] private float _floatAmplitude = 10.0f;
     [SerializeField] private float _floatFrequency = 0.2f;
@@ -18,9 +18,9 @@ public class TitleCharacter_Movement : MonoBehaviour
     private float _floatTime;
     private float _floatOffset;
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Spring -----
-    // ==================================================
+    // --------------------------------------------------
     [Header("Spring")]
     [SerializeField] private float _inputForce = 300.0f;
     [SerializeField] private float _springStrength = 5.0f;
@@ -31,9 +31,9 @@ public class TitleCharacter_Movement : MonoBehaviour
     private float _springOffset;
     private float _springVelocity;
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Rotation Spring -----
-    // ==================================================
+    // --------------------------------------------------
     [Header("Rotation Spring")]
     [SerializeField] private float _rotationInputForce = 100.0f;
     [SerializeField] private float _rotationSpringStrength = 15.0f;
@@ -45,16 +45,16 @@ public class TitleCharacter_Movement : MonoBehaviour
 
     private Quaternion _baseRotation;
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Components -----
-    // ==================================================
+    // --------------------------------------------------
     private RectTransform _rectTransform;
     private Vector2 _basePosition;
     private TitleScene_InputHandler _inputHandler;
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- UnityEvents -----
-    // ==================================================
+    // --------------------------------------------------
     private void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();
@@ -78,9 +78,9 @@ public class TitleCharacter_Movement : MonoBehaviour
         ApplyTransform();
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Floating -----
-    // ==================================================
+    // --------------------------------------------------
     private void UpdateFloating(float dt)
     {
         _floatTime += dt;
@@ -89,9 +89,9 @@ public class TitleCharacter_Movement : MonoBehaviour
         _floatOffset = Mathf.Sin(_floatTime * _floatFrequency * Mathf.PI * 2.0f) * _floatAmplitude;
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Spring -----
-    // ==================================================
+    // --------------------------------------------------
     private void UpdateSpring(float dt)
     {
         // 入力による力
@@ -125,9 +125,9 @@ public class TitleCharacter_Movement : MonoBehaviour
         }
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Rotation Spring -----
-    // ==================================================
+    // --------------------------------------------------
     private void UpdateRotationSpring(float dt)
     {
         // 入力による回転加速度
@@ -161,9 +161,9 @@ public class TitleCharacter_Movement : MonoBehaviour
         }
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Apply Transform -----
-    // ==================================================
+    // --------------------------------------------------
     private void ApplyTransform()
     {
         // 位置
@@ -175,9 +175,9 @@ public class TitleCharacter_Movement : MonoBehaviour
         _rectTransform.localRotation = _baseRotation * Quaternion.Euler(0.0f, 0.0f, _rotationOffset);
     }
 
-    // ==================================================
+    // --------------------------------------------------
     // ----- Input -----
-    // ==================================================
+    // --------------------------------------------------
     public void SetMoveInput(float input)
     {
         _moveInput = Mathf.Clamp(input, -1.0f, 1.0f);
