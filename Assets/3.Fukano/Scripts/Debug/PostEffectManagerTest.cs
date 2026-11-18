@@ -392,23 +392,29 @@ public class PostEffectManagerTest : MonoBehaviour
         // ----- Fog -----
         if (IsKeyPressed(keyboard, _keySettings.fogKeys.playFogKey)) TestPlayFog();
         if (IsKeyPressed(keyboard, _keySettings.fogKeys.stopFogKey)) TestStopFog();
+
         // ----- Overlay -----
         if (IsKeyPressed(keyboard, _keySettings.overlayKeys.playOverlayKey)) TestPlayOverlay();
         if (IsKeyPressed(keyboard, _keySettings.overlayKeys.stopOverlayKey)) PostEffectManager.StopOverlay();
+
         // ----- Gaussian Blur -----
         if (IsKeyPressed(keyboard, _keySettings.gaussianBlurKeys.playGaussianBlurKey)) TestPlayGaussianBlur();
         if (IsKeyPressed(keyboard, _keySettings.gaussianBlurKeys.stopGaussianBlurKey)) PostEffectManager.StopGaussianBlur();
+
         // ----- Lens Distortion -----
         if (IsKeyPressed(keyboard, _keySettings.lensDistortionKeys.playLensDistortionKey)) TestPlayLensDistortion();
         if (IsKeyPressed(keyboard, _keySettings.lensDistortionKeys.stopLensDistortionKey)) PostEffectManager.StopLensDistortion();
+
         // ----- Radial Blur -----
         if (IsKeyPressed(keyboard, _keySettings.radialBlurKeys.playRadialBlurKey)) TestPlayRadialBlur();
         if (IsKeyPressed(keyboard, _keySettings.radialBlurKeys.stopRadialBlurKey)) PostEffectManager.StopRadialBlur();
+
         // ----- Named Overlay -----
         if (IsKeyPressed(keyboard, _keySettings.namedOverlayKeys.playDamageOverlayKey)) TestPlayDamageOverlay();
         if (IsKeyPressed(keyboard, _keySettings.namedOverlayKeys.playWarningOverlayKey)) TestPlayWarningOverlay();
         if (IsKeyPressed(keyboard, _keySettings.namedOverlayKeys.stopDamageOverlayKey)) PostEffectManager.StopOverlay("Damage");
         if (IsKeyPressed(keyboard, _keySettings.namedOverlayKeys.stopWarningOverlayKey)) PostEffectManager.StopOverlay("Warning");
+
         // ----- Combined Tests -----
         if (IsKeyPressed(keyboard, _keySettings.combinedKeys.playAllKey)) TestPlayAll();
         if (IsKeyPressed(keyboard, _keySettings.combinedKeys.stopAllKey)) TestStopAll();
@@ -545,6 +551,7 @@ public class PostEffectManagerTest : MonoBehaviour
 
     // ==================================================
     // Additional API Usage Examples
+    // ID付き再生、複数種類の同時描画、コルーチンによるシーケンス再生などの例。
     // ==================================================
 
     // ----- Named Overlay Examples -----
@@ -562,6 +569,7 @@ public class PostEffectManagerTest : MonoBehaviour
         PostEffectManager.PlayOverlay("Warning", 30, 300, 30, Color.yellow, 0.5f);
         Debug.Log("[Info] PlayOverlay ID=Warning");
     }
+
 
     // ----- Combined Examples -----
 
