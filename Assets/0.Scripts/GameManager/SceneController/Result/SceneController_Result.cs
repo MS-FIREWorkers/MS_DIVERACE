@@ -34,7 +34,7 @@ public class SceneController_Result : SceneController_Base
     // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
-    private void Start()
+    private void Awake()
     {
         _stateMachine = GetComponent<ResultScene_StateMachine>();
         _presentationController = GetComponent<ResultScene_PresentationController>();
@@ -60,7 +60,12 @@ public class SceneController_Result : SceneController_Base
     // --------------------------------------------------
     public void OnClick_ToTitle()
     {
-        // チュートリアルシーン遷移
-        GameManager.Instance.ChangeScene(_nameToTitleScene);
+        // 確認ウィンドウを開く（遷移は確認ウィンドウで「Yes」を選んだ時に行う）
+        if (_stateMachine == null)
+        {
+            Debug.LogError("[Error] ResultScene_StateMachine Not Found!");
+            return;
+        }
+        _stateMachine.RequestConfirm();
     }
 }
