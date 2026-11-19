@@ -53,18 +53,24 @@ public class TestLevelStreamer : MonoBehaviour
         StartCoroutine(InitializeLevels());
     }
 
+
     private IEnumerator InitializeLevels()
     {
         isStreaming = true;
+
+        // ----- Level 05 -----
 
         yield return LoadAndPlaceLevel(
             0,
             Vector3.zero
         );
 
+        // ----- Level 04 Preload -----
+
         if (levelScenes.Length > 1)
         {
-            LevelSceneInfo currentInfo = GetLevelInfo(0);
+            LevelSceneInfo currentInfo =
+                GetLevelInfo(0);
 
             if (currentInfo != null)
             {
@@ -75,8 +81,12 @@ public class TestLevelStreamer : MonoBehaviour
             }
         }
 
+        // ★ 追加：最初のLevel 05をActiveにする
+        ActivateCurrentLevelScene();
+
         isStreaming = false;
     }
+
 
     private void Update()
     {
@@ -124,7 +134,8 @@ public class TestLevelStreamer : MonoBehaviour
         isStreaming = true;
 
         currentLevelIndex++;
-
+        // ★ 追加：現在の階層のSkyboxに切り替える
+        ActivateCurrentLevelScene();
         // 現在のレベルに対応するパーティクルへ切り替える。
         if (_environmentEffectManager != null)
             _environmentEffectManager.SetLevel(currentLevelIndex);
@@ -313,4 +324,53 @@ public class TestLevelStreamer : MonoBehaviour
                 yield return UnloadLevel(i);
         }
     }
+    // ==========================================
+    // ----- Skybox切り替え -----
+    // ==========================================
+
+    private void ActivateCurrentLevelScene()
+    {
+        // 現在の階層のScene名を取得
+        string sceneName =
+            levelScenes[currentLevelIndex].sceneName;
+
+        Scene targetScene =
+            SceneManager.GetSceneByName(sceneName);
+
+        // Sceneがロードされているか確認
+        if (!targetScene.IsValid() ||
+            !targetScene.isLoaded)
+        {
+            Debug.LogWarning(
+                $"[Skybox] Scene not loaded: {sceneName}"
+            );
+            return;
+        }
+
+        // 既にActive Sceneなら何もしない
+        if (SceneManager.GetActiveScene() == targetScene)
+        {
+            return;
+        }
+
+        // Active Sceneを変更
+        bool success =
+            SceneManager.SetActiveScene(targetScene);
+
+        if (success)
+        {
+            Debug.Log(
+                $"[Skybox] Switched to: {sceneName}"
+            );
+        }
+        else
+        {
+            Debug.LogError(
+                $"[Skybox] Switch failed: {sceneName}"
+            );
+        }
+    }
+
 }
+
+
