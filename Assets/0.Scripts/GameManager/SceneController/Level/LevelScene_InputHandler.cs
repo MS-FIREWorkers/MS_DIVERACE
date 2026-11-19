@@ -1,10 +1,11 @@
-/*
+ï»¿/*
     LevelScene_InputHandler
     20261104  hanaue sho
-    ƒŒƒxƒ‹ƒV[ƒ“‚Å‚Ì“ü—Í‚ğó‚¯‚Æ‚éƒXƒNƒŠƒvƒg
-    ƒ|[ƒYƒ{ƒ^ƒ“‰Ÿ‰º‚È‚Ç
+    ãƒ¬ãƒ™ãƒ«ã‚·ãƒ¼ãƒ³ã§ã®å…¥åŠ›ã‚’å—ã‘ã¨ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+    ãƒãƒ¼ã‚ºãƒœã‚¿ãƒ³æŠ¼ä¸‹ãªã©
  */
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class LevelScene_InputHandler : MonoBehaviour
 {
@@ -13,13 +14,57 @@ public class LevelScene_InputHandler : MonoBehaviour
     // --------------------------------------------------
     private SceneController_Level _controller;
 
+    // --------------------------------------------------
+    // ----- InputAction -----
+    // --------------------------------------------------
+    [Header("InputAction")]
+    [SerializeField] private InputActionReference _pauseAction;
+
+    // --------------------------------------------------
+    // ----- InputValues Property -----
+    // --------------------------------------------------
+    public bool PauseInput { get; private set; }
 
     // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
-    private void Start()
+    private void OnEnable()
+    {
+        if (_pauseAction == null) return;
+
+        _pauseAction.action.performed += OnPause;
+        _pauseAction.action.Enable();
+    }
+    private void OnDisable()
+    {
+        if (_pauseAction == null) return;
+
+        _pauseAction.action.performed -= OnPause;
+        _pauseAction.action.Disable();
+    }
+    private void Awake()
     {
         _controller = GetComponent<SceneController_Level>();
 
+        if (_pauseAction == null)
+        {
+            Debug.LogWarning("[Warning] PauseAction Not Atatched!");
+        }
+    }
+
+    // --------------------------------------------------
+    // ----- Input Events -----
+    // --------------------------------------------------
+    private void OnPause(InputAction.CallbackContext context)
+    {
+        PauseInput = true;
+    }
+
+    // --------------------------------------------------
+    // ----- Public Methods -----
+    // --------------------------------------------------
+    public void ConsumePauseInput()
+    {
+        PauseInput = false;
     }
 }

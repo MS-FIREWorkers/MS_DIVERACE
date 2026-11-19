@@ -715,6 +715,7 @@ GameObject:
   - component: {fileID: 1192245336}
   - component: {fileID: 1192245340}
   - component: {fileID: 1192245339}
+  - component: {fileID: 1192245341}
   - component: {fileID: 1192245338}
   - component: {fileID: 1192245337}
   m_Layer: 0
@@ -751,6 +752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e412e0c9d54b8da43970990bae648e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneController_Level
+  _player: {fileID: 0}
 --- !u!114 &1192245337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,6 +777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed473de4d4d8e8c48b29641262658e5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelScene_PauseWindowHandler
+  _pauseWindow: {fileID: 0}
 --- !u!114 &1192245339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -787,6 +790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db88eae2ca41cb04e910c2e7e113b49c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelScene_InputHandler
+  _pauseAction: {fileID: -4984913107880408426, guid: a1211e740bed2754a86c3f621c7ed2e5, type: 3}
 --- !u!114 &1192245340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,6 +803,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 639e5e87a9b73d047bebddf95513dafb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelScene_StateMachine
+  _initialState: 2
+  _currentStateName: 0
+--- !u!114 &1192245341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192245333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c5191e40331a7439f1935aa29e1429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelScene_Timer
 --- !u!1 &1306945370
 GameObject:
   m_ObjectHideFlags: 0
