@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4280545058466580583}
   - component: {fileID: 4765561155538953414}
   - component: {fileID: 3477984834800290264}
+  - component: {fileID: 4905108710633237922}
   m_Layer: 0
   m_Name: PlayerCharacter_Root
   m_TagString: Player
@@ -236,6 +237,18 @@ MonoBehaviour:
   m_DefaultActionMap: PalyerCharacterControll
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &4905108710633237922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684849824088822187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc34ace813dbcf4db7c87a6956d9893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObstacleFilm_PlayerTracker
 --- !u!1 &5278697388263896530
 GameObject:
   m_ObjectHideFlags: 0

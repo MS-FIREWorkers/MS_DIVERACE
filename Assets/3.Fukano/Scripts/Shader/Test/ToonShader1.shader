@@ -1,4 +1,4 @@
-Shader "Custom/ToonShader"
+Shader "Custom/ToonShader_1"
 {
     //Insoectorから設定できるパラメータを定義する
     Properties
