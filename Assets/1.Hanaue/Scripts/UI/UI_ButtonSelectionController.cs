@@ -1,12 +1,12 @@
-/*
-    TitleUI_SerectionController
+ï»¿/*
+    UI_ButtonSelectionController
     20261118  hanaue sho
-    ƒ{ƒ^ƒ“‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg
+    ãƒœã‚¿ãƒ³ã‚’ç®¡ç†ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
  */
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TitleUI_SelectionController : MonoBehaviour
+public class UI_ButtonSelectionController : MonoBehaviour
 {
     // --------------------------------------------------
     // ----- SelectButton -----
@@ -27,7 +27,7 @@ public class TitleUI_SelectionController : MonoBehaviour
     // --------------------------------------------------
     private void Start()
     {
-        // ‰Šúó‘Ô‚Å‚ÍƒAƒCƒRƒ“‚ğ”ñ•\¦
+        // åˆæœŸçŠ¶æ…‹ã§ã¯ã‚¢ã‚¤ã‚³ãƒ³ã‚’éè¡¨ç¤º
         if (_selectionIcon != null)
         {
             _selectionIcon.gameObject.SetActive(false);
@@ -46,14 +46,14 @@ public class TitleUI_SelectionController : MonoBehaviour
             return;
         }
 
-        // ƒ{ƒ^ƒ“‚ÌˆÊ’u‚ª•Ï‚í‚Á‚Ä‚àƒAƒCƒRƒ“‚ğ’Ç]‚³‚¹‚é
+        // ãƒœã‚¿ãƒ³ã®ä½ç½®ãŒå¤‰ã‚ã£ã¦ã‚‚ã‚¢ã‚¤ã‚³ãƒ³ã‚’è¿½å¾“ã•ã›ã‚‹
         UpdateIconPosition();
     }
 
 
     // --------------------------------------------------
     // ----- Set Selected Button -----
-    // ‘I‘ğ‚³‚ê‚½ƒ{ƒ^ƒ“‚ğ“o˜^‚·‚é
+    // é¸æŠã•ã‚ŒãŸãƒœã‚¿ãƒ³ã‚’ç™»éŒ²ã™ã‚‹
     // --------------------------------------------------
     public void SetSelectedButton(UI_Button_Controller button)
     {
@@ -78,11 +78,11 @@ public class TitleUI_SelectionController : MonoBehaviour
 
     // --------------------------------------------------
     // ----- Clear Selected Button -----
-    // w’èƒ{ƒ^ƒ“‚Ì‘I‘ğó‘Ô‚ğ‰ğœ‚·‚é
+    // æŒ‡å®šãƒœã‚¿ãƒ³ã®é¸æŠçŠ¶æ…‹ã‚’è§£é™¤ã™ã‚‹
     // --------------------------------------------------
     public void ClearSelectedButton(UI_Button_Controller button)
     {
-        // Œ»İ‘I‘ğ’†‚Ìƒ{ƒ^ƒ“ˆÈŠO‚©‚ç‚Ì‰ğœ’Ê’m‚Í–³‹
+        // ç¾åœ¨é¸æŠä¸­ã®ãƒœã‚¿ãƒ³ä»¥å¤–ã‹ã‚‰ã®è§£é™¤é€šçŸ¥ã¯ç„¡è¦–
         if (_selectedButton != button)
         {
             return;
@@ -98,7 +98,7 @@ public class TitleUI_SelectionController : MonoBehaviour
  
     // --------------------------------------------------
     // ----- Update Icon Position -----
-    // ‘I‘ğ’†‚Ìƒ{ƒ^ƒ“‚Ì¶‘¤‚ÖƒAƒCƒRƒ“‚ğ”z’u‚·‚é
+    // é¸æŠä¸­ã®ãƒœã‚¿ãƒ³ã®å·¦å´ã¸ã‚¢ã‚¤ã‚³ãƒ³ã‚’é…ç½®ã™ã‚‹
     // --------------------------------------------------
     private void UpdateIconPosition()
     {
@@ -111,13 +111,13 @@ public class TitleUI_SelectionController : MonoBehaviour
         Rect rect = buttonRect.rect;
 
         // ----- Target Position -----
-        // ƒ{ƒ^ƒ“‚Ì¶’†‰›‚ğŠî€‚Æ‚·‚é
+        // ãƒœã‚¿ãƒ³ã®å·¦ä¸­å¤®ã‚’åŸºæº–ã¨ã™ã‚‹
         Vector3 localPosition = new Vector3(rect.xMin - _iconOffset, rect.center.y, 0.0f);
 
-        // ƒ{ƒ^ƒ“‚Ìƒ[ƒJƒ‹À•W‚©‚çƒ[ƒ‹ƒhÀ•W‚Ö•ÏŠ·
+        // ãƒœã‚¿ãƒ³ã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‹ã‚‰ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã¸å¤‰æ›
         Vector3 worldPosition = buttonRect.TransformPoint(localPosition);
 
-        // ƒAƒCƒRƒ“‚ğˆÚ“®
+        // ã‚¢ã‚¤ã‚³ãƒ³ã‚’ç§»å‹•
         _selectionIcon.position = worldPosition;
     }
 }

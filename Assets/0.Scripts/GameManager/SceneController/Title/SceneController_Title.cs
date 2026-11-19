@@ -50,6 +50,36 @@ public class SceneController_Title : SceneController_Base
         _stateMachine = GetComponent<TitleScene_StateMachine>();
         _presentationController = GetComponent<TitleScene_PresentationController>();
         _inputHandler = GetComponent<TitleScene_InputHandler>();
+
+        // ----- Button Events -----
+        if (_buttonTutorial != null)
+        {
+            _buttonTutorial.AddClickListener(OnClick_Totutorial);
+        }
+        if (_buttonLevel != null)
+        {
+            _buttonLevel.AddClickListener(OnClick_ToLevel);
+        }
+        if (_buttonExit != null)
+        {
+            _buttonExit.AddClickListener(OnClick_Exit);
+        }
+    }
+    private void OnDestroy()
+    {
+        // ----- Button Events -----
+        if (_buttonTutorial != null)
+        {
+            _buttonTutorial.RemoveClickListener(OnClick_Totutorial);
+        }
+        if (_buttonLevel != null)
+        {
+            _buttonLevel.RemoveClickListener(OnClick_ToLevel);
+        }
+        if (_buttonExit != null)
+        {
+            _buttonExit.RemoveClickListener(OnClick_Exit);
+        }
     }
 
     // --------------------------------------------------

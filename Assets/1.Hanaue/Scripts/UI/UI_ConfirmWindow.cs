@@ -1,7 +1,7 @@
-/*
+ï»¿/*
     UI_ConfirmWindow
     20261118  hanaue sho
-    Šm”FƒEƒBƒ“ƒhƒE‚ÉƒAƒ^ƒbƒ`‚·‚éƒXƒNƒŠƒvƒg
+    ç¢ºèªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«ã‚¢ã‚¿ãƒƒãƒã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
  */
 using System;
 using UnityEngine;
@@ -14,13 +14,13 @@ public class UI_ConfirmWindow : MonoBehaviour
     // --------------------------------------------------
     // ----- References -----
     // --------------------------------------------------
-    [Header("Referencesiè“®QÆj")]
+    [Header("Referencesï¼ˆæ‰‹å‹•å‚ç…§ï¼‰")]
     [SerializeField] private CanvasGroup _mainButtonsCanvasGroup;
     [SerializeField] private TMP_Text _messageText;
-    [SerializeField] private Button _buttonYes;
-    [SerializeField] private Button _buttonNo;
+    [SerializeField] private UI_Button_Controller _buttonYes;
+    [SerializeField] private UI_Button_Controller _buttonNo;
 
-    private Action _onConfirm; // Šm”FŒã‚É”­‰Î‚·‚éƒCƒxƒ“ƒg
+    private Action _onConfirm; // ç¢ºèªå¾Œã«ç™ºç«ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆ
     private UI_Button_Controller _previousButton;
 
     // --------------------------------------------------
@@ -28,18 +28,17 @@ public class UI_ConfirmWindow : MonoBehaviour
     // --------------------------------------------------
     private void Awake()
     {
-        // ‰Šúó‘Ô‚Å‚Í”ñ•\¦
+        // åˆæœŸçŠ¶æ…‹ã§ã¯éè¡¨ç¤º
         gameObject.SetActive(false);
 
         // ----- Button Events -----
         if (_buttonYes != null)
         {
-            _buttonYes.onClick.AddListener(OnClick_Yes);
+            _buttonYes.AddClickListener(OnClick_Yes);
         }
-
         if (_buttonNo != null)
         {
-            _buttonNo.onClick.AddListener(OnClick_No);
+            _buttonNo.AddClickListener(OnClick_No);
         }
     }
     private void OnDestroy()
@@ -47,19 +46,18 @@ public class UI_ConfirmWindow : MonoBehaviour
         // ----- Button Events -----
         if (_buttonYes != null)
         {
-            _buttonYes.onClick.RemoveListener(OnClick_Yes);
+            _buttonYes.RemoveClickListener(OnClick_Yes);
         }
-
         if (_buttonNo != null)
         {
-            _buttonNo.onClick.RemoveListener(OnClick_No);
+            _buttonNo.RemoveClickListener(OnClick_No);
         }
     }
 
 
     // --------------------------------------------------
     // ----- Open -----
-    // Šm”FƒEƒBƒ“ƒhƒE‚ğŠJ‚­
+    // ç¢ºèªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‹ã
     // --------------------------------------------------
     public void Open(string message, UI_Button_Controller previousButton, Action onConfirm)
     {
@@ -73,7 +71,7 @@ public class UI_ConfirmWindow : MonoBehaviour
         }
 
         // ----- Main Buttons -----
-        // ”wŒã‚Ìƒ{ƒ^ƒ“‘€ì‚ğ–³Œø‰»
+        // èƒŒå¾Œã®ãƒœã‚¿ãƒ³æ“ä½œã‚’ç„¡åŠ¹åŒ–
         if (_mainButtonsCanvasGroup != null)
         {
             _mainButtonsCanvasGroup.interactable = false;
@@ -81,16 +79,16 @@ public class UI_ConfirmWindow : MonoBehaviour
         }
 
         // ----- Selection -----
-        // Œ³‚Ìƒ{ƒ^ƒ“‚Ì‘I‘ğ‚ğ‰ğœ
+        // å…ƒã®ãƒœã‚¿ãƒ³ã®é¸æŠã‚’è§£é™¤
         if (EventSystem.current != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
 
-        // ƒEƒBƒ“ƒhƒE‚ğ•\¦
+        // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤º
         gameObject.SetActive(true);
 
-        // u‚Í‚¢v‚ğ‰Šú‘I‘ğ
+        // ã€Œã¯ã„ã€ã‚’åˆæœŸé¸æŠ
         if (_buttonYes != null && EventSystem.current != null)
         {
             EventSystem.current.SetSelectedGameObject(_buttonYes.gameObject);
@@ -99,7 +97,7 @@ public class UI_ConfirmWindow : MonoBehaviour
 
     // --------------------------------------------------
     // ----- Close -----
-    // Šm”FƒEƒBƒ“ƒhƒE‚ğ•Â‚¶AŒ³‚Ì‘I‘ğ‚ğ•œŒ³‚·‚é
+    // ç¢ºèªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ã€å…ƒã®é¸æŠã‚’å¾©å…ƒã™ã‚‹
     // --------------------------------------------------
     private void Close()
     {
@@ -132,13 +130,14 @@ public class UI_ConfirmWindow : MonoBehaviour
     // --------------------------------------------------
     public void OnClick_Yes()
     {
-        // “o˜^‚³‚ê‚½ˆ—‚ğ‘Ş”ğ
+        Debug.Log("[Debug] OnClick_Yes");
+        // ç™»éŒ²ã•ã‚ŒãŸå‡¦ç†ã‚’é€€é¿
         Action confirmAction = _onConfirm;
         _onConfirm = null;
 
         Close();
 
-        // Šm”F‚³‚ê‚½ˆ—‚ğÀs
+        // ç¢ºèªã•ã‚ŒãŸå‡¦ç†ã‚’å®Ÿè¡Œ
         confirmAction?.Invoke();
     }
     public void OnClick_No()

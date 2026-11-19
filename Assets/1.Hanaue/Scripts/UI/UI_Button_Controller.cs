@@ -1,12 +1,15 @@
-/*
+ï»¿/*
     UI_Button_Controller
     20261118  hanaue sho
-    ƒ{ƒ^ƒ“‚ÉƒAƒ^ƒbƒ`‚·‚éƒXƒNƒŠƒvƒg
+    ãƒœã‚¿ãƒ³ã«ã‚¢ã‚¿ãƒƒãƒã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+    æœ¬å½“ã¯ç¢ºèªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ³ãƒ‰ãƒ©ãƒ¼ã‚’ç‹¬ç«‹ã•ã›ã‚‹ã¹ãã‹ã‚‚
  */
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System.Collections;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Button))]
 public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelectHandler, IDeselectHandler
@@ -15,9 +18,8 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
     // ----- SelectButton -----
     // --------------------------------------------------
     [Header("References")]
-    [SerializeField] private TitleUI_SelectionController _selectionController;
+    [SerializeField] private UI_ButtonSelectionController _selectionController;
     [SerializeField] private UI_ParallelogramEffect _effect;
-
     [Header("Confirm")]
     [SerializeField, TextArea] private string _confirmMessage;
 
@@ -25,10 +27,19 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
     private RectTransform _rectTransform;
 
     // --------------------------------------------------
+    // ----- Click Event -----
+    // --------------------------------------------------
+    [Header("Click Event")]
+    [SerializeField] private float _clickInterval = 0.3f;
+    [SerializeField] private UnityEvent _onClickAfterEffect;
+    private bool _isClickProcessing = false;
+
+    // --------------------------------------------------
     // ----- PublicProperty -----
     // --------------------------------------------------
     public string ConfirmMessage => _confirmMessage;
     public RectTransform RectTransform => _rectTransform;
+
 
     // --------------------------------------------------
     // ----- UnityEvents -----
@@ -37,12 +48,15 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
     {
         _button = GetComponent<Button>();
         _rectTransform = GetComponent<RectTransform>();
-        _selectionController = FindFirstObjectByType<TitleUI_SelectionController>();
+        _selectionController = FindFirstObjectByType<UI_ButtonSelectionController>();
 
         if (_effect == null)
         {
             _effect = GetComponent<UI_ParallelogramEffect>();
         }
+
+        // ----- Button Events -----
+        _button.onClick.AddListener(OnClick);
     }
     private void OnDisable()
     {
@@ -51,10 +65,17 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
             _selectionController.ClearSelectedButton(this);
         }
     }
+    private void OnDestroy()
+    {
+        if (_button != null)
+        {
+            _button.onClick.RemoveListener(OnClick);
+        }
+    }
 
     // --------------------------------------------------
     // ----- Pointer Enter -----
-    // ƒ}ƒEƒX‚ªƒ{ƒ^ƒ“‚É“ü‚Á‚½‚Æ‚«
+    // ãƒã‚¦ã‚¹ãŒãƒœã‚¿ãƒ³ã«å…¥ã£ãŸã¨ã
     // --------------------------------------------------
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -64,7 +85,7 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
         }
 
         // ----- Mouse Check -----
-        // ƒ}ƒEƒX‚ª“®‚¢‚Ä‚¢‚é‚Æ‚«‚¾‚¯‘I‘ğ‚ğ•ÏX‚·‚é
+        // ãƒã‚¦ã‚¹ãŒå‹•ã„ã¦ã„ã‚‹ã¨ãã ã‘é¸æŠã‚’å¤‰æ›´ã™ã‚‹
         if (Mouse.current == null)
         {
             return;
@@ -80,7 +101,7 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
             return;
         }
 
-        // ‘I‘ğ’†‚Ìƒ{ƒ^ƒ“‚È‚ç•ÏX‚µ‚È‚¢
+        // é¸æŠä¸­ã®ãƒœã‚¿ãƒ³ãªã‚‰å¤‰æ›´ã—ãªã„
         if (eventSystem.currentSelectedGameObject == gameObject)
         {
             return;
@@ -89,10 +110,9 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
 
         eventSystem.SetSelectedGameObject(gameObject);
     }
-
     // --------------------------------------------------
     // ----- On Select -----
-    // EventSystem‚©‚ç‘I‘ğ‚³‚ê‚½‚Æ‚«
+    // EventSystemã‹ã‚‰é¸æŠã•ã‚ŒãŸã¨ã
     // --------------------------------------------------
     public void OnSelect(BaseEventData eventData)
     {
@@ -105,13 +125,11 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
         if (_effect != null)
         {
             _effect.PlayBorderLight();
-            //_effect.PlayHighlight();
         }
     }
-
     // --------------------------------------------------
     // ----- On Deselect -----
-    // EventSystem‚©‚ç‘I‘ğ‰ğœ‚³‚ê‚½‚Æ‚«
+    // EventSystemã‹ã‚‰é¸æŠè§£é™¤ã•ã‚ŒãŸã¨ã
     // --------------------------------------------------
     public void OnDeselect(BaseEventData eventData)
     {
@@ -119,5 +137,52 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
         {
             _selectionController.ClearSelectedButton(this);
         }
+    }
+
+    // --------------------------------------------------
+    // ----- OnClick -----
+    // --------------------------------------------------
+    private void OnClick()
+    {
+        if (_isClickProcessing)
+        {
+            return;
+        }
+
+        StartCoroutine(ClickSequence());
+    }
+
+    // --------------------------------------------------
+    // ----- Click Sequence -----
+    // æ¼”å‡ºçµ‚äº†å¾Œã«ã‚¯ãƒªãƒƒã‚¯ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºç«ã™ã‚‹
+    // --------------------------------------------------
+    private IEnumerator ClickSequence()
+    {
+        _isClickProcessing = true;
+
+        // ----- Effect -----
+        if (_effect != null)
+        {
+            _effect.PlayHighlight();
+        }
+
+        // ----- Interval -----
+        yield return new WaitForSecondsRealtime(Mathf.Max(_clickInterval, 0.0f));
+
+        // ----- Click Event -----
+        _isClickProcessing = false;
+        _onClickAfterEffect?.Invoke();
+    }
+
+    // --------------------------------------------------
+    // ----- ClickEvent Registration -----
+    // --------------------------------------------------
+    public void AddClickListener(UnityAction action)
+    {
+        _onClickAfterEffect.AddListener(action);
+    }
+    public void RemoveClickListener(UnityAction action)
+    {
+        _onClickAfterEffect.RemoveListener(action);
     }
 }

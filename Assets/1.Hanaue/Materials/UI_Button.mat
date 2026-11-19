@@ -115,7 +115,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HighlightDuration: 0.3
+    - _HighlightDuration: 0.2
     - _HighlightStartTime: -1
     - _HighlightWidth: 80
     - _Metallic: 0
