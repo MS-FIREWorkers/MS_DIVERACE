@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5322449067098993733
+--- !u!1 &7491163874951340892
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3920844825946950471}
-  - component: {fileID: 6709012355938930059}
-  - component: {fileID: 7420903998181134965}
-  - component: {fileID: 7483548286701007073}
-  - component: {fileID: 7815275456688510751}
-  - component: {fileID: 6442798853238441055}
+  - component: {fileID: 4045728466428027086}
+  - component: {fileID: 3149003866684680252}
+  - component: {fileID: 3756369207208701246}
+  - component: {fileID: 7491012703265467159}
+  - component: {fileID: 7846258859951130723}
+  - component: {fileID: 8069623554019772965}
   m_Layer: 0
-  m_Name: Obstacle_Container Car 1
+  m_Name: Obstacle_car_00 3
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3920844825946950471
+--- !u!4 &4045728466428027086
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5322449067098993733}
+  m_GameObject: {fileID: 7491163874951340892}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 450, y: 40, z: 70}
+  m_LocalPosition: {x: -70, y: -1272, z: -24}
+  m_LocalScale: {x: 30, y: 20, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6709012355938930059
+--- !u!33 &3149003866684680252
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5322449067098993733}
+  m_GameObject: {fileID: 7491163874951340892}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7420903998181134965
+--- !u!23 &3756369207208701246
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5322449067098993733}
+  m_GameObject: {fileID: 7491163874951340892}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -93,13 +93,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7483548286701007073
+--- !u!65 &7491012703265467159
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5322449067098993733}
+  m_GameObject: {fileID: 7491163874951340892}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -114,13 +114,13 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &7815275456688510751
+--- !u!54 &7846258859951130723
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5322449067098993733}
+  m_GameObject: {fileID: 7491163874951340892}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -141,26 +141,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6442798853238441055
+--- !u!114 &8069623554019772965
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5322449067098993733}
+  m_GameObject: {fileID: 7491163874951340892}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62933f94d4e41414692dbf6e640efcb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleMovement
   _moveMode: 2
-  _startDelay: 3
+  _startDelay: 0
   _moveDirection: {x: 1, y: 0, z: 0}
   _moveDistance: 0
-  _moveSpeed: 300
+  _moveSpeed: 100
   _smoothTurn: 0
   _waypoints:
-  - {x: 1200, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1000}
   _loopWaypoints: 1
   _waypointWaitTime: 0
   _orbitPlane: 0
