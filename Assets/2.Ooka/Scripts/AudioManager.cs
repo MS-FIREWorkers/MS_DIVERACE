@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +10,7 @@ using UnityEngine.Audio;
 // 音の再生（BGM・SE）とAudioMixerの音量管理を担当するスクリプト（シングルトン）
 //
 // ・音の設定はAudioData（ScriptableObject）で管理する
+// ・AudioIdとAudioDataの対応はAudioLibrary（ScriptableObject）で一元管理する
 // ・BGMはAudioSourceを2つ使い、フェードアウト・フェードインで切り替える
 // ・SEはAudioSourceのプールから再生する
 // ・シーンをまたいで常駐する（DontDestroyOnLoad）。シーンには1つだけ配置すること
@@ -20,6 +20,11 @@ using UnityEngine.Audio;
 //   AudioManager.Instance.StopBGM(fadeOutTime: 1f);
 //   AudioManager.Instance.PlaySE(seData);
 //   AudioManager.Instance.PlaySEAt(seData, position);
+//
+// AudioIdで指定する場合：
+//   AudioManager.Instance.PlayBGM(AudioId.BgmTest, fadeOutTime: 1f, fadeInTime: 1f);
+//   AudioManager.Instance.PlaySE(AudioId.PlayerJump);
+//   AudioManager.Instance.PlaySEAt(AudioId.PlayerJump, position);
 
 [DefaultExecutionOrder(-100)] // ManagedAudioSourceなど、他のスクリプトのAwakeより先に初期化する
 public class AudioManager : MonoBehaviour
@@ -63,6 +68,10 @@ public class AudioManager : MonoBehaviour
     [Tooltip("同時に再生できるSEの上限。超えた場合は古いSEから上書きする")]
     [SerializeField, Min(1)] private int _maxSePoolSize = 24;
 
+    [Header("AudioLibrary")]
+    [Tooltip("AudioIdとAudioDataの対応表。通常は1つ。カテゴリごとに分ける場合は複数登録する")]
+    [SerializeField] private AudioLibrary[] _libraries;
+
 
     // ==================================================
     // ----- Private Variables -----
@@ -83,6 +92,9 @@ public class AudioManager : MonoBehaviour
 
     private readonly List<AudioSource> _sePool = new List<AudioSource>();
     private int _seOverwriteIndex;
+
+    // AudioIdとAudioDataの対応表（起動時にAudioLibraryから作成する）
+    private readonly Dictionary<AudioId, AudioData> _audioTable = new Dictionary<AudioId, AudioData>();
 
 
     // ==================================================
@@ -133,6 +145,7 @@ public class AudioManager : MonoBehaviour
         ResolveMixerGroups();
         CreateBgmChannels();
         CreateSePool();
+        BuildAudioTable();
     }
 
     private void OnDestroy()
@@ -211,6 +224,57 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // AudioLibraryからAudioIdとAudioDataの対応表を作成する
+    // AudioLibraryにはID名（文字列）が保存されているため、名前からAudioIdを取得する
+    // 同じAudioIdが複数登録されている場合は、先に登録されたものを使用する
+    private void BuildAudioTable()
+    {
+        _audioTable.Clear();
+
+        if (_libraries == null)
+        {
+            return;
+        }
+
+        foreach (AudioLibrary library in _libraries)
+        {
+            if (library == null)
+            {
+                continue;
+            }
+
+            foreach (AudioEntry entry in library.Entries)
+            {
+                // 未設定の行は登録しない（警告はAudioLibraryのInspector上で表示される）
+                if (string.IsNullOrEmpty(entry.Name) || entry.Data == null)
+                {
+                    continue;
+                }
+
+                // 名前からAudioIdを取得する
+                // AudioIdは、AudioLibraryに入力した名前をもとに自動生成されるため、
+                // 更新前の名前はここで見つからない
+                if (!System.Enum.TryParse(entry.Name, out AudioId id) || id == AudioId.None)
+                {
+                    Debug.LogWarning(
+                        $"AudioId に {entry.Name} が存在しません。メニューの Tools → Audio → AudioIdを更新 を実行してください。（{library.name}）",
+                        library);
+                    continue;
+                }
+
+                if (_audioTable.ContainsKey(id))
+                {
+                    Debug.LogWarning(
+                        $"AudioId {id} が重複して登録されています。先に登録されたものを使用します。（{library.name}）",
+                        library);
+                    continue;
+                }
+
+                _audioTable.Add(id, entry.Data);
+            }
+        }
+    }
+
 
     // ==================================================
     // ----- BGM -----
@@ -267,6 +331,15 @@ public class AudioManager : MonoBehaviour
         }
 
         _activeBgmIndex = nextIndex;
+    }
+
+    // AudioIdで指定してBGMを再生する（引数の意味はPlayBGM(AudioData)と同じ）
+    public void PlayBGM(AudioId id, float fadeOutTime = 1f, float fadeInTime = 1f, bool waitFadeOut = false)
+    {
+        if (TryGetAudioData(id, out AudioData data))
+        {
+            PlayBGM(data, fadeOutTime, fadeInTime, waitFadeOut);
+        }
     }
 
     // 再生中のBGMをフェードアウトして停止する
@@ -383,6 +456,24 @@ public class AudioManager : MonoBehaviour
         PlaySEInternal(data, true, position);
     }
 
+    // AudioIdで指定してSEを2Dで再生する
+    public void PlaySE(AudioId id)
+    {
+        if (TryGetAudioData(id, out AudioData data))
+        {
+            PlaySEInternal(data, false, Vector3.zero);
+        }
+    }
+
+    // AudioIdで指定してSEを指定した位置から3Dで再生する
+    public void PlaySEAt(AudioId id, Vector3 position)
+    {
+        if (TryGetAudioData(id, out AudioData data))
+        {
+            PlaySEInternal(data, true, position);
+        }
+    }
+
     // SEを再生する共通処理
     private void PlaySEInternal(AudioData data, bool is3D, Vector3 position)
     {
@@ -472,6 +563,19 @@ public class AudioManager : MonoBehaviour
     public AudioMixerGroup GetMixerGroup(AudioChannel channel)
     {
         return channel == AudioChannel.BGM ? _bgmGroup : _seGroup;
+    }
+
+    // AudioIdに対応するAudioDataを取得する
+    // 登録されていない場合は警告を表示してfalseを返す
+    private bool TryGetAudioData(AudioId id, out AudioData data)
+    {
+        if (_audioTable.TryGetValue(id, out data))
+        {
+            return true;
+        }
+
+        Debug.LogWarning($"AudioId {id} がAudioLibraryに登録されていません。");
+        return false;
     }
 
     // AudioDataが再生可能か確認する

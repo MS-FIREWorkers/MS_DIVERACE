@@ -16,7 +16,7 @@ MonoBehaviour:
   _channel: 1
   _volume: 1
   _pitchRange: {x: 1, y: 1}
-  _loop: 1
+  _loop: 0
   _spatialBlend: 0
   _minDistance: 1
   _maxDistance: 50

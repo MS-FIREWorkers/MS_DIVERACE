@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +15,9 @@ using UnityEngine.InputSystem;
 // 5キー：SEを2Dで再生
 // 6キー：SEをこのオブジェクトの位置から3Dで再生
 // 7キー：Time.timeScaleを0 / 1で切り替え（ポーズ中もフェードが進むか確認する）
+// 8キー：AudioIdで指定したBGMをクロスフェードで再生
+// 9キー：AudioIdで指定したSEを2Dで再生
+// 0キー：AudioIdで指定したSEをこのオブジェクトの位置から3Dで再生
 
 public class AudioManagerTester : MonoBehaviour
 {
@@ -32,6 +34,13 @@ public class AudioManagerTester : MonoBehaviour
 
     [Tooltip("5キー・6キーで再生するSE")]
     [SerializeField] private AudioData _se;
+
+    [Header("テスト用AudioId")]
+    [Tooltip("8キーで再生するBGMのAudioId")]
+    [SerializeField] private AudioId _bgmId = AudioId.BgmTest;
+
+    [Tooltip("9キー・0キーで再生するSEのAudioId")]
+    [SerializeField] private AudioId _seId = AudioId.PlayerJump;
 
     [Header("フェード時間（秒）")]
     [Tooltip("BGMのフェードイン・フェードアウトに使用する時間")]
@@ -91,6 +100,24 @@ public class AudioManagerTester : MonoBehaviour
         if (keyboard.digit7Key.wasPressedThisFrame)
         {
             Time.timeScale = Time.timeScale > 0f ? 0f : 1f;
+        }
+
+        // AudioIdで指定したBGMをクロスフェードで再生
+        if (keyboard.digit8Key.wasPressedThisFrame)
+        {
+            AudioManager.Instance.PlayBGM(_bgmId, _fadeTime, _fadeTime);
+        }
+
+        // AudioIdで指定したSEを2Dで再生
+        if (keyboard.digit9Key.wasPressedThisFrame)
+        {
+            AudioManager.Instance.PlaySE(_seId);
+        }
+
+        // AudioIdで指定したSEをこのオブジェクトの位置から3Dで再生
+        if (keyboard.digit0Key.wasPressedThisFrame)
+        {
+            AudioManager.Instance.PlaySEAt(_seId, transform.position);
         }
     }
 

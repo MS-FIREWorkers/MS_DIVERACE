@@ -290,14 +290,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55569ac564e37e944a48b4c7c5af217f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  audioMixer: {fileID: 24100000, guid: 9ea8db41e61e50d49ae312f68faedddb, type: 2}
-  masterVolumeParameter: MasterVolume
-  bgmVolumeParameter: BGMVolume
-  seVolumeParameter: SEVolume
-  bgmGroup: {fileID: 0}
-  seGroup: {fileID: 0}
-  initialSePoolSize: 8
-  maxSePoolSize: 24
+  _audioMixer: {fileID: 24100000, guid: 9ea8db41e61e50d49ae312f68faedddb, type: 2}
+  _masterVolumeParameter: MasterVolume
+  _bgmVolumeParameter: BGMVolume
+  _seVolumeParameter: SEVolume
+  _bgmGroup: {fileID: 0}
+  _seGroup: {fileID: 0}
+  _initialSePoolSize: 8
+  _maxSePoolSize: 24
+  _libraries:
+  - {fileID: 11400000, guid: 0a379443dec733043937772b28fcb11c, type: 2}
 --- !u!1 &12506202
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +332,8 @@ MonoBehaviour:
   _bgmA: {fileID: 11400000, guid: 5deb5e18bb180e74282fe5abfde9e31d, type: 2}
   _bgmB: {fileID: 11400000, guid: 3f53a5114b5f99c4e8948ec045074da8, type: 2}
   _se: {fileID: 11400000, guid: afc2bbc36bf054847b2565b422b3a97c, type: 2}
+  _bgmId: 1849956393
+  _seId: 327751197
   _fadeTime: 2
 --- !u!4 &12506204
 Transform:
@@ -673,7 +677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &530659969
 AudioSource:
   m_ObjectHideFlags: 0
@@ -874,8 +878,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988718002fac60c43bb2730810da9052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ManagedAudioSource
-  audioData: {fileID: 11400000, guid: 15d466a0466c0334690c596325ecc8f4, type: 2}
-  playOnStart: 1
+  _audioData: {fileID: 11400000, guid: 15d466a0466c0334690c596325ecc8f4, type: 2}
+  _playOnStart: 1
 --- !u!1 &719604741
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +897,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &719604743
 Transform:
   m_ObjectHideFlags: 0
@@ -921,8 +925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988718002fac60c43bb2730810da9052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ManagedAudioSource
-  audioData: {fileID: 11400000, guid: da45be6a7a1da86468ff7b384c58ff11, type: 2}
-  playOnStart: 1
+  _audioData: {fileID: 11400000, guid: da45be6a7a1da86468ff7b384c58ff11, type: 2}
+  _playOnStart: 1
 --- !u!82 &719604745
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1042,7 +1046,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &765178756
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1294,8 +1298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988718002fac60c43bb2730810da9052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ManagedAudioSource
-  audioData: {fileID: 11400000, guid: 717619fa22fb7de4f80c3b1c4b2180e0, type: 2}
-  playOnStart: 1
+  _audioData: {fileID: 11400000, guid: afc2bbc36bf054847b2565b422b3a97c, type: 2}
+  _playOnStart: 1
 --- !u!1 &1803012181
 GameObject:
   m_ObjectHideFlags: 0
