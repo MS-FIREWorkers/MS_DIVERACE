@@ -255,7 +255,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 10441379}
-  - component: {fileID: 10441380}
   - component: {fileID: 10441381}
   m_Layer: 0
   m_Name: AudioManager
@@ -279,22 +278,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &10441380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 10441378}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b5948c1f5c9ae346b4ba6a5c1d45a89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioMixerVolumeController
-  audioMixer: {fileID: 24100000, guid: 9ea8db41e61e50d49ae312f68faedddb, type: 2}
-  masterVolumeParameter: MasterVolume
-  bgmVolumeParameter: BGMVolume
-  seVolumeParameter: SEVolume
 --- !u!114 &10441381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,6 +294,58 @@ MonoBehaviour:
   masterVolumeParameter: MasterVolume
   bgmVolumeParameter: BGMVolume
   seVolumeParameter: SEVolume
+  bgmGroup: {fileID: 0}
+  seGroup: {fileID: 0}
+  initialSePoolSize: 8
+  maxSePoolSize: 24
+--- !u!1 &12506202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 12506204}
+  - component: {fileID: 12506203}
+  m_Layer: 0
+  m_Name: AudioManagerTester
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &12506203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12506202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8162832338f097447a58a43f20b02c73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManagerTester
+  _bgmA: {fileID: 11400000, guid: 5deb5e18bb180e74282fe5abfde9e31d, type: 2}
+  _bgmB: {fileID: 11400000, guid: 3f53a5114b5f99c4e8948ec045074da8, type: 2}
+  _se: {fileID: 11400000, guid: afc2bbc36bf054847b2565b422b3a97c, type: 2}
+  _fadeTime: 2
+--- !u!4 &12506204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 12506202}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &139801161
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,7 +801,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &530659969
 AudioSource:
   m_ObjectHideFlags: 0
@@ -971,7 +1006,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &719604742
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1397,6 +1432,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MovingAudioEmitter
       objectReference: {fileID: 0}
+    - target: {fileID: 9136568799252525225, guid: 3cf9f2ef263afb6459f814822b3bc0ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1529,3 +1568,4 @@ SceneRoots:
   - {fileID: 414547053}
   - {fileID: 719604743}
   - {fileID: 1390280038}
+  - {fileID: 12506204}
