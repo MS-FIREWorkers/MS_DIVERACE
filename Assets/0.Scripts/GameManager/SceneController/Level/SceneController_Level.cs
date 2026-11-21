@@ -52,7 +52,7 @@ public class SceneController_Level : SceneController_Base
     }
     private void Update()
     {
-        // ----- ポーズ処理 -----
+        // ----- ポーズ入力処理 -----
         if (_inputHandler.PauseInput)
         {
             _inputHandler.ConsumePauseInput();

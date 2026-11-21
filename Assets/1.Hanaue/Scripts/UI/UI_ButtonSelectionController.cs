@@ -16,7 +16,7 @@ public class UI_ButtonSelectionController : MonoBehaviour
     [SerializeField] private RectTransform _selectionIcon;
 
     [Header("Icon")]
-    [SerializeField] private float _iconOffset = 20.0f;
+    [SerializeField] private float _iconOffset = -25.0f;
 
     private UI_Button_Controller _selectedButton;
 

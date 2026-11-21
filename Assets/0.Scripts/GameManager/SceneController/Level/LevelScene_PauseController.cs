@@ -5,6 +5,7 @@
     ポーズボタンを押した際にこのスクリプトを経由してポーズウィンドウを有効化、無効化を行う
  */
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelScene_PauseController : MonoBehaviour
 {
@@ -13,14 +14,12 @@ public class LevelScene_PauseController : MonoBehaviour
     // --------------------------------------------------
     private SceneController_Level _controller;
 
-
     // --------------------------------------------------
     // ----- Pause -----
     // --------------------------------------------------
     private bool _isPaused = false;
 
     public bool IsPaused => _isPaused;
-
 
     // --------------------------------------------------
     // ----- PauseWindow -----
@@ -29,16 +28,62 @@ public class LevelScene_PauseController : MonoBehaviour
     [SerializeField] private GameObject _pauseWindow;
 
     // --------------------------------------------------
+    // ----- OnClick Reference -----
+    // --------------------------------------------------
+    [Header("ボタン参照（手動参照）")]
+    [SerializeField] private UI_ConfirmWindow _confirmWindow;
+    [SerializeField] private UI_Button_Controller _buttonResume;
+    [SerializeField] private UI_Button_Controller _buttonRestart;
+    [SerializeField] private UI_Button_Controller _buttonToTitle;
+
+    // --------------------------------------------------
+    // ----- ChangeSceneName -----
+    // --------------------------------------------------
+    [Header("ChangeScene Name")]
+    [Tooltip("タイトル遷移ボタンでの遷移先シーン名")]
+    [SerializeField] private string _nameToTitleScene;
+
+    // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
     private void Awake()
     {
         _controller = GetComponent<SceneController_Level>();
-
+        _confirmWindow = FindFirstObjectByType<UI_ConfirmWindow>(FindObjectsInactive.Include);
 
         if (_pauseWindow != null)
         {
             _pauseWindow?.SetActive(false);
+        }
+
+        // ----- Button -----
+        if (_buttonResume != null)
+        {
+            _buttonResume.AddClickListener(OnClick_Resume);
+        }
+        if (_buttonRestart != null)
+        {
+            _buttonRestart.AddClickListener(OnClick_Restart);
+        }
+        if (_buttonToTitle != null)
+        {
+            _buttonToTitle.AddClickListener(OnClick_ToTitle);
+        }
+    }
+    private void OnDestroy()
+    {
+        // ----- Button -----
+        if (_buttonResume != null)
+        {
+            _buttonResume.RemoveClickListener(OnClick_Resume);
+        }
+        if (_buttonRestart != null)
+        {
+            _buttonRestart.RemoveClickListener(OnClick_Restart);
+        }
+        if (_buttonToTitle != null)
+        {
+            _buttonToTitle.RemoveClickListener(OnClick_ToTitle);
         }
     }
 
@@ -98,4 +143,38 @@ public class LevelScene_PauseController : MonoBehaviour
             Pause();
         }
     }
+
+
+    // --------------------------------------------------
+    // ----- OnClick Events -----
+    // --------------------------------------------------
+    public void OnClick_Resume()
+    {
+        // 再開
+        Resume();
+    }
+    public void OnClick_Restart()
+    {
+        _confirmWindow.Open(_buttonRestart.ConfirmMessage, _buttonRestart, Confirm_Restart);
+    }
+    public void OnClick_ToTitle()
+    {
+        _confirmWindow.Open(_buttonToTitle.ConfirmMessage, _buttonToTitle, Confirm_ToTitle);
+    }
+
+    // --------------------------------------------------
+    // ----- Confirm Events -----
+    // --------------------------------------------------
+    private void Confirm_Restart()
+    {
+        // 現在のシーンを再ロード
+        // 実際はステートを初期化したい。間に合うかどうか。
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        GameManager.Instance.ChangeScene(currentSceneName);
+    }
+    private void Confirm_ToTitle()
+    {
+        GameManager.Instance.ChangeScene(_nameToTitleScene);
+    }
+
 }
