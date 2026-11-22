@@ -34,6 +34,12 @@ public class SceneController_Level : SceneController_Base
     public Player_CharacterController Player => _player;
 
     // --------------------------------------------------
+    // ----- ChangeScene -----
+    // --------------------------------------------------
+    [Header("ChangeSceneName")]
+    [SerializeField] private string _resultSceneName;
+
+    // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
     private void Awake()
@@ -73,4 +79,24 @@ public class SceneController_Level : SceneController_Base
     {
         Debug.Log("Level Exit");
     }
+
+
+    // --------------------------------------------------
+    // ----- OnPlayerGoal -----
+    // --------------------------------------------------
+    public void OnPlayerGoal()
+    {
+        // レース中以外なら無視
+        if (_stateMachine.CurrentStateName != LevelScene_StateMachine.StateType.Racing)
+        {
+            return;
+        }
+
+        _stateMachine.ChangeState(LevelScene_StateMachine.StateType.Goal);
+    }
+    public void ChangeSceneResult()
+    {
+        GameManager.Instance.ChangeScene(_resultSceneName);
+    }
+
 }

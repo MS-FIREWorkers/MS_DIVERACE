@@ -35,7 +35,9 @@ public class LevelScene_State_Goal : LevelScene_State_Base
 
         if (_elapsedTime >= 2.0f)
         {
-            Debug.Log("Scene Transition");
+            // シーン遷移
+            //Debug.Log("Scene Transition");
+            _controller.ChangeSceneResult();
         }
     }
     public override void Exit() { }

@@ -2,6 +2,7 @@
     LevelScene_State_Racing
     20261119  hanaue sho
     レース中ステート
+    レース中からゴールステートへの遷移はLevelScene_GoalTriggerを経由する
  */
 using UnityEngine;
 
@@ -35,11 +36,7 @@ public class LevelScene_State_Racing : LevelScene_State_Base
     }
     public override void Update()
     {
-        // 仮のゴール条件：10秒経過
-        if (_controller.Timer.ElapsedTime >= 10.0f)
-        {
-            _controller.StateMachine.ChangeState(LevelScene_StateMachine.StateType.Goal);
-        }
+
     }
     public override void Exit()
     {

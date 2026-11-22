@@ -44,7 +44,7 @@ public class LevelScene_StateMachine : MonoBehaviour
     [Header("State")]
     [SerializeField] private StateType _initialState = StateType.Countdown;
     [SerializeField] private StateType _currentStateName = StateType.FadeIn;
-
+    public StateType CurrentStateName => _currentStateName;
 
     // --------------------------------------------------
     // ----- Unity Events -----
