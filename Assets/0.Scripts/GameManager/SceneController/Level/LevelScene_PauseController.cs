@@ -4,6 +4,7 @@
     レベルシーンでポーズウィンドウに指示を出すスクリプト
     ポーズボタンを押した際にこのスクリプトを経由してポーズウィンドウを有効化、無効化を行う
  */
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +27,12 @@ public class LevelScene_PauseController : MonoBehaviour
     // --------------------------------------------------
     [Header("PauseWindow（手動参照）")]
     [SerializeField] private GameObject _pauseWindow;
+
+    // --------------------------------------------------
+    // ----- UI_ButtonSelectionController -----
+    // --------------------------------------------------
+    [Header("UI_ButtonSelectionController（手動参照）")]
+    [SerializeField] private UI_ButtonSelectionController _buttonSelectionController;
 
     // --------------------------------------------------
     // ----- OnClick Reference -----
@@ -109,6 +116,7 @@ public class LevelScene_PauseController : MonoBehaviour
         if (_pauseWindow != null)
         {
             _pauseWindow.SetActive(true);
+            _buttonSelectionController?.SelectFirstButton();
         }
     }
     public void Resume()
@@ -120,6 +128,12 @@ public class LevelScene_PauseController : MonoBehaviour
 
         _isPaused = false;
 
+        // 確認ウィンドウを閉じる
+        if (_confirmWindow != null && _confirmWindow.gameObject.activeSelf)
+        {
+            _confirmWindow.Close(false);
+        }
+
         // 時間再開
         Time.timeScale = 1.0f;
 
@@ -129,6 +143,7 @@ public class LevelScene_PauseController : MonoBehaviour
         // ウィンドウ非表示
         if (_pauseWindow != null)
         {
+            _buttonSelectionController?.ClearSelection();
             _pauseWindow?.SetActive(false);
         }
     }

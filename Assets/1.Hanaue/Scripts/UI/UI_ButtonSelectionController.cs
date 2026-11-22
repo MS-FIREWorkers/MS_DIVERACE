@@ -25,14 +25,16 @@ public class UI_ButtonSelectionController : MonoBehaviour
     // --------------------------------------------------
     // ----- UnityEvents -----
     // --------------------------------------------------
-    private void Start()
+    private void Awake()
     {
         // 初期状態ではアイコンを非表示
         if (_selectionIcon != null)
         {
             _selectionIcon.gameObject.SetActive(false);
         }
-
+    }
+    private void Start() // 初回アクティブ時に実行
+    {
         // ----- Initial Selection -----
         if (_firstSelectedButton != null && EventSystem.current != null)
         {
@@ -50,6 +52,18 @@ public class UI_ButtonSelectionController : MonoBehaviour
         UpdateIconPosition();
     }
 
+    // --------------------------------------------------
+    // ----- SelecteFirstButton -----
+    // 初期選択ボタンに設定する
+    // --------------------------------------------------
+    public void SelectFirstButton()
+    {
+        if (_firstSelectedButton == null || EventSystem.current == null)
+        {
+            return;
+        }
+        EventSystem.current.SetSelectedGameObject(_firstSelectedButton.gameObject);
+    }
 
     // --------------------------------------------------
     // ----- Set Selected Button -----
@@ -95,7 +109,30 @@ public class UI_ButtonSelectionController : MonoBehaviour
             _selectionIcon.gameObject.SetActive(false);
         }
     }
- 
+
+    // --------------------------------------------------
+    // ----- ClearSelection -----
+    // クラス全体を初期化
+    // --------------------------------------------------
+    public void ClearSelection()
+    {
+        if (
+            EventSystem.current != null &&
+            _selectedButton != null &&
+            EventSystem.current.currentSelectedGameObject == _selectedButton.gameObject
+           )
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        _selectedButton = null;
+
+        if (_selectionIcon != null)
+        {
+            _selectionIcon.gameObject.SetActive(false);
+        }
+    }
+
     // --------------------------------------------------
     // ----- Update Icon Position -----
     // 選択中のボタンの左側へアイコンを配置する

@@ -578,7 +578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1306945376}
   _effect: {fileID: 0}
   _confirmMessage: ToTitle?
   _clickInterval: 0.3
@@ -732,7 +732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1306945376}
   _effect: {fileID: 0}
   _confirmMessage: Restart?
   _clickInterval: 0.3
@@ -1572,6 +1572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelScene_PauseWindowHandler
   _pauseWindow: {fileID: 1306945370}
+  _buttonSelectionController: {fileID: 1306945376}
   _confirmWindow: {fileID: 1772868022}
   _buttonResume: {fileID: 1563911615}
   _buttonRestart: {fileID: 520077982}
@@ -2282,7 +2283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1306945376}
   _effect: {fileID: 0}
   _confirmMessage: 
   _clickInterval: 0.3
@@ -2446,10 +2447,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7569431360274353836, guid: bcc3e54bfff5f9044bb0393b382e7458, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8124764041013027269, guid: bcc3e54bfff5f9044bb0393b382e7458, type: 3}
       propertyPath: m_Name
       value: Canvas_ConfirmWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 8547380430379349350, guid: bcc3e54bfff5f9044bb0393b382e7458, type: 3}
+      propertyPath: _selectionController
+      value: 
+      objectReference: {fileID: 1306945376}
+    - target: {fileID: 8826974311078674369, guid: bcc3e54bfff5f9044bb0393b382e7458, type: 3}
+      propertyPath: _selectionController
+      value: 
+      objectReference: {fileID: 1306945376}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
