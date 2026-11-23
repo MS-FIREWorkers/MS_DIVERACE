@@ -300,4 +300,67 @@ public class Player_CollisionDetector : MonoBehaviour
         return resolved;
     }
 
+    // --------------------------------------------------
+    // ----- Check Wall Contact -----
+    // 指定した壁が横方向に存在するか確認する
+    // gap はプレイヤーColliderと壁の間隔
+    // --------------------------------------------------
+    public bool CheckWallContact(Collider wallCollider, Vector3 wallNormal, float maxGap, out float gap)
+    {
+        gap = 0.0f;
+
+        if (wallCollider == null)
+        {
+            return false;
+        }
+
+        // 壁の法線は水平として扱う
+        wallNormal.y = 0.0f;
+        if (wallNormal.sqrMagnitude <= Mathf.Epsilon)
+        {
+            return false;
+        }
+
+        wallNormal.Normalize();
+
+        // Player Collider
+        Vector3 center = _boxCollider.transform.TransformPoint(_boxCollider.center);
+        Vector3 scale = _boxCollider.transform.lossyScale;
+
+        Vector3 halfExtents = Vector3.Scale(
+                                            _boxCollider.size * 0.5f,
+                                            new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z))
+                                           );
+
+        Quaternion orientation = _boxCollider.transform.rotation;
+
+        // 壁から少し離した場所を始点とする
+        float probeOffset = 0.25f;
+        Vector3 origin = center + wallNormal * probeOffset;
+
+        float castDistance = probeOffset + maxGap + _skinWidth;
+
+        // 壁の方向へBoxCast
+        RaycastHit[] hits = Physics.BoxCastAll(origin, halfExtents, -wallNormal, orientation, castDistance, ~0, QueryTriggerInteraction.Ignore);
+
+        foreach (RaycastHit hit in hits)
+        {
+            // 現在スライドしている壁のみを対象とする
+            if (hit.collider != wallCollider)
+            {
+                continue;
+            }
+
+            // 想定している壁面か確認
+            if (Vector3.Dot(hit.normal, wallNormal) < 0.9f)
+            {
+                continue;
+            }
+
+            gap = hit.distance - probeOffset;
+            return true;
+        }
+
+        return false;
+    }
 }

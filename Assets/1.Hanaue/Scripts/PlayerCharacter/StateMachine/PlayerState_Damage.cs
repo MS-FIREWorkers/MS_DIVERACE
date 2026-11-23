@@ -23,6 +23,11 @@ public class PlayerState_Damage : PlayerState_Base
     private float _elapsedTime = 0.0f;
     private float _damageDuration = 0.5f;
 
+    // --------------------------------------------------
+    // ----- AdditionalVelocity Propaty -----
+    // --------------------------------------------------
+    private Vector3 _additionalVelocity = Vector3.zero;
+
 
     // --------------------------------------------------
     // ----- Constructor -----
@@ -55,6 +60,11 @@ public class PlayerState_Damage : PlayerState_Base
                 CalculateVelocityOnSide();
                 break;
         }
+
+        // 追加速度を適用
+        _controller.Movement.ApplyImpulse(_additionalVelocity);
+        // 次回の衝突に持ち越さない
+        _additionalVelocity = Vector3.zero;
     }
     public override void Update() 
     {
@@ -77,19 +87,19 @@ public class PlayerState_Damage : PlayerState_Base
         // ----- 衝突判定 -----
         if (_controller.CollisionDetector.CheckCollision(displace, out PlayerImpactInfo impactInfo))
         {
-            if (impactInfo.ImpactType == PlayerImpactType.Top)
+            _controller.Movement.CancelBoost();
+
+            // WallSide の条件を確認
+            if (_controller.StateMachine.StateWallSide.CanEnter(impactInfo))
+            {
+                _controller.StateMachine.StateWallSide.SetImpactInfo(impactInfo);
+                _controller.StateMachine.ChangeState(_controller.StateMachine.StateWallSide);
+            }
+            else
             {
                 _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
+                _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
             }
-            else if (impactInfo.ImpactType == PlayerImpactType.Side)
-            {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
-            }
-            else if (impactInfo.ImpactType == PlayerImpactType.TopEdge)
-            {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
-            }
-            _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
             return;
         }
 
@@ -107,7 +117,12 @@ public class PlayerState_Damage : PlayerState_Base
     // --------------------------------------------------
     public void SetImpactInfo(PlayerImpactInfo impactInfo)
     {
+        SetImpactInfo(impactInfo, new Vector3(0, 0, 0));
+    }
+    public void SetImpactInfo(PlayerImpactInfo impactInfo, Vector3 additionalVelocity)
+    {
         _impactInfo = impactInfo;
+        _additionalVelocity = additionalVelocity;
     }
 
     // --------------------------------------------------

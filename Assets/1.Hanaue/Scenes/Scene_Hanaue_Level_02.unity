@@ -2211,6 +2211,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCharacter_Root
       objectReference: {fileID: 0}
+    - target: {fileID: 6256661428362288202, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: _wallSideControlData
+      value: 
+      objectReference: {fileID: 11400000, guid: 4dfbccdf6d1ae2a45bdff909e321871b, type: 2}
     - target: {fileID: 8925642637377856025, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -41,20 +41,19 @@ public class PlayerState_FreeFall : PlayerState_Base
         // ----- 衝突判定 -----
         if (_controller.CollisionDetector.CheckCollision(displace, out PlayerImpactInfo impactInfo))
         {
-            if (impactInfo.ImpactType == PlayerImpactType.Top)
-            {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
-            }
-            else if (impactInfo.ImpactType == PlayerImpactType.Side)
-            {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
-            }
-            else if (impactInfo.ImpactType == PlayerImpactType.TopEdge)
-            {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
-            }
-            _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
             _controller.Movement.CancelBoost();
+
+            // WallSide の条件を確認
+            if (_controller.StateMachine.StateWallSide.CanEnter(impactInfo))
+            {
+                _controller.StateMachine.StateWallSide.SetImpactInfo(impactInfo);
+                _controller.StateMachine.ChangeState(_controller.StateMachine.StateWallSide);
+            }
+            else
+            {
+                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
+                _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
+            }
             return;
         }
 
