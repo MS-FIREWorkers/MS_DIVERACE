@@ -2063,7 +2063,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4725482999198011865, guid: 21f10690a61b2f040969d5a96935bce9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1000
+      value: -1100
       objectReference: {fileID: 0}
     - target: {fileID: 4725482999198011865, guid: 21f10690a61b2f040969d5a96935bce9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2210,6 +2210,10 @@ PrefabInstance:
     - target: {fileID: 3684849824088822187, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter_Root
+      objectReference: {fileID: 0}
+    - target: {fileID: 5739119695878372246, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: _topEdgeGrazeMargin
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6256661428362288202, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: _wallSideControlData

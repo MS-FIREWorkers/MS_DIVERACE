@@ -146,7 +146,7 @@ public class PlayerState_WallSide : PlayerState_Base
         Vector3 displacement = _controller.Movement.GetDisplacement(Time.deltaTime);
 
         // ----- 他の障害物との衝突判定 -----
-        if (_controller.CollisionDetector.CheckCollision(displacement, out PlayerImpactInfo impactInfo))
+        if (_controller.CollisionDetector.CheckCollision(displacement, out PlayerImpactInfo impactInfo, _wallCollider))
         {
             Vector3 additionalVelocity = _wallNormal * _wallCollisionExitSpeed;
 

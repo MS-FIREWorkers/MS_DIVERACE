@@ -9,6 +9,7 @@ public enum PlayerImpactType
     None,
     Top,
     TopEdge,
+    TopEdgeGraze,
     Side,
 }
 public struct PlayerImpactInfo
@@ -41,6 +42,7 @@ public class Player_CollisionDetector : MonoBehaviour
     [SerializeField] private float _skinWidth = 0.02f;
     [SerializeField, Range(-1.0f, 1.0f)] private float _topNormalThreshold = 0.6f;
 
+    [SerializeField, Min(0.0f)] private float _topEdgeGrazeMargin = 0.0f;
 
     // --------------------------------------------------
     // ----- Unity Events -----
@@ -60,7 +62,7 @@ public class Player_CollisionDetector : MonoBehaviour
     // --------------------------------------------------
     // ----- Check Collision -----
     // --------------------------------------------------
-    public bool CheckCollision(Vector3 displacement, out PlayerImpactInfo impactInfo)
+    public bool CheckCollision(Vector3 displacement, out PlayerImpactInfo impactInfo, Collider ignoreCollider = null)
     {
         impactInfo = default;
 
@@ -98,7 +100,6 @@ public class Player_CollisionDetector : MonoBehaviour
         
         foreach (RaycastHit hit in hits)
         {
-
             // 自分自身は無視
             if (hit.collider.transform.IsChildOf(transform))
             {
@@ -106,6 +107,11 @@ public class Player_CollisionDetector : MonoBehaviour
             }
 
             if (!IsTargetCollision(hit.collider))
+            {
+                continue;
+            }
+
+            if (hit.collider == ignoreCollider)
             {
                 continue;
             }
@@ -244,6 +250,35 @@ public class Player_CollisionDetector : MonoBehaviour
             edgeDirection = Vector3.back;
         }
 
+        // ----- TopEdgeGraze 判定 -----
+        // EdgeDirection に対応する障害物の端と、
+        // プレイヤー中心との距離を求める
+        float insideDistance = 0.0f;
+
+        if (edgeDirection == Vector3.right)
+        {
+            insideDistance = targetBounds.max.x - impactCenter.x;
+        }
+        else if (edgeDirection == Vector3.left)
+        {
+            insideDistance = impactCenter.x - targetBounds.min.x;
+        }
+        else if (edgeDirection == Vector3.forward)
+        {
+            insideDistance = targetBounds.max.z - impactCenter.z;
+        }
+        else if (edgeDirection == Vector3.back)
+        {
+            insideDistance = impactCenter.z - targetBounds.min.z;
+        }
+
+        // 中心が外側、または内側のマージン以内ならGraze
+        if (insideDistance <= _topEdgeGrazeMargin)
+        {
+            Debug.Log("[Debug] TopEdgeGraze");
+            return PlayerImpactType.TopEdgeGraze;
+        }
+
         return PlayerImpactType.TopEdge;
     }
 
@@ -363,4 +398,80 @@ public class Player_CollisionDetector : MonoBehaviour
 
         return false;
     }
+
+    // --------------------------------------------------
+    // ----- Calculate TopEdgeGraze Correction -----
+    // 移動後のプレイヤーColliderが障害物の外側へ
+    // 抜けるために必要な水平補正量を計算
+    // --------------------------------------------------
+    public Vector3 CalculateTopEdgeGrazeCorrection(PlayerImpactInfo impactInfo, Vector3 displacement)
+    {
+        if (impactInfo.ImpactType != PlayerImpactType.TopEdgeGraze)
+        {
+            return Vector3.zero;
+        }
+
+        if (impactInfo.Collider == null)
+        {
+            return Vector3.zero;
+        }
+
+        // ----- 障害物の範囲 -----
+        Bounds targetBounds = impactInfo.Collider.bounds;
+
+        // ----- 移動後のプレイヤーCollider -----
+        Vector3 center = _boxCollider.transform.TransformPoint(_boxCollider.center) + displacement;
+        Vector3 halfSize = _boxCollider.size * 0.5f;
+        Vector3 scale = _boxCollider.transform.lossyScale;
+        Quaternion rotation = _boxCollider.transform.rotation;
+
+        // ----- 頂点の範囲を取得 -----
+        float minX = float.MaxValue;
+        float maxX = float.MinValue;
+        float minZ = float.MaxValue;
+        float maxZ = float.MinValue;
+
+        for (int x = -1; x <= 1; x += 2)
+        {
+            for (int y = -1; y <= 1; y += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    Vector3 localOffset = new Vector3(halfSize.x * x, halfSize.y * y, halfSize.z * z);
+                    Vector3 scaledOffset = Vector3.Scale(localOffset, scale);
+                    Vector3 vertex = center + rotation * scaledOffset;
+
+                    minX = Mathf.Min(minX, vertex.x);
+                    maxX = Mathf.Max(maxX, vertex.x);
+                    minZ = Mathf.Min(minZ, vertex.z);
+                    maxZ = Mathf.Max(maxZ, vertex.z);
+                }
+            }
+        }
+
+        // ----- 補正量を計算 -----
+        Vector3 correction = Vector3.zero;
+
+        if (impactInfo.EdgeDirection == Vector3.right)
+        {
+            correction.x = Mathf.Max(0.0f, targetBounds.max.x - minX + _skinWidth);
+        }
+        else if (impactInfo.EdgeDirection == Vector3.left)
+        {
+            correction.x = -Mathf.Max(0.0f, maxX - targetBounds.min.x + _skinWidth);
+        }
+        else if (impactInfo.EdgeDirection == Vector3.forward)
+        {
+            correction.z = Mathf.Max(0.0f, targetBounds.max.z - minZ + _skinWidth);
+        }
+        else if (impactInfo.EdgeDirection == Vector3.back)
+        {
+            correction.z = -Mathf.Max(0.0f, maxZ - targetBounds.min.z + _skinWidth);
+        }
+
+        return correction;
+    }
+
+
+
 }

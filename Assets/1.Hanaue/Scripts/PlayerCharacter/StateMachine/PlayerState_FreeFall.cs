@@ -41,16 +41,31 @@ public class PlayerState_FreeFall : PlayerState_Base
         // ----- 衝突判定 -----
         if (_controller.CollisionDetector.CheckCollision(displace, out PlayerImpactInfo impactInfo))
         {
-            _controller.Movement.CancelBoost();
+            // ----- TopEdgeGraze -----
+            if (impactInfo.ImpactType == PlayerImpactType.TopEdgeGraze)
+            {
+                // 障害物の外側へ抜けるための補正量
+                Vector3 correction = _controller.CollisionDetector.CalculateTopEdgeGrazeCorrection(impactInfo, displace);
+
+                // 移動予定量に補正を加える
+                Vector3 correctedDisplacement = displace + correction;
+
+                // 速度を変更せずに移動
+                _controller.Movement.ApplyMovement(correctedDisplacement);
+            }
 
             // WallSide の条件を確認
             if (_controller.StateMachine.StateWallSide.CanEnter(impactInfo))
             {
+                _controller.Movement.CancelBoost();
+
                 _controller.StateMachine.StateWallSide.SetImpactInfo(impactInfo);
                 _controller.StateMachine.ChangeState(_controller.StateMachine.StateWallSide);
             }
             else
             {
+                _controller.Movement.CancelBoost();
+
                 _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
                 _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
             }
