@@ -74,6 +74,9 @@ public class Player_CharacterController : MonoBehaviour
         data.Velocity = Movement.CurrentVelocity;
         data.Posture = InputHandler.PoseInput;
 
+        data.IsWallSide = StateMachine.CurrentState == StateMachine.StateWallSide;
+        data.WallNormal = data.IsWallSide ? StateMachine.StateWallSide.WallNormal : Vector3.zero;
+
         return data;
     }
 

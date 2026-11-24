@@ -2009,6 +2009,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 667250415}
     - target: {fileID: 8619288563730375800, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
+      propertyPath: _wallDeadZone
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619288563730375800, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
+      propertyPath: _wallBackDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619288563730375800, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
+      propertyPath: _wallCameraHeight
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619288563730375800, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
+      propertyPath: _wallSideDistance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8619288563730375800, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
       propertyPath: _maxCameraDistance
       value: 8
       objectReference: {fileID: 0}

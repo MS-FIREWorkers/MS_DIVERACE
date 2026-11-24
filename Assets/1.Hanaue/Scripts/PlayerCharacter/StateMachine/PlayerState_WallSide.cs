@@ -66,6 +66,7 @@ public class PlayerState_WallSide : PlayerState_Base
     private Collider _wallCollider;
     private Vector3 _wallNormal;
 
+    public Vector3 WallNormal => _wallNormal;
 
     // --------------------------------------------------
     // ----- WallSideExitType -----
