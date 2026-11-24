@@ -98,22 +98,42 @@ public class Player_CollisionDetector : MonoBehaviour
         RaycastHit? nearestHit = null;
         float nearestDistance = float.MaxValue;
         
-        foreach (RaycastHit hit in hits)
+        foreach (RaycastHit originalHit in hits)
         {
             // 自分自身は無視
-            if (hit.collider.transform.IsChildOf(transform))
+            if (originalHit.collider.transform.IsChildOf(transform))
             {
                 continue;
             }
 
-            if (!IsTargetCollision(hit.collider))
+            if (!IsTargetCollision(originalHit.collider))
             {
                 continue;
             }
 
-            if (hit.collider == ignoreCollider)
+            if (originalHit.collider == ignoreCollider)
             {
+                Debug.Log("[Debug] Here");
                 continue;
+            }
+
+
+            RaycastHit hit = originalHit;
+
+            // ----- 初期重なりの判定 -----
+            if (hit.distance <= 0.0001f)
+            {
+                bool isPenetrating = Physics.ComputePenetration(
+                    _boxCollider, _boxCollider.transform.position, _boxCollider.transform.rotation,
+                    hit.collider, hit.collider.transform.position, hit.collider.transform.rotation,
+                    out Vector3 separationDirection, out float separationDistance
+                );
+
+                if (isPenetrating)
+                {
+                    // BoxCastの仮の法線を、実際の分離方向に置き換える
+                    hit.normal = separationDirection;
+                }
             }
 
             if (hit.distance < nearestDistance)
@@ -152,6 +172,12 @@ public class Player_CollisionDetector : MonoBehaviour
 
             EdgeDirection = edgeDirection,
         };
+
+        Debug.Log("[Collision] Target=" + impactInfo.Collider.name
+    + " Type=" + impactInfo.ImpactType
+    + " Normal=" + impactInfo.Normal
+    + " Distance=" + impactInfo.Distance
+    + " VelocityY=" + (displacement.y / Time.deltaTime));
 
         return true;
     }
