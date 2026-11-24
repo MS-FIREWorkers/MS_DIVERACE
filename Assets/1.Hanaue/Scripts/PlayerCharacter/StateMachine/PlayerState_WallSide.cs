@@ -99,12 +99,24 @@ public class PlayerState_WallSide : PlayerState_Base
         _wallNormal.y = 0.0f;
         _wallNormal.Normalize();
 
-        // 壁に対してキャラクターの角度を補正
+        // ----- 壁に対してキャラクターの角度を補正 -----
         AlignRotationToWall();
+
+        // ----- 使用する腕を判定 -----
+        float sideDot = Vector3.Dot(_controller.transform.right, _wallNormal);
+        bool useRightArm = sideDot < 0.0f;
+        // ----- IK Contact -----
+        _controller.Animation.SetWallIKContact(_wallCollider, _wallNormal, useRightArm);
+        // ----- IK Weight -----
+        _controller.Animation.SetArmIK(useRightArm, !useRightArm);
+        _controller.Animation.SetArmIK(useRightArm, !useRightArm);
+
 
         // 壁面法線方向の速度を除去
         _controller.Movement.ConstrainVelocityToWall(_wallNormal);
 
+
+        // ----- 初期化 -----
         _slideElapsedTime = 0.0f;
         _exitInputElapsedTime = 0.0f;
 
@@ -172,6 +184,10 @@ public class PlayerState_WallSide : PlayerState_Base
     {
         _wallCollider = null;
         _wallNormal = Vector3.zero;
+
+        _controller.Animation.ClearWallIKContact();
+        _controller.Animation.DisableArmIK();
+
         Debug.Log("WallSide Exit");
     }
 

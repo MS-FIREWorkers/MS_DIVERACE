@@ -472,6 +472,41 @@ public class Player_CollisionDetector : MonoBehaviour
         return correction;
     }
 
+    // --------------------------------------------------
+    // ----- TryGetWallHandContact -----
+    // 指定した壁にRaycastして接触情報を取得
+    // --------------------------------------------------
+    public bool TryGetWallHandContact(Vector3 origin, Vector3 wallNormal, Collider wallCollider, float maxDistance, out RaycastHit hit)
+    {
+        hit = default;
 
+        if (wallCollider == null)
+        {
+            return false;
+        }
+        if (wallNormal.sqrMagnitude <= Mathf.Epsilon)
+        {
+            return false;
+        }
+
+        wallNormal.Normalize();
+
+        // 壁の方向へRaycast
+        Ray ray = new Ray(origin, -wallNormal);
+
+        // 指定した壁だけを判定
+        if (!wallCollider.Raycast(ray, out hit, maxDistance))
+        {
+            return false;
+        }
+
+        // 想定している側面か確認
+        if (Vector3.Dot(hit.normal, wallNormal) < 0.9f)
+        {
+            return false;
+        }
+
+        return true;
+    }
 
 }
