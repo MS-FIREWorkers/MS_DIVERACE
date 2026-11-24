@@ -35,12 +35,12 @@ public class AudioManagerTester : MonoBehaviour
     [Tooltip("5キー・6キーで再生するSE")]
     [SerializeField] private AudioData _se;
 
-    [Header("テスト用AudioId")]
-    [Tooltip("8キーで再生するBGMのAudioId")]
-    [SerializeField] private AudioId _bgmId = AudioId.BgmTest;
+    // [Header("テスト用AudioId")]
+    // [Tooltip("8キーで再生するBGMのAudioId")]
+    // [SerializeField] private AudioId _bgmId = AudioId.BgmTest;
 
-    [Tooltip("9キー・0キーで再生するSEのAudioId")]
-    [SerializeField] private AudioId _seId = AudioId.PlayerJump;
+    // [Tooltip("9キー・0キーで再生するSEのAudioId")]
+    // [SerializeField] private AudioId _seId = AudioId.PlayerJump;
 
     [Header("フェード時間（秒）")]
     [Tooltip("BGMのフェードイン・フェードアウトに使用する時間")]
@@ -105,19 +105,19 @@ public class AudioManagerTester : MonoBehaviour
         // AudioIdで指定したBGMをクロスフェードで再生
         if (keyboard.digit8Key.wasPressedThisFrame)
         {
-            AudioManager.Instance.PlayBGM(_bgmId, _fadeTime, _fadeTime);
+            // AudioManager.Instance.PlayBGM(_bgmId, _fadeTime, _fadeTime);
         }
 
         // AudioIdで指定したSEを2Dで再生
         if (keyboard.digit9Key.wasPressedThisFrame)
         {
-            AudioManager.Instance.PlaySE(_seId);
+            // AudioManager.Instance.PlaySE(_seId);
         }
 
         // AudioIdで指定したSEをこのオブジェクトの位置から3Dで再生
         if (keyboard.digit0Key.wasPressedThisFrame)
         {
-            AudioManager.Instance.PlaySEAt(_seId, transform.position);
+            // AudioManager.Instance.PlaySEAt(_seId, transform.position);
         }
     }
 
