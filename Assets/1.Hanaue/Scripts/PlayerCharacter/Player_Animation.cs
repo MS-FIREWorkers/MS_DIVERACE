@@ -59,6 +59,7 @@ public class Player_Animation : MonoBehaviour
     private bool _hasWallIKContact;
 
     public Vector3 CurrentHandContactPoint { get; private set; }
+    public Vector3 CurrentHandContactNormal { get; private set; }
     public bool HasHandContact => _hasWallIKContact;
 
     // --------------------------------------------------
@@ -146,6 +147,7 @@ public class Player_Animation : MonoBehaviour
 
         // ----- Contact Point -----
         CurrentHandContactPoint = hit.point;
+        CurrentHandContactNormal = hit.normal;
         _hasWallIKContact = true;
 
         // ----- Target Position -----
