@@ -1666,6 +1666,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneController_Level
   _player: {fileID: 0}
   _resultSceneName: Scene_Result
+  _raceResultData: {fileID: 11400000, guid: f8e3d387f605b8f489288b16aaeebd51, type: 2}
 --- !u!114 &1192245337
 MonoBehaviour:
   m_ObjectHideFlags: 0

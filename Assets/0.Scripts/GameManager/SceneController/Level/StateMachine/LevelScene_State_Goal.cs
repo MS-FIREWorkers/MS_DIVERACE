@@ -27,6 +27,8 @@ public class LevelScene_State_Goal : LevelScene_State_Base
     public override void Enter() 
     {
         _elapsedTime = 0.0f;
+
+        _controller.RaceResultData.SetResult(_controller.Timer.ElapsedTime);
         Debug.Log("Goal" + _controller.Timer.ElapsedTime);
     }
     public override void Update() 

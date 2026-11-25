@@ -5,6 +5,7 @@
     Update の処理は基本的に StateMachine にまとめる。
  */
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class SceneController_Level : SceneController_Base
 {
@@ -40,6 +41,13 @@ public class SceneController_Level : SceneController_Base
     [SerializeField] private string _resultSceneName;
 
     // --------------------------------------------------
+    // ----- RaceResultData -----
+    // --------------------------------------------------
+    [Header("RaceResultData（手動参照）")]
+    [SerializeField] private RaceResultData _raceResultData;
+    public RaceResultData RaceResultData => _raceResultData;
+
+    // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
     private void Awake()
@@ -55,6 +63,12 @@ public class SceneController_Level : SceneController_Base
         {
             Debug.LogError("[Error] Player Not Found!!");
         }
+
+        if (RaceResultData == null)
+        {
+            Debug.LogError("[Error] RaceResultData Is Not Found!!");
+        }
+        RaceResultData.ResetResult();
     }
     private void Update()
     {
