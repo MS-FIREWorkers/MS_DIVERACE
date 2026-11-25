@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6053318375173361073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1151469001902962589}
+  - component: {fileID: 374738533169476519}
+  - component: {fileID: 4081268430113225941}
+  - component: {fileID: 2230219300642584145}
+  m_Layer: 0
+  m_Name: DeviceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1151469001902962589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6053318375173361073}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &374738533169476519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6053318375173361073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b12a9649bfc2e94e907900a0c4ff8f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamepadCoreBehaviour
+--- !u!114 &4081268430113225941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6053318375173361073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5519fcb5c57721a4695b6bea4832b718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HapticsManager
+  _fallingSettings: {fileID: 11400000, guid: 82f7b2dfaa008a345bc114db3d730c8a, type: 2}
+  _horizontalSettings: {fileID: 11400000, guid: 86b4e52cf6a1dd846bb1666e61a5b656, type: 2}
+  _approachSettings: {fileID: 11400000, guid: 0351cbfb7b60d6447a2957dd95668935, type: 2}
+  _collisionSettings: {fileID: 11400000, guid: bbc003637229ba642a0f910b1ad638b1, type: 2}
+  _passingSettings: {fileID: 11400000, guid: 7bdb05d715b8b704ca9752a775dcfa48, type: 2}
+  _clipDuration: 0.5
+--- !u!114 &2230219300642584145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6053318375173361073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f55549ae4b98b5b4a923551cd23ee0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DualSenseHapticsController
