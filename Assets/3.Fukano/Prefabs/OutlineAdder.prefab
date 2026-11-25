@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OutlineTarget
   _enableOutline: 1
   _useParentAsTarget: 1
-  _widthPixels: 3
+  _widthPixels: 4
