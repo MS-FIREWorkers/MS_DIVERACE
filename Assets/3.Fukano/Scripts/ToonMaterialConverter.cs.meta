@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 2b6656da5320b0b4581e5a9277afc07e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _toonShader: {fileID: 4800000, guid: fa895772effd46147b8bd552c5cfab49, type: 3}
+  - _targetRoot: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

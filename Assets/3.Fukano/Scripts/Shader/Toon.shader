@@ -5,7 +5,7 @@
 // Description : Unity 6 URP Forward+ 3段階トゥーンシェーダー。
 //               法線、アルファクリップ、発光、影、アウトラインに対応。
 // ==================================================
-Shader "Custom/ToonShader_8"
+Shader "Custom/ToonShader"
 {
     Properties
     {
@@ -41,6 +41,9 @@ Shader "Custom/ToonShader_8"
         [Header(Outline)]
         _OutlineColor("Outline Color", Color) = (0, 0, 0, 1)
         _OutlineWidth("Outline Width", Range(0, 0.2)) = 0.05
+        [HideInInspector] _OutlineMode("Outline Mode", Float) = 0
+        [HideInInspector] _OutlineOnly("Outline Only", Float) = 0
+        [HideInInspector] _SilhouetteWidthPixels("Silhouette Width Pixels", Range(1, 4)) = 2
     }
 
     SubShader
@@ -74,6 +77,9 @@ Shader "Custom/ToonShader_8"
             float _EmissionStrength;
             float4 _OutlineColor;
             float _OutlineWidth;
+            float _OutlineMode;
+            float _OutlineOnly;
+            float _SilhouetteWidthPixels;
         CBUFFER_END
 
         TEXTURE2D(_BaseMap);
@@ -155,6 +161,7 @@ Shader "Custom/ToonShader_8"
 
             half4 FragToon(Varyings input) : SV_Target
             {
+                clip(0.5 - _OutlineOnly);
                 half4 baseColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor;
                 #if defined(_ALPHATEST_ON)
                     clip(baseColor.a - _Cutoff);
@@ -274,9 +281,58 @@ Shader "Custom/ToonShader_8"
 
             half4 FragOutline(OutlineVaryings input) : SV_Target
             {
+                clip(0.5 - abs(_OutlineMode));
                 clip(_OutlineWidth - 0.000001);
                 ApplyToonAlphaClip(input.uv);
                 return _OutlineColor;
+            }
+            ENDHLSL
+        }
+
+        // ==================================================
+        // 画面上の輪郭線に使う可視シルエット。
+        // ==================================================
+        Pass
+        {
+            Name "SilhouetteMask"
+            Tags { "LightMode" = "ToonSilhouetteMask" }
+            Cull Back
+            ZWrite Off
+            ZTest LEqual
+            Blend One One
+            BlendOp Max
+
+            HLSLPROGRAM
+            #pragma vertex VertSilhouetteMask
+            #pragma fragment FragSilhouetteMask
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            struct SilhouetteAttributes
+            {
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct SilhouetteVaryings
+            {
+                float4 positionHCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            SilhouetteVaryings VertSilhouetteMask(SilhouetteAttributes input)
+            {
+                SilhouetteVaryings output;
+                output.positionHCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.uv = GetToonUV(input.uv);
+                return output;
+            }
+
+            half4 FragSilhouetteMask(SilhouetteVaryings input) : SV_Target
+            {
+                clip(_OutlineMode - 0.5);
+                ApplyToonAlphaClip(input.uv);
+                // RGBA holds coverage for widths 1 through 4.
+                return 1.0 - step(0.5, abs(_SilhouetteWidthPixels - float4(1, 2, 3, 4)));
             }
             ENDHLSL
         }
@@ -343,6 +399,7 @@ Shader "Custom/ToonShader_8"
 
             half4 FragShadow(ShadowVaryings input) : SV_Target
             {
+                clip(0.5 - _OutlineOnly);
                 ApplyToonAlphaClip(input.uv);
                 return 0;
             }
@@ -405,6 +462,7 @@ Shader "Custom/ToonShader_8"
 
             half4 FragDepth(DepthVaryings input) : SV_Target
             {
+                clip(0.5 - _OutlineOnly);
                 ApplyToonAlphaClip(input.uv);
 
                 return 0;
@@ -457,6 +515,7 @@ Shader "Custom/ToonShader_8"
 
             half4 FragDepthNormals(DepthNormalsVaryings input) : SV_Target
             {
+                clip(0.5 - _OutlineOnly);
                 ApplyToonAlphaClip(input.uv);
                 float3 normalWS = normalize(input.normalWS);
                 return half4(normalWS, 0.0);

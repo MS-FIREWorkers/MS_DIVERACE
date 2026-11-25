@@ -12,6 +12,12 @@ using UnityEngine.Serialization;
 
 public class ToonMaterialConverter : MonoBehaviour
 {
+    public enum OutlineMode
+    {
+        MeshExtrusion,
+        ScreenSpaceSilhouette
+    }
+
     // ==================================================
     // ----- Serializable Data -----
     // ==================================================
@@ -40,10 +46,23 @@ public class ToonMaterialConverter : MonoBehaviour
     [SerializeField, FormerlySerializedAs("toonShader")]
     private Shader _toonShader;
 
+    [Tooltip("変換対象。未指定の場合はこのコンポーネントのGameObjectを使用します。")]
+    [SerializeField] private Transform _targetRoot;
+
+
     [Header("Outline Settings")]
     [Tooltip("アウトライン描画の有効・無効")]
     [SerializeField, FormerlySerializedAs("enableOutline")]
     private bool _enableOutline = true;
+
+    [Tooltip("本体と影を隠し、画面シルエットの輪郭線だけを表示します。")]
+    [SerializeField] private bool _outlineOnly;
+
+    [Tooltip("画面シルエット方式の色はRenderer Featureの共有設定を使用します。")]
+    [SerializeField] private OutlineMode _outlineMode;
+
+    [Tooltip("画面シルエット方式の線幅。単位は描画解像度のピクセルです。")]
+    [SerializeField, Range(1, 4)] private int _silhouetteWidthPixels = 2;
 
     [Tooltip("アウトラインの色")]
     [SerializeField, FormerlySerializedAs("outlineColor")]
@@ -53,6 +72,31 @@ public class ToonMaterialConverter : MonoBehaviour
     [SerializeField, Range(0.0f, 0.2f), FormerlySerializedAs("outlineWidth")]
     private float _outlineWidth = 0.05f;
 
+
+    [Header("Shadow Settings")]
+    [Tooltip("変換先マテリアルの影設定を、このコンバーターの設定で上書きします。")]
+    [SerializeField] private bool _overrideShadowSettings;
+    [SerializeField] private Color _shadowColor = new(0.3f, 0.3f, 0.4f, 1.0f);
+
+    [Tooltip("影から中間色へ切り替わる明るさ")]
+    [SerializeField, Range(0.0f, 1.0f)] private float _shadowThreshold = 0.3f;
+
+    [Tooltip("中間色から明部へ切り替わる明るさ。適用時は影のしきい値以上になります。")]
+    [SerializeField, Range(0.0f, 1.0f)] private float _lightThreshold = 0.6f;
+
+
+
+    [Header("Specular Highlight")]
+    [Tooltip("対応するToonマテリアルの反射ハイライト設定を上書きします。")]
+    [SerializeField] private bool _overrideSpecularSettings;
+
+    [Tooltip("反射ハイライトの強さ。0で無効になります。")]
+    [SerializeField, Range(0.0f, 2.0f)] private float _specularStrength = 0.25f;
+
+    [Tooltip("値が高いほどハイライトが小さく鋭くなります。")]
+    [SerializeField, Range(0.0f, 1.0f)] private float _specularSmoothness = 0.6f;
+
+
     [SerializeField, HideInInspector, FormerlySerializedAs("records")]
     private List<RendererMaterialRecord> _records = new();
 
@@ -60,9 +104,20 @@ public class ToonMaterialConverter : MonoBehaviour
     private List<ToonMaterialEntry> _materialEntries = new();
 
     public Shader ToonShader => _toonShader;
+    public Transform TargetRoot => _targetRoot != null ? _targetRoot : transform;
     public IReadOnlyList<RendererMaterialRecord> Records => _records;
     public IReadOnlyList<ToonMaterialEntry> MaterialEntries => _materialEntries;
+    public bool OverrideShadowSettings => _overrideShadowSettings;
+    public Color ShadowColor => _shadowColor;
+    public float ShadowThreshold => _shadowThreshold;
+    public float LightThreshold => Mathf.Max(_shadowThreshold, _lightThreshold);
+    public bool OverrideSpecularSettings => _overrideSpecularSettings;
+    public float SpecularStrength => _specularStrength;
+    public float SpecularSmoothness => _specularSmoothness;
     public bool EnableOutline => _enableOutline;
+    public bool OutlineOnly => _enableOutline && _outlineOnly;
+    public OutlineMode SelectedOutlineMode => _outlineMode;
+    public int SilhouetteWidthPixels => _silhouetteWidthPixels;
     public Color OutlineColor => _outlineColor;
     public float OutlineWidth => _outlineWidth;
 

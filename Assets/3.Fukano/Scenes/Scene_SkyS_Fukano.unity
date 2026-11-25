@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &7807623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,11 +260,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 132905374963078967, guid: acce13b7198deb2459511640e70b70ad, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.6083499
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 132905374963078967, guid: acce13b7198deb2459511640e70b70ad, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.000069618225
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 132905374963078967, guid: acce13b7198deb2459511640e70b70ad, type: 3}
       propertyPath: m_LocalRotation.w
@@ -363,6 +363,10 @@ PrefabInstance:
     - target: {fileID: 2666978322542925706, guid: 19922bb4c19ba5d498d5f7ed51ef6330, type: 3}
       propertyPath: m_Center.z
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7421922024620246662, guid: 19922bb4c19ba5d498d5f7ed51ef6330, type: 3}
+      propertyPath: depthRayCount
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 7789806952721152553, guid: 19922bb4c19ba5d498d5f7ed51ef6330, type: 3}
       propertyPath: m_Name
@@ -647,13 +651,14 @@ Transform:
   m_GameObject: {fileID: 533271686}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 2.21324, z: 12.88626}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 86927133}
   - {fileID: 889200686}
   - {fileID: 6071771583675087606}
+  - {fileID: 1019683109}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &583577453
@@ -1034,12 +1039,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1019683107}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 533271687}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1049931974
 GameObject:
@@ -2975,15 +2980,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7828221319632709283, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7828221319632709283, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.21324
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7828221319632709283, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.88626
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7828221319632709283, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3012,6 +3017,18 @@ PrefabInstance:
     - target: {fileID: 7828221319632709283, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030790067672275788, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
+      propertyPath: _effectSettings.radialBlurSettings.radialIntensity
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030790067672275788, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
+      propertyPath: _effectSettings.radialBlurSettings.radialInnerRadius
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9030790067672275788, guid: 56eccc24d6f617d49817921b25ee93af, type: 3}
+      propertyPath: _effectSettings.radialBlurSettings.radialOuterRadius
+      value: 1.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3109,5 +3126,4 @@ SceneRoots:
   - {fileID: 281921389}
   - {fileID: 1287307430}
   - {fileID: 533271687}
-  - {fileID: 1019683109}
   - {fileID: 184207151}
