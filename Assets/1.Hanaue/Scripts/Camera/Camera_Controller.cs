@@ -17,6 +17,10 @@ public struct CameraTargetData
 
     // 姿勢
     public float Posture;
+
+    // WallSide
+    public bool IsWallSide;
+    public Vector3 WallNormal;
 }
 
 public class Camera_Controller : MonoBehaviour
@@ -88,6 +92,7 @@ public class Camera_Controller : MonoBehaviour
         // ----- Apply -----
         ApplyCameraShake(_shake.CurrentOffset);
         ApplyCameraFov(_movement.CurrentBaseFov, _shake.CurrentOffset.Fov);
+
     }
     private void Update()
     {

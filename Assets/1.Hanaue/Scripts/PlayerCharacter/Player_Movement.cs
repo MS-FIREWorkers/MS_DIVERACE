@@ -220,6 +220,83 @@ public class Player_Movement : MonoBehaviour
 
 
     // --------------------------------------------------
+    // ----- Constrain Velocity To Wall -----
+    // 壁面法線方向の水平速度を取り除く
+    // --------------------------------------------------
+    public void ConstrainVelocityToWall(Vector3 wallNormal)
+    {
+        wallNormal.y = 0.0f;
+        wallNormal.Normalize();
+
+        // 水平速度を壁面方向へ投影
+        Vector3 horizontalVelocity = new Vector3(_currentVelocity.x, 0.0f, _currentVelocity.z);
+        horizontalVelocity = Vector3.ProjectOnPlane(horizontalVelocity, wallNormal);
+
+        _currentVelocity.x = horizontalVelocity.x;
+        _currentVelocity.z = horizontalVelocity.z;
+    }
+    // --------------------------------------------------
+    // ----- Correct Wall Gap -----
+    // 壁からの距離を維持する
+    // --------------------------------------------------
+    public void CorrectWallGap(Vector3 wallNormal, float currentGap, float targetGap)
+    {
+        wallNormal.y = 0.0f;
+        wallNormal.Normalize();
+
+        float correction = targetGap - currentGap;
+
+        transform.position += wallNormal * correction;
+    }
+    // --------------------------------------------------
+    // ----- UpdateWallSideVelocity -----
+    // 壁に沿った水平移動と落下加速
+    // --------------------------------------------------
+    public void UpdateWallSideVelocity(Vector2 input, float posture, PlayerMovement_ControlData controlData, Vector3 wallNormal, float dragMultiplier, float extraFallAcceleration, float deltaTime)
+    {
+        posture = Mathf.Clamp01(posture);
+        input = Vector2.ClampMagnitude(input, 1.0f);
+
+        // ----- 壁面法線 -----
+        wallNormal.y = 0.0f;
+        wallNormal.Normalize();
+
+        // ----- 水平入力による加速度 -----
+        if (controlData.EnableHorizontalMove)
+        {
+            Vector3 acceleration = CalculateHorizontalAcceleration(input, posture, controlData);
+
+            // 壁に沿う方向だけ適用
+            acceleration = Vector3.ProjectOnPlane(acceleration, wallNormal);
+
+            _currentVelocity += acceleration * deltaTime;
+        }
+
+        // ----- 水平方向の抵抗 -----
+        Vector3 dragAcceleration = CalculateHorizontalDrag(posture);
+
+        // 壁に沿う方向へ投影して、抵抗を減らす
+        dragAcceleration = Vector3.ProjectOnPlane(dragAcceleration, wallNormal);
+        dragAcceleration *= Mathf.Max(0.0f, dragMultiplier);
+
+        _currentVelocity += dragAcceleration * deltaTime;
+
+        // ----- 鉛直加速 -----
+        if (controlData.EnableFall)
+        {
+            float verticalAcceleration = CalculateVerticalAcceleration(posture, controlData);
+
+            // 壁面滑走による追加加速
+            verticalAcceleration -= Mathf.Max(0.0f, extraFallAcceleration);
+
+            _currentVelocity.y += verticalAcceleration * deltaTime;
+        }
+
+        // ----- 壁の法線方向の速度を除去 -----
+        ConstrainVelocityToWall(wallNormal);
+    }
+
+    // --------------------------------------------------
     // ----- Public Events -----
     // --------------------------------------------------
     public void SetVelocity(Vector3 velocity)
@@ -257,5 +334,21 @@ public class Player_Movement : MonoBehaviour
         _boostTargetSpeed = 0.0f;
         _boostAcceleration = 0.0f;
         _boostDirection = Vector3.zero;
+    }
+
+    // --------------------------------------------------
+    // ----- ApplyWallExitVelocity -----
+    // 壁から離れる方向へ速度を与える
+    // --------------------------------------------------
+    public void ApplyWallExitVelocity(Vector3 wallNormal, float exitSpeed)
+    {
+        wallNormal.y = 0.0f;
+        wallNormal.Normalize();
+
+        // 既存の速度から壁面法線方向の成分を除去
+        _currentVelocity = Vector3.ProjectOnPlane(_currentVelocity, wallNormal);
+
+        // 壁から離れる方向へ速度を付与
+        _currentVelocity += wallNormal * Mathf.Max(0.0f, exitSpeed);
     }
 }

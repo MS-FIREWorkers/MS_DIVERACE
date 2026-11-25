@@ -23,8 +23,11 @@ public class PlayerState_FreeFall : PlayerState_Base
     // ----- Lifecycle -----
     // --------------------------------------------------
     public override void Enter() { }
-    public override void Update() 
+    public override void Update()
     {
+        // ----- 再接触壁の計測 -----
+        _controller.StateMachine.StateWallSide.UpdateReentryBlock(Time.deltaTime);
+
         // ----- 入力を取得 -----
         Vector2 moveInput = _controller.InputHandler.MoveInput;
         float postureInput = _controller.InputHandler.PoseInput;
@@ -41,22 +44,60 @@ public class PlayerState_FreeFall : PlayerState_Base
         // ----- 衝突判定 -----
         if (_controller.CollisionDetector.CheckCollision(displace, out PlayerImpactInfo impactInfo))
         {
-            if (impactInfo.ImpactType == PlayerImpactType.Top)
+            // ----- TopEdgeGraze -----
+            if (impactInfo.ImpactType == PlayerImpactType.TopEdgeGraze)
             {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
+                // 障害物の外側へ抜けるための補正量
+                Vector3 correction = _controller.CollisionDetector.CalculateTopEdgeGrazeCorrection(impactInfo, displace);
+
+                // 移動予定量に補正を加える
+                Vector3 correctedDisplacement = displace + correction;
+
+                // 速度を変更せずに移動
+                _controller.Movement.ApplyMovement(correctedDisplacement);
+                return;
             }
-            else if (impactInfo.ImpactType == PlayerImpactType.Side)
+
+            // ----- Side → WallSide -----
+            if (impactInfo.ImpactType == PlayerImpactType.Side)
             {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
+                PlayerState_WallSide wallSideState = _controller.StateMachine.StateWallSide;
+
+                if (wallSideState.CanEnter(impactInfo))
+                {
+                    _controller.Movement.CancelBoost();
+
+                    wallSideState.SetImpactInfo(impactInfo);
+                    _controller.StateMachine.ChangeState(wallSideState);
+                    return;
+                }
             }
-            else if (impactInfo.ImpactType == PlayerImpactType.TopEdge)
-            {
-                _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
-            }
-            _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
+
+            // ----- Damage -----
             _controller.Movement.CancelBoost();
+
+            _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo);
+            _controller.StateMachine.ChangeState(_controller.StateMachine.StateDamage);
+            
             return;
         }
+
+        // WallSide 判定
+        if (_controller.CollisionDetector.TryGetWallSideCandidate(out PlayerImpactInfo wallImpactInfo))
+        {
+            PlayerState_WallSide wallSideState = _controller.StateMachine.StateWallSide;
+
+            if (wallSideState.CanEnter(wallImpactInfo))
+            {
+                // 壁面情報を渡す
+                wallSideState.SetImpactInfo(wallImpactInfo);
+
+                // WallSideへ遷移
+                _controller.StateMachine.ChangeState(wallSideState);
+                return;
+            }
+        }
+
 
         // ----- 通常移動 -----
         _controller.Movement.ApplyMovement(displace);

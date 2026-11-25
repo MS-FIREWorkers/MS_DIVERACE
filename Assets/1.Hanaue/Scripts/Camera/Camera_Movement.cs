@@ -75,6 +75,28 @@ public class Camera_Movement : MonoBehaviour
     [SerializeField] private float _fovDecelerationFollowRate = 100.0f;
 
     // --------------------------------------------------
+    // ----- WallSide Camera -----
+    // --------------------------------------------------
+    [Header("WallSide Camera")]
+    [Tooltip("WallSide中の壁からの距離")]
+    [SerializeField] private float _wallSideDistance = 5.0f;
+    [Tooltip("WallSide中のキャラクターのローカルZ軸方向の距離")]
+    [SerializeField] private float _wallBackDistance = 3.0f;
+    [Tooltip("WallSide中のキャラクターのローカルY軸方向の距離")]
+    [SerializeField] private float _wallCameraHeight = 5.0f;
+
+    [Tooltip("WallSide中のデッドゾーン")]
+    [SerializeField] private float _wallDeadZone = 2.0f;
+    [SerializeField] private float _wallDeadZoneOffset = 0.0f;
+
+    [SerializeField] private float _wallLookAhead = 10.0f;
+    [SerializeField] private float _wallLookSideOffset = 0.0f;
+
+    [Header("WallSide Transition")]
+    [Tooltip("WallSide中への切り替え時間")]
+    [SerializeField] private float _wallBlendDuration = 0.4f;
+
+    // --------------------------------------------------
     // ----- Debug -----
     // --------------------------------------------------
     [Header("Debug")]
@@ -94,6 +116,11 @@ public class Camera_Movement : MonoBehaviour
     private float _distanceFallSpeed;
     private float _fovFallSpeed;
 
+    private float _wallSideBlend;
+    private Vector3 _wallFollowPivotPosition;
+    private Vector3 _lastWallNormal;
+    private Vector3 _lastWallForward;
+    private bool _wasWallSide;
 
     // --------------------------------------------------
     // ----- Unity Events -----
@@ -104,9 +131,6 @@ public class Camera_Movement : MonoBehaviour
         {
             _cameraTransform = transform;
         }
-
-
-
     }
     private void OnDrawGizmos()
     {
@@ -144,8 +168,10 @@ public class Camera_Movement : MonoBehaviour
 
         float posture = Mathf.Clamp01(targetData.Posture);
 
+        // ----- Normal Follow Pivot -----
         UpdateFollowPivot(targetData.Position, posture);
 
+        // ----- Fall Speed Filter -----
         float actualFallSpeed = Mathf.Max(0.0f, -targetData.Velocity.y);
         float targetDistanceSpeed = Mathf.Min(actualFallSpeed, _approachMaxFallSpeed);
         float targetFovSpeed = Mathf.Min(actualFallSpeed, _fovMaxFallSpeed);
@@ -153,28 +179,73 @@ public class Camera_Movement : MonoBehaviour
         _fovFallSpeed = CalculateFilteredFallSpeed(_fovFallSpeed, targetFovSpeed, _fovAccelerationFollowRate, _fovDecelerationFollowRate, deltaTime);
 
 
-        // ----- CameraDistance -----
+        // ----- Normal Camera -----
         float cameraDistance = CalculateCameraDistance(_distanceFallSpeed);
+        Vector3 normalPosition = CalculateCameraPosition(cameraDistance);
+        Vector3 normalLookTarget = CalculateLookTarget(targetData.Position, posture);
 
-        // ----- CameraPosition -----
-        Vector3 desiredPosition = CalculateCameraPosition(cameraDistance);
+        // ----- WallSide Camera -----
+        if (targetData.IsWallSide)
+        {
+            Vector3 normal = targetData.WallNormal;
+            normal.y = 0.0f;
+            if (normal.sqrMagnitude > Mathf.Epsilon)
+            {
+                _lastWallNormal = normal.normalized;
+            }
 
-        // ----- LookTarget -----
-        Vector3 lookTarget = CalculateLookTarget(targetData.Position, posture);
+            Vector3 forward = Vector3.ProjectOnPlane(targetData.Forward, Vector3.up);
+            if (forward.sqrMagnitude > Mathf.Epsilon)
+            {
+                _lastWallForward = Vector3.ProjectOnPlane(forward.normalized, _lastWallNormal).normalized;
+            }
 
-        // ----- Position -----
+            // WallSideに入った直後だけ初期化
+            if (!_wasWallSide)
+            {
+                _wallFollowPivotPosition = targetData.Position;
+            }
+
+            UpdateWallSidePivot(targetData.Position, _lastWallForward);
+        }
+        else
+        {
+            // 離脱後もY座標だけは落下に追従
+            _wallFollowPivotPosition.y = targetData.Position.y;
+        }
+
+        _wasWallSide = targetData.IsWallSide;
+
+        // ----- WallSide Blend -----
+        float targetBlend = targetData.IsWallSide ? 1.0f : 0.0f;
+        float blendStep = _wallBlendDuration > 0.0f ? deltaTime / _wallBlendDuration : 1.0f;
+
+        _wallSideBlend = Mathf.MoveTowards(_wallSideBlend, targetBlend, blendStep);
+
+        // ----- Camera Position / LookTarget -----
+        Vector3 desiredPosition = normalPosition;
+        Vector3 lookTarget = normalLookTarget;
+        if (_wallSideBlend > 0.0f)
+        {
+            // 通常カメラとスライドカメラを補間
+            Vector3 wallPosition = CalculateWallSideCameraPosition();
+            Vector3 wallLookTarget = CalculateWallSideLookTarget(targetData.Position);
+
+            desiredPosition = Vector3.Lerp(normalPosition, wallPosition, _wallSideBlend);
+            lookTarget = Vector3.Lerp(normalLookTarget, wallLookTarget, _wallSideBlend);
+        }
+
+        // ----- Apply -----
         UpdatePosition(desiredPosition, deltaTime);
-        
-        // ----- Rotate -----
         UpdateRotation(lookTarget, targetData.Forward, deltaTime);
 
         // ----- FOV -----
         CurrentBaseFov = CalculateBaseFov(_fovFallSpeed);
 
-        // Debug
+
+        // ----- Debug -----
         _debugPlayerPosition = targetData.Position;
         _debugLookTarget = lookTarget;
-
     }
 
     // --------------------------------------------------
@@ -227,6 +298,30 @@ public class Camera_Movement : MonoBehaviour
             _followPivotPosition.z = targetPosition.z + deadZoneZ;
         }
     }
+    private void UpdateWallSidePivot(Vector3 playerPosition, Vector3 wallForward)
+    {
+        // Y座標は常にプレイヤーへ追従
+        _wallFollowPivotPosition.y = playerPosition.y;
+
+        // デッドゾーンの中心をオフセット
+        Vector3 targetPosition = playerPosition - wallForward * _wallDeadZoneOffset;
+
+        // 壁に沿う方向の距離
+        float difference = Vector3.Dot(targetPosition - _wallFollowPivotPosition, wallForward);
+
+        if (difference > _wallDeadZone)
+        {
+            _wallFollowPivotPosition += wallForward * (difference - _wallDeadZone);
+        }
+        else if (difference < -_wallDeadZone)
+        {
+            _wallFollowPivotPosition += wallForward * (difference + _wallDeadZone);
+        }
+
+        // 壁の法線方向は常に追従
+        Vector3 normalOffset = Vector3.Project(playerPosition - _wallFollowPivotPosition, _lastWallNormal);
+        _wallFollowPivotPosition += normalOffset;
+    }
     private void UpdatePosition(Vector3 targetPosition, float deltaTime)
     {
         Vector3 currentPosition = _cameraTransform.position;
@@ -272,11 +367,24 @@ public class Camera_Movement : MonoBehaviour
     {
         return _followPivotPosition + Vector3.up * distance;
     }
+    private Vector3 CalculateWallSideCameraPosition()
+    {
+        return _wallFollowPivotPosition
+            + _lastWallNormal * _wallSideDistance
+            - _lastWallForward * _wallBackDistance
+            + Vector3.up * _wallCameraHeight;
+    }
     private Vector3 CalculateLookTarget(Vector3 playerPosition, float posture)
     {
         float lookAhead = Mathf.Lerp(_horizontalLookAhead, _verticalLookAhead, posture);
 
         return playerPosition - Vector3.up * lookAhead;
+    }
+    private Vector3 CalculateWallSideLookTarget(Vector3 playerPosition)
+    {
+        return playerPosition
+            + _lastWallNormal * _wallLookSideOffset
+            + Vector3.down * _wallLookAhead;
     }
     private float CalculateCameraDistance(float fallSpeed)
     {

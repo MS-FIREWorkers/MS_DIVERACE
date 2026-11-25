@@ -10,6 +10,7 @@ public enum PlayerStateName
     None,
     FreeFall,
     Damage,
+    WallSide,
 }
 
 public class Player_StateMachine : MonoBehaviour
@@ -24,8 +25,10 @@ public class Player_StateMachine : MonoBehaviour
     // --------------------------------------------------
     private PlayerState_FreeFall _stateFreeFall;
     private PlayerState_Damage _stateDamage;
+    private PlayerState_WallSide _stateWallSide;
     public PlayerState_FreeFall StateFreeFall => _stateFreeFall;
     public PlayerState_Damage StateDamage => _stateDamage;
+    public PlayerState_WallSide StateWallSide => _stateWallSide;
 
     // --------------------------------------------------
     // ----- CurrentState -----
@@ -49,6 +52,8 @@ public class Player_StateMachine : MonoBehaviour
     [SerializeField] private PlayerMovement_ControlData _freeFallControlData;
     [Tooltip("DamageState ControlData")]
     [SerializeField] private PlayerMovement_ControlData _damageControlData;
+    [Tooltip("WallSideState ControlData")]
+    [SerializeField] private PlayerMovement_ControlData _wallSideControlData;
 
 
     // --------------------------------------------------
@@ -60,6 +65,7 @@ public class Player_StateMachine : MonoBehaviour
         _characterController = GetComponent<Player_CharacterController>();
         _stateFreeFall = new PlayerState_FreeFall(_characterController, _freeFallControlData);
         _stateDamage = new PlayerState_Damage(_characterController, _damageControlData);
+        _stateWallSide = new PlayerState_WallSide(_characterController, _wallSideControlData);
 
         ChangeState(_stateFreeFall);
     }
@@ -101,6 +107,10 @@ public class Player_StateMachine : MonoBehaviour
         else if (_currentState == _stateDamage)
         {
             _currentStateName = PlayerStateName.Damage;
+        }
+        else if (_currentState == _stateWallSide)
+        {
+            _currentStateName = PlayerStateName.WallSide;
         }
     }
 
