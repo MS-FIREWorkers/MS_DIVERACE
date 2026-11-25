@@ -26,6 +26,7 @@ public class FadeController : MonoBehaviour
     // --------------------------------------------------
     [Header("Duration")]
     [SerializeField] private float _fadeDuration = 0.5f;
+    public float FadeDuration => _fadeDuration;
 
 
     // --------------------------------------------------
