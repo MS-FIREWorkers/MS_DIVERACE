@@ -227,6 +227,11 @@ public class PlayerState_WallSide : PlayerState_Base
         {
             return false;
         }
+        // タグ判定
+        if (!_controller.CollisionDetector.IsWallSlideTarget(impactInfo.Collider))
+        {
+            return false;
+        }
 
         // 姿勢判定（1=鉛直、0=水平）
         float posture = _controller.InputHandler.PoseInput;

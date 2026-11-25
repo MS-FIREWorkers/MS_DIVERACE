@@ -186,7 +186,8 @@ public class Player_CollisionDetector : MonoBehaviour
     {
         return
             target.CompareTag("Obstacle") ||
-            target.CompareTag("Terrain");
+            target.CompareTag("Terrain")  ||
+            target.CompareTag("Barrier");
     }
     private PlayerImpactType JudgeImpactType(Vector3 normal, Collider targetCollider, Vector3 impactCenter, out Vector3 edgeDirection)
     {
@@ -425,7 +426,7 @@ public class Player_CollisionDetector : MonoBehaviour
 
         return false;
     }
-
+  
     // --------------------------------------------------
     // ----- Calculate TopEdgeGraze Correction -----
     // 移動後のプレイヤーColliderが障害物の外側へ
@@ -590,7 +591,7 @@ public class Player_CollisionDetector : MonoBehaviour
                 continue;
             }
             // 障害物以外は除外
-            if (!IsTargetCollision(other))
+            if (!IsWallSlideTarget(other))
             {
                 continue;
             }
@@ -634,4 +635,10 @@ public class Player_CollisionDetector : MonoBehaviour
 
         return found;
     }
+    public bool IsWallSlideTarget(Collider target)
+    {
+        return target.CompareTag("Obstacle") ||
+               target.CompareTag("Terrain");
+    }
+
 }
