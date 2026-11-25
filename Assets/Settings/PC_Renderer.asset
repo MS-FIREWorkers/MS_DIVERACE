@@ -156,6 +156,9 @@ MonoBehaviour:
   _outlineLayer:
     serializedVersion: 2
     m_Bits: 1024
+  _silhouetteCompositeShader: {fileID: 4800000, guid: f2d197ea84534ac5b26a27975b9e1b90, type: 3}
+  _outlineTargetMaskShader: {fileID: 4800000, guid: caee5cdfa67c48a6870508726393e8ee, type: 3}
+  _silhouetteColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 0

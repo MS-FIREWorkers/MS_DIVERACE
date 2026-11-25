@@ -19,8 +19,17 @@ public class ToonMaterialConverterEditor : Editor
     // ==================================================
 
     private const string OutputRoot = "Assets/3.Fukano/GeneratedToonMaterials";
+    private const string PlayerToonShaderName = "Custom/PlayerCharacterToon";
     private static readonly int OutlineColorId = Shader.PropertyToID("_OutlineColor");
     private static readonly int OutlineWidthId = Shader.PropertyToID("_OutlineWidth");
+    private static readonly int OutlineModeId = Shader.PropertyToID("_OutlineMode");
+    private static readonly int OutlineOnlyId = Shader.PropertyToID("_OutlineOnly");
+    private static readonly int SilhouetteWidthPixelsId = Shader.PropertyToID("_SilhouetteWidthPixels");
+    private static readonly int ShadowColorId = Shader.PropertyToID("_ShadowColor");
+    private static readonly int ShadowThresholdId = Shader.PropertyToID("_ShadowThreshold");
+    private static readonly int LightThresholdId = Shader.PropertyToID("_LightThreshold");
+    private static readonly int SpecularStrengthId = Shader.PropertyToID("_SpecularStrength");
+    private static readonly int SpecularSmoothnessId = Shader.PropertyToID("_SpecularSmoothness");
 
     // ==================================================
     // ----- Unity Editor Events -----
@@ -28,7 +37,7 @@ public class ToonMaterialConverterEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        DrawConverterSettings();
         ToonMaterialConverter converter = (ToonMaterialConverter)target;
         EditorGUILayout.Space(10);
 
@@ -36,10 +45,54 @@ public class ToonMaterialConverterEditor : Editor
             ConvertToToon(converter);
 
         if (GUILayout.Button("Update Outline Settings"))
-            UpdateOutline(converter);
+            UpdateMaterials(converter, "Update Toon Outline", ApplyOutline);
+
+        using (new EditorGUI.DisabledScope(!converter.OverrideShadowSettings || converter.Records.Count == 0))
+        {
+            if (GUILayout.Button("Update Shadow Settings"))
+                UpdateMaterials(converter, "Update Toon Shadow", ApplyShadow);
+        }
+
+        using (new EditorGUI.DisabledScope(!converter.OverrideSpecularSettings || converter.Records.Count == 0))
+        {
+            if (GUILayout.Button("Update Specular Settings"))
+                UpdateMaterials(converter, "Update Toon Specular", ApplySpecular);
+        }
 
         if (GUILayout.Button("Restore Original Materials"))
             RestoreOriginals(converter);
+    }
+
+    private void DrawConverterSettings()
+    {
+        serializedObject.Update();
+        SerializedProperty outlineEnabled = serializedObject.FindProperty("_enableOutline");
+        SerializedProperty outlineOnly = serializedObject.FindProperty("_outlineOnly");
+        SerializedProperty outlineMode = serializedObject.FindProperty("_outlineMode");
+        SerializedProperty property = serializedObject.GetIterator();
+        bool enterChildren = true;
+
+        while (property.NextVisible(enterChildren))
+        {
+            enterChildren = false;
+            bool useSilhouette = outlineOnly.boolValue ||
+                outlineMode.intValue == (int)ToonMaterialConverter.OutlineMode.ScreenSpaceSilhouette;
+            bool show = property.name switch
+            {
+                "_outlineOnly" => outlineEnabled.boolValue,
+                "_outlineMode" => outlineEnabled.boolValue && !outlineOnly.boolValue,
+                "_silhouetteWidthPixels" => outlineEnabled.boolValue && useSilhouette,
+                "_outlineColor" or "_outlineWidth" => outlineEnabled.boolValue && !useSilhouette,
+                _ => true
+            };
+            if (!show)
+                continue;
+
+            using (new EditorGUI.DisabledScope(property.name == "m_Script"))
+                EditorGUILayout.PropertyField(property, includeChildren: true);
+        }
+
+        serializedObject.ApplyModifiedProperties();
     }
 
     // ==================================================
@@ -60,25 +113,31 @@ public class ToonMaterialConverterEditor : Editor
             return;
         }
 
+        Transform targetRoot = converter.TargetRoot;
+        Renderer[] renderers = System.Array.FindAll(
+            targetRoot.GetComponentsInChildren<Renderer>(true),
+            renderer =>
+            {
+                ToonMaterialConverter owner = renderer.GetComponentInParent<ToonMaterialConverter>(true);
+                return owner == null || owner == converter;
+            });
+        if (renderers.Length == 0)
+        {
+            Debug.LogWarning("[Warning] 変換対象のRendererが見つかりません。", converter);
+            return;
+        }
+
         // AssetDatabaseを通してフォルダを作成する。
         EnsureAssetFolder(OutputRoot);
-        string folderName = converter.gameObject.name + "_Toon";
+        string folderName = targetRoot.name + "_Toon";
         string folderPath = OutputRoot + "/" + folderName;
         EnsureAssetFolder(folderPath);
 
         Dictionary<Material, Material> cache = new();
-        Renderer[] renderers = converter.GetComponentsInChildren<Renderer>(true);
         Undo.RecordObject(converter, "Convert To Toon");
 
         foreach (Renderer renderer in renderers)
         {
-            if (renderer == null)
-                continue;
-
-            ToonMaterialConverter owner = renderer.GetComponentInParent<ToonMaterialConverter>();
-            if (owner != converter)
-                continue;
-
             Material[] originals = renderer.sharedMaterials;
             Material[] converted = new Material[originals.Length];
 
@@ -100,6 +159,8 @@ public class ToonMaterialConverterEditor : Editor
 
                         CopyProperties(original, toon);
                         ApplyOutline(converter, toon);
+                        ApplyShadow(converter, toon);
+                        ApplySpecular(converter, toon);
                         string path = AssetDatabase.GenerateUniqueAssetPath(folderPath + "/" + toon.name + ".mat");
                         AssetDatabase.CreateAsset(toon, path);
                         converter.RegisterToonMaterial(original, toon);
@@ -114,6 +175,8 @@ public class ToonMaterialConverterEditor : Editor
                         }
 
                         ApplyOutline(converter, toon);
+                        ApplyShadow(converter, toon);
+                        ApplySpecular(converter, toon);
                         EditorUtility.SetDirty(toon);
                     }
 
@@ -126,19 +189,22 @@ public class ToonMaterialConverterEditor : Editor
             Undo.RecordObject(renderer, "Convert To Toon");
             converter.AddRecord(renderer, originals, converted);
             renderer.sharedMaterials = converted;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(renderer);
             EditorUtility.SetDirty(renderer);
         }
 
+        PrefabUtility.RecordPrefabInstancePropertyModifications(converter);
         EditorUtility.SetDirty(converter);
         AssetDatabase.SaveAssets();
         Debug.Log("Toon Material変換完了", converter);
     }
 
     // ==================================================
-    // ----- Custom Methods: Outline -----
+    // ----- Custom Methods: Toon Settings -----
     // ==================================================
 
-    private void UpdateOutline(ToonMaterialConverter converter)
+    private void UpdateMaterials(ToonMaterialConverter converter, string undoLabel,
+        System.Action<ToonMaterialConverter, Material> applySettings)
     {
         HashSet<Material> updated = new();
         foreach (ToonMaterialConverter.RendererMaterialRecord record in converter.Records)
@@ -151,8 +217,8 @@ public class ToonMaterialConverterEditor : Editor
                 if (material == null || !updated.Add(material))
                     continue;
 
-                Undo.RecordObject(material, "Update Toon Outline");
-                ApplyOutline(converter, material);
+                Undo.RecordObject(material, undoLabel);
+                applySettings(converter, material);
                 EditorUtility.SetDirty(material);
             }
         }
@@ -170,6 +236,42 @@ public class ToonMaterialConverterEditor : Editor
             material.SetColor(OutlineColorId, converter.OutlineColor);
         if (material.HasProperty(OutlineWidthId))
             material.SetFloat(OutlineWidthId, converter.EnableOutline ? converter.OutlineWidth : 0.0f);
+        bool outlineOnly = converter.OutlineOnly && material.HasProperty(OutlineOnlyId);
+        if (material.HasProperty(OutlineOnlyId))
+            material.SetFloat(OutlineOnlyId, outlineOnly ? 1.0f : 0.0f);
+        if (material.HasProperty(OutlineModeId))
+        {
+            ToonMaterialConverter.OutlineMode mode = outlineOnly
+                ? ToonMaterialConverter.OutlineMode.ScreenSpaceSilhouette
+                : converter.SelectedOutlineMode;
+            material.SetFloat(OutlineModeId, converter.EnableOutline ? (float)mode : -1.0f);
+        }
+        if (material.HasProperty(SilhouetteWidthPixelsId))
+            material.SetFloat(SilhouetteWidthPixelsId, converter.SilhouetteWidthPixels);
+    }
+
+    private void ApplySpecular(ToonMaterialConverter converter, Material material)
+    {
+        if (!converter.OverrideSpecularSettings)
+            return;
+
+        if (material.HasProperty(SpecularStrengthId))
+            material.SetFloat(SpecularStrengthId, converter.SpecularStrength);
+        if (material.HasProperty(SpecularSmoothnessId))
+            material.SetFloat(SpecularSmoothnessId, converter.SpecularSmoothness);
+    }
+
+    private void ApplyShadow(ToonMaterialConverter converter, Material material)
+    {
+        if (!converter.OverrideShadowSettings)
+            return;
+
+        if (material.HasProperty(ShadowColorId))
+            material.SetColor(ShadowColorId, converter.ShadowColor);
+        if (material.HasProperty(ShadowThresholdId))
+            material.SetFloat(ShadowThresholdId, converter.ShadowThreshold);
+        if (material.HasProperty(LightThresholdId))
+            material.SetFloat(LightThresholdId, converter.LightThreshold);
     }
 
     // ==================================================
@@ -186,10 +288,12 @@ public class ToonMaterialConverterEditor : Editor
 
             Undo.RecordObject(record.renderer, "Restore Original Materials");
             record.renderer.sharedMaterials = record.originalMaterials;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(record.renderer);
             EditorUtility.SetDirty(record.renderer);
         }
 
         converter.ClearRecords();
+        PrefabUtility.RecordPrefabInstancePropertyModifications(converter);
         EditorUtility.SetDirty(converter);
         Debug.Log("元Materialへ復元しました。", converter);
     }
@@ -239,6 +343,38 @@ public class ToonMaterialConverterEditor : Editor
             destination.SetTexture("_EmissionMap", source.GetTexture("_EmissionMap"));
         if (source.HasProperty("_EmissionColor"))
             destination.SetColor("_EmissionColor", source.GetColor("_EmissionColor"));
+
+        if (destination.shader.name != PlayerToonShaderName || !source.HasProperty("_BASE_COLOR_MAP"))
+            return;
+
+        CopyTexture(source, "_BASE_COLOR_MAP", destination, "_BaseMap");
+        CopyTexture(source, "_NORMAL_MAP", destination, "_BumpMap");
+        CopyTexture(source, "_EMISSION_COLOR_MAP", destination, "_EmissionMap");
+        CopyTexture(source, "_OPACITY_MAP", destination, "_OpacityMap");
+
+        if (source.HasProperty("_BASE_COLOR"))
+            destination.SetColor("_BaseColor", source.GetColor("_BASE_COLOR"));
+        if (source.HasProperty("_EMISSION_COLOR") && destination.GetTexture("_EmissionMap") != null)
+            destination.SetColor("_EmissionColor", source.GetColor("_EMISSION_COLOR"));
+
+        if (destination.GetTexture("_OpacityMap") != null)
+        {
+            destination.SetFloat("_AlphaClip", 1.0f);
+            destination.EnableKeyword("_ALPHATEST_ON");
+        }
+    }
+
+    private static void CopyTexture(Material source, string sourceProperty, Material destination, string destinationProperty)
+    {
+        if (!source.HasProperty(sourceProperty))
+            return;
+
+        destination.SetTexture(destinationProperty, source.GetTexture(sourceProperty));
+        if (destinationProperty == "_BaseMap")
+        {
+            destination.SetTextureScale(destinationProperty, source.GetTextureScale(sourceProperty));
+            destination.SetTextureOffset(destinationProperty, source.GetTextureOffset(sourceProperty));
+        }
     }
 
     // ==================================================

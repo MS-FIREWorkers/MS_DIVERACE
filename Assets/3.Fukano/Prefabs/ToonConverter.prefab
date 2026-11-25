@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3164046570166293678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1072961842119586674}
+  - component: {fileID: 4435489884436586231}
+  m_Layer: 0
+  m_Name: ToonConverter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1072961842119586674
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3164046570166293678}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4435489884436586231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3164046570166293678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b6656da5320b0b4581e5a9277afc07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToonMaterialConverter
+  _toonShader: {fileID: 4800000, guid: fa895772effd46147b8bd552c5cfab49, type: 3}
+  _targetRoot: {fileID: 0}
+  _enableOutline: 1
+  _outlineMode: 1
+  _silhouetteWidthPixels: 3
+  _outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  _outlineWidth: 0.05
+  _overrideShadowSettings: 1
+  _shadowColor: {r: 0, g: 0, b: 0, a: 1}
+  _shadowThreshold: 0.15
+  _lightThreshold: 0.3
+  _overrideSpecularSettings: 1
+  _specularStrength: 0.5
+  _specularSmoothness: 0.4
+  _records: []
+  _materialEntries: []
