@@ -60,8 +60,8 @@ public class PlayerState_WallSide : PlayerState_Base
     // --------------------------------------------------
     // ----- Wall Contact -----
     // --------------------------------------------------
-    private readonly float _targetWallGap = 0.02f;
-    private readonly float _maxWallGap = 0.15f;
+    private readonly float _targetWallGap = 0.02f; // WallSide中に維持したい壁との距離
+    private readonly float _maxWallGap = 1.5f; // 壁がどこまで離れたらWallSideを終了するか
 
     private Collider _wallCollider;
     private Vector3 _wallNormal;
@@ -79,6 +79,12 @@ public class PlayerState_WallSide : PlayerState_Base
         Collision,
     }
 
+    // --------------------------------------------------
+    // ----- WallSide Reentry -----
+    // --------------------------------------------------
+    private Collider _blockedWallCollider; // 同じコライダーへの再侵入を拒む
+    private readonly float _reentryBlockDuration = 1.0f;
+    private float _reentryBlockElapsedTime = 0.0f;
 
     // --------------------------------------------------
     // ----- Constructor -----
@@ -108,7 +114,6 @@ public class PlayerState_WallSide : PlayerState_Base
         // ----- IK Contact -----
         _controller.Animation.SetWallIKContact(_wallCollider, _wallNormal, useRightArm);
         // ----- IK Weight -----
-        _controller.Animation.SetArmIK(useRightArm, !useRightArm);
         _controller.Animation.SetArmIK(useRightArm, !useRightArm);
 
 
@@ -151,6 +156,9 @@ public class PlayerState_WallSide : PlayerState_Base
             LeaveWall(WallSideExitType.Edge);
             return;
         }
+
+        // ----- 再接触壁の計測 -----
+        UpdateReentryBlock(Time.deltaTime);
 
         // ----- 速度更新 -----
         _controller.Movement.UpdateWallSideVelocity(moveInput, postureInput, _controlData, _wallNormal, _horizontalDragMultiplier, _extraFallAcceleration, Time.deltaTime);
@@ -204,8 +212,14 @@ public class PlayerState_WallSide : PlayerState_Base
     // --------------------------------------------------
     public bool CanEnter(PlayerImpactInfo impactInfo)
     {
-        // 側面衝突以外は不可
-        if (impactInfo.ImpactType != PlayerImpactType.Side)
+        // 側面衝突以外は不可 // 別の場所で判定しているので無視
+        //if (impactInfo.ImpactType != PlayerImpactType.Side)
+        //{
+        //    return false;
+        //}
+
+        // ----- 再進入禁止 -----
+        if (_blockedWallCollider != null && impactInfo.Collider == _blockedWallCollider)
         {
             return false;
         }
@@ -282,6 +296,25 @@ public class PlayerState_WallSide : PlayerState_Base
     }
 
     // --------------------------------------------------
+    // ----- UpdateReentryBlock -----
+    // 再接触をゆるす時間計測
+    // --------------------------------------------------
+    public void UpdateReentryBlock(float deltaTime)
+    {
+        if (_blockedWallCollider == null)
+        {
+            return;
+        }
+
+        _reentryBlockElapsedTime += deltaTime;
+        if (_reentryBlockElapsedTime >= _reentryBlockDuration)
+        {
+            _blockedWallCollider = null;
+            _reentryBlockElapsedTime = 0.0f;
+        }
+    }
+
+    // --------------------------------------------------
     // ----- Leave Wall -----
     // --------------------------------------------------
     private void LeaveWall(WallSideExitType exitType)
@@ -289,6 +322,10 @@ public class PlayerState_WallSide : PlayerState_Base
         // 入力による離脱時のみ外側へ速度を付与
         if (exitType == WallSideExitType.Input)
         {
+            // 離脱した壁への再進入を禁止
+            _blockedWallCollider = _wallCollider;
+            _reentryBlockElapsedTime = 0.0f;
+
             _controller.Movement.ApplyWallExitVelocity(_wallNormal, _exitSpeed);
         }
 

@@ -34,6 +34,7 @@ public class Player_CollisionDetector : MonoBehaviour
     // --------------------------------------------------
     [Header("Collider")]
     [SerializeField] private BoxCollider _boxCollider;
+    [SerializeField] private BoxCollider _wallSideCollider;
 
     // --------------------------------------------------
     // ----- Collision Parameter -----
@@ -535,4 +536,102 @@ public class Player_CollisionDetector : MonoBehaviour
         return true;
     }
 
+    // --------------------------------------------------
+    // ----- Try Get WallSide Candidate -----
+    // WallSide用Colliderの範囲内から壁面候補を取得
+    // --------------------------------------------------
+    public bool TryGetWallSideCandidate(out PlayerImpactInfo impactInfo)
+    {
+        impactInfo = default;
+
+        if (_wallSideCollider == null)
+        {
+            return false;
+        }
+
+        // ----- WallSide Collider -----
+        Transform wallTransform = _wallSideCollider.transform;
+
+        Vector3 center = wallTransform.TransformPoint(_wallSideCollider.center);
+        Vector3 scale = wallTransform.lossyScale;
+
+        Vector3 halfExtents = Vector3.Scale(
+            _wallSideCollider.size * 0.5f,
+            new Vector3(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z))
+        );
+
+        Quaternion orientation = wallTransform.rotation;
+
+        // ----- OverlapBox -----
+        Collider[] overlaps = Physics.OverlapBox(center, halfExtents, orientation, ~0, QueryTriggerInteraction.Ignore);
+
+        // ----- Ray Direction -----
+        Vector3 right = transform.right;
+        right.y = 0.0f;
+        if (right.sqrMagnitude <= Mathf.Epsilon)
+        {
+            return false;
+        }
+
+        right.Normalize();
+
+        Vector3[] directions = { right, -right };
+
+        // Triggerの中心から左右端までの距離
+        float rayDistance = halfExtents.x;
+
+        float nearestDistance = float.MaxValue;
+        bool found = false;
+        foreach (Collider other in overlaps)
+        {
+            // 自分自身は除外
+            if (other.transform.IsChildOf(transform))
+            {
+                continue;
+            }
+            // 障害物以外は除外
+            if (!IsTargetCollision(other))
+            {
+                continue;
+            }
+
+            // ----- Left / Right Raycast -----
+            foreach (Vector3 direction in directions)
+            {
+                Ray ray = new Ray(center, direction);
+                if (!other.Raycast(ray, out RaycastHit hit, rayDistance))
+                {
+                    continue;
+                }
+
+                // 左右方向に向いた側面のみ採用
+                float sideDot = Vector3.Dot(hit.normal, -direction);
+                if (sideDot < 0.7f)
+                {
+                    continue;
+                }
+
+                // 最も近い候補を採用
+                if (hit.distance >= nearestDistance)
+                {
+                    continue;
+                }
+
+                nearestDistance = hit.distance;
+                found = true;
+
+                impactInfo = new PlayerImpactInfo
+                {
+                    ImpactType = PlayerImpactType.None,
+                    Point = hit.point,
+                    Normal = hit.normal,
+                    Collider = other,
+                    Distance = hit.distance,
+                    EdgeDirection = Vector3.zero
+                };
+            }
+        }
+
+        return found;
+    }
 }

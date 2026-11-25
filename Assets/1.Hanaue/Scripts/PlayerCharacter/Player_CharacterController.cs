@@ -24,6 +24,7 @@ public class Player_CharacterController : MonoBehaviour
     [SerializeField] private Player_StateMachine _stateMachine;
     [SerializeField] private Player_CollisionDetector _collisionDetector;
     [SerializeField] private Player_Animation _animation;
+    [SerializeField] private Player_EffectEmitter _effectEmitter;
 
     // --------------------------------------------------
     // ----- Public Property -----
@@ -33,6 +34,7 @@ public class Player_CharacterController : MonoBehaviour
     public Player_StateMachine StateMachine => _stateMachine;
     public Player_CollisionDetector CollisionDetector => _collisionDetector;
     public Player_Animation Animation => _animation;
+    public Player_EffectEmitter EffectEmitter => _effectEmitter;
 
     // --------------------------------------------------
     // ----- ControllerMode -----
