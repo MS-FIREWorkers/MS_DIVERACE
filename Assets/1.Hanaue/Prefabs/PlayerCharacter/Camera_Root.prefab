@@ -86,9 +86,9 @@ MonoBehaviour:
   _distanceDecelerationFollowRate: 100
   _fovAccelerationFollowRate: 100
   _fovDecelerationFollowRate: 100
-  _wallSideDistance: 1.5
+  _wallSideDistance: 1
   _wallBackDistance: 0
-  _wallCameraHeight: 5
+  _wallCameraHeight: 3
   _wallDeadZone: 0
   _wallDeadZoneOffset: 0
   _wallLookAhead: 10
