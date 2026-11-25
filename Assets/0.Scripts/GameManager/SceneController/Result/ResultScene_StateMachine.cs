@@ -1,10 +1,10 @@
-/*
+ï»¿/*
     ResultScene_StateMachine
     20261104  hanaue sho
-    ƒŠƒUƒ‹ƒgƒV[ƒ“‚Ìó‘Ô‚ğŠÇ—‚·‚éƒXƒNƒŠƒvƒg
-    ˆÈ‰º‚ÍŠÇ—‚·‚éó‘Ôƒtƒ[
-    ‚PDƒ^ƒCƒ€‚ÆƒXƒRƒA‚Ì•\¦‰‰oiƒXƒLƒbƒv‰Âj
-    ‚QDƒV[ƒ“‘JˆÚ‘Ò‚¿
+    ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³ã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+    ä»¥ä¸‹ã¯ç®¡ç†ã™ã‚‹çŠ¶æ…‹ãƒ•ãƒ­ãƒ¼
+    ï¼‘ï¼ã‚¿ã‚¤ãƒ ã¨ã‚¹ã‚³ã‚¢ã®è¡¨ç¤ºæ¼”å‡ºï¼ˆã‚¹ã‚­ãƒƒãƒ—å¯ï¼‰
+    ï¼’ï¼ã‚·ãƒ¼ãƒ³é·ç§»å¾…ã¡
  */
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,13 +33,13 @@ public class ResultScene_StateMachine : MonoBehaviour
     private enum ResultState
     {
         None,
-        WaitFadeIn,     // ƒtƒF[ƒhƒCƒ“‘Ò‚¿
-        CountUpTime,    // ƒNƒŠƒAƒ^ƒCƒ€‚ÌƒJƒEƒ“ƒgƒAƒbƒviƒXƒLƒbƒv‰Âj
-        ShowRank,       // •]‰¿‚Ìƒ|ƒbƒvƒAƒbƒv•\¦iƒXƒLƒbƒv‰Âj
-        ShowThanks,     // ‚¨—ç‚ÌŒ¾—t‚ğ‰E‚©‚ç”ò‚Ñ‚Ü‚¹‚éiƒXƒLƒbƒv‰Âj
-        WaitInput,      // ƒ{ƒ^ƒ““ü—Í‘Ò‚¿
-        Confirm,        // Šm”FƒEƒBƒ“ƒhƒE•\¦’†
-        Transition,     // ƒV[ƒ“‘JˆÚ’†
+        WaitFadeIn,     // ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³å¾…ã¡
+        CountUpTime,    // ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ ã®ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ï¼ˆã‚¹ã‚­ãƒƒãƒ—å¯ï¼‰
+        ShowRank,       // è©•ä¾¡ã®ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—è¡¨ç¤ºï¼ˆã‚¹ã‚­ãƒƒãƒ—å¯ï¼‰
+        ShowThanks,     // ãŠç¤¼ã®è¨€è‘‰ã‚’å³ã‹ã‚‰é£›ã³è¾¼ã¾ã›ã‚‹ï¼ˆã‚¹ã‚­ãƒƒãƒ—å¯ï¼‰
+        WaitInput,      // ãƒœã‚¿ãƒ³å…¥åŠ›å¾…ã¡
+        Confirm,        // ç¢ºèªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¡¨ç¤ºä¸­
+        Transition,     // ã‚·ãƒ¼ãƒ³é·ç§»ä¸­
     }
     private ResultState _state = ResultState.None;
     private float _stateTimer = 0.0f;
@@ -49,45 +49,45 @@ public class ResultScene_StateMachine : MonoBehaviour
     // --------------------------------------------------
     private enum FadeWaitMode
     {
-        None,                   // ‘Ò‚½‚È‚¢
-        FixedTime,              // w’è‚µ‚½•b”‚¾‚¯‘Ò‚Â
-        FadeDurationAndMargin,  // ƒtƒF[ƒh‚ÌŠÔ + ƒ}[ƒWƒ“‚¾‚¯‘Ò‚ÂiƒtƒF[ƒhŠÔ‚ª•Ï‚í‚Á‚Ä‚à©“®‚Å‡‚í‚¹‚éj
+        None,                   // å¾…ãŸãªã„
+        FixedTime,              // æŒ‡å®šã—ãŸç§’æ•°ã ã‘å¾…ã¤
+        FadeDurationAndMargin,  // ãƒ•ã‚§ãƒ¼ãƒ‰ã®æ™‚é–“ + ãƒãƒ¼ã‚¸ãƒ³ã ã‘å¾…ã¤ï¼ˆãƒ•ã‚§ãƒ¼ãƒ‰æ™‚é–“ãŒå¤‰ã‚ã£ã¦ã‚‚è‡ªå‹•ã§åˆã‚ã›ã‚‹ï¼‰
     }
     [Header("Fade Wait")]
-    [Tooltip("ƒJƒEƒ“ƒgƒAƒbƒvŠJn‚Ü‚Å‚Ì‘Ò‚¿•û")]
+    [Tooltip("ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—é–‹å§‹ã¾ã§ã®å¾…ã¡æ–¹")]
     [SerializeField] private FadeWaitMode _fadeWaitMode = FadeWaitMode.FadeDurationAndMargin;
-    [Tooltip("FixedTime ‚Ì‚Ì‘Ò‚¿ŠÔi•bj")]
+    [Tooltip("FixedTime ã®æ™‚ã®å¾…ã¡æ™‚é–“ï¼ˆç§’ï¼‰")]
     [SerializeField] private float _fadeWaitTime = 0.5f;
-    [Tooltip("FadeDurationAndMargin ‚ÌAƒtƒF[ƒh‚ÌŠÔ‚É‘«‚·—]”’i•bj")]
+    [Tooltip("FadeDurationAndMargin ã®æ™‚ã€ãƒ•ã‚§ãƒ¼ãƒ‰ã®æ™‚é–“ã«è¶³ã™ä½™ç™½ï¼ˆç§’ï¼‰")]
     [SerializeField] private float _fadeWaitMargin = 0.2f;
-    private float _fadeWaitDuration = 0.0f;   // ÀÛ‚É‘Ò‚ÂŠÔiStart ‚ÅŒˆ‚ß‚éj
+    private float _fadeWaitDuration = 0.0f;   // å®Ÿéš›ã«å¾…ã¤æ™‚é–“ï¼ˆStart ã§æ±ºã‚ã‚‹ï¼‰
 
     // --------------------------------------------------
     // ----- Confirm Window Settings -----
     // --------------------------------------------------
     [Header("Confirm Window")]
-    [Tooltip("ƒ{ƒ^ƒ““ü—ÍŒã‚ÉŠm”FƒEƒBƒ“ƒhƒE‚ğo‚·‚©BƒIƒt‚É‚·‚é‚Æ‚»‚Ì‚Ü‚Üƒ^ƒCƒgƒ‹‚Ö‘JˆÚ‚·‚é")]
+    [Tooltip("ãƒœã‚¿ãƒ³å…¥åŠ›å¾Œã«ç¢ºèªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’å‡ºã™ã‹ã€‚ã‚ªãƒ•ã«ã™ã‚‹ã¨ãã®ã¾ã¾ã‚¿ã‚¤ãƒˆãƒ«ã¸é·ç§»ã™ã‚‹")]
     [SerializeField] private bool _useConfirmWindow = true;
 
     // --------------------------------------------------
     // ----- Rank Settings -----
     // --------------------------------------------------
-    // ƒNƒŠƒAƒ^ƒCƒ€i•bj‚ªˆÈ‰º‚Ì’lˆÈ‰º‚È‚ç‚»‚Ì•]‰¿AB ‚æ‚è’x‚¯‚ê‚Î C •]‰¿
-    // S … A … B ‚Ì‡‚É‚È‚é‚æ‚¤‚Éİ’è‚·‚é
+    // ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ ï¼ˆç§’ï¼‰ãŒä»¥ä¸‹ã®å€¤ä»¥ä¸‹ãªã‚‰ãã®è©•ä¾¡ã€B ã‚ˆã‚Šé…ã‘ã‚Œã° C è©•ä¾¡
+    // S â‰¦ A â‰¦ B ã®é †ã«ãªã‚‹ã‚ˆã†ã«è¨­å®šã™ã‚‹
     [Header("Rank (Clear Time Seconds)")]
-    [Tooltip("ƒNƒŠƒAƒ^ƒCƒ€‚ª‚±‚Ì•b”ˆÈ‰º‚È‚ç S •]‰¿")]
+    [Tooltip("ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ ãŒã“ã®ç§’æ•°ä»¥ä¸‹ãªã‚‰ S è©•ä¾¡")]
     [SerializeField] private float _rankSTime = 120.0f;
-    [Tooltip("ƒNƒŠƒAƒ^ƒCƒ€‚ª‚±‚Ì•b”ˆÈ‰º‚È‚ç A •]‰¿iS ‚Ì•b”‚æ‚è‘å‚«‚­‚·‚éj")]
+    [Tooltip("ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ ãŒã“ã®ç§’æ•°ä»¥ä¸‹ãªã‚‰ A è©•ä¾¡ï¼ˆS ã®ç§’æ•°ã‚ˆã‚Šå¤§ããã™ã‚‹ï¼‰")]
     [SerializeField] private float _rankATime = 180.0f;
-    [Tooltip("ƒNƒŠƒAƒ^ƒCƒ€‚ª‚±‚Ì•b”ˆÈ‰º‚È‚ç B •]‰¿iA ‚Ì•b”‚æ‚è‘å‚«‚­‚·‚éjB‚±‚ê‚æ‚è’x‚¢‚Æ C •]‰¿")]
+    [Tooltip("ã‚¯ãƒªã‚¢ã‚¿ã‚¤ãƒ ãŒã“ã®ç§’æ•°ä»¥ä¸‹ãªã‚‰ B è©•ä¾¡ï¼ˆA ã®ç§’æ•°ã‚ˆã‚Šå¤§ããã™ã‚‹ï¼‰ã€‚ã“ã‚Œã‚ˆã‚Šé…ã„ã¨ C è©•ä¾¡")]
     [SerializeField] private float _rankBTime = 240.0f;
 
     // --------------------------------------------------
     // ----- Debug -----
-    // ƒvƒŒƒCŠÔ‚Ìó‚¯“n‚µ•û–@‚ªŒˆ‚Ü‚é‚Ü‚Å‚Ì‰¼‚Ì’l
+    // ãƒ—ãƒ¬ã‚¤æ™‚é–“ã®å—ã‘æ¸¡ã—æ–¹æ³•ãŒæ±ºã¾ã‚‹ã¾ã§ã®ä»®ã®å€¤
     // --------------------------------------------------
     [Header("Debug")]
-    [Tooltip("•\¦‚·‚éƒvƒŒƒCŠÔi•bjB•]‰¿‚ÌŠm”F‚Í‚±‚Ì’l‚ğ•Ï‚¦‚Äs‚¤")]
+    [Tooltip("è¡¨ç¤ºã™ã‚‹ãƒ—ãƒ¬ã‚¤æ™‚é–“ï¼ˆç§’ï¼‰ã€‚è©•ä¾¡ã®ç¢ºèªã¯ã“ã®å€¤ã‚’å¤‰ãˆã¦è¡Œã†")]
     [SerializeField] private float _debugPlayTime = 83.45f;
 
     // --------------------------------------------------
@@ -99,7 +99,7 @@ public class ResultScene_StateMachine : MonoBehaviour
     // --------------------------------------------------
     // ----- Confirm Selection -----
     // --------------------------------------------------
-    private const float NavigateThreshold = 0.5f;   // ¶‰E“ü—Í‚Æ‚İ‚È‚·ŒX‚«‚Ì‘å‚«‚³
+    private const float NavigateThreshold = 0.5f;   // å·¦å³å…¥åŠ›ã¨ã¿ãªã™å‚¾ãã®å¤§ãã•
     private float _prevNavigateX = 0.0f;
     private bool _isYesSelected = false;
 
@@ -136,10 +136,10 @@ public class ResultScene_StateMachine : MonoBehaviour
     }
     private void OnValidate()
     {
-        // •]‰¿‚Ì•b”‚Ì•À‚Ñ‚ª‹t‚¾‚Æ³‚µ‚­”»’è‚Å‚«‚È‚¢‚½‚ßŒx‚·‚é
+        // è©•ä¾¡ã®ç§’æ•°ã®ä¸¦ã³ãŒé€†ã ã¨æ­£ã—ãåˆ¤å®šã§ããªã„ãŸã‚è­¦å‘Šã™ã‚‹
         if (_rankSTime > _rankATime || _rankATime > _rankBTime)
         {
-            Debug.LogWarning("[Warning] Rank Time Order Is Wrong! S … A … B ‚Ì‡‚Éİ’è‚µ‚Ä‚­‚¾‚³‚¢B");
+            Debug.LogWarning("[Warning] Rank Time Order Is Wrong! S â‰¦ A â‰¦ B ã®é †ã«è¨­å®šã—ã¦ãã ã•ã„ã€‚");
         }
     }
     private void Update()
@@ -182,8 +182,14 @@ public class ResultScene_StateMachine : MonoBehaviour
     // --------------------------------------------------
     private float GetPlayTime()
     {
-        // TODO: ƒvƒŒƒCŠÔ‚Ìó‚¯“n‚µ•û–@‚ªŒˆ‚Ü‚Á‚½‚çA‚±‚±‚Åæ“¾‚·‚é‚æ‚¤‚É•ÏX‚·‚é
-        return _debugPlayTime;
+        // TODO: ãƒ—ãƒ¬ã‚¤æ™‚é–“ã®å—ã‘æ¸¡ã—æ–¹æ³•ãŒæ±ºã¾ã£ãŸã‚‰ã€ã“ã“ã§å–å¾—ã™ã‚‹ã‚ˆã†ã«å¤‰æ›´ã™ã‚‹
+        float playTime = _debugPlayTime;
+        if (_controller.RaceResultData != null)
+        {
+            playTime = _controller.RaceResultData.RaceTime;
+        }
+
+        return playTime;
     }
     private string CalculateRank(float playTime)
     {
@@ -210,7 +216,7 @@ public class ResultScene_StateMachine : MonoBehaviour
         _state = next;
         _stateTimer = 0.0f;
 
-        // Šeó‘Ô‚É“ü‚Á‚½‚Ìˆ—
+        // å„çŠ¶æ…‹ã«å…¥ã£ãŸæ™‚ã®å‡¦ç†
         switch (next)
         {
             case ResultState.ShowRank:
@@ -220,7 +226,7 @@ public class ResultScene_StateMachine : MonoBehaviour
                 _presentation.ShowThanks();
                 break;
             case ResultState.Confirm:
-                // Œë‘€ì–h~‚Ì‚½‚ßu‚¢‚¢‚¦v‚ğ‰Šú‘I‘ğ‚É‚·‚é
+                // èª¤æ“ä½œé˜²æ­¢ã®ãŸã‚ã€Œã„ã„ãˆã€ã‚’åˆæœŸé¸æŠã«ã™ã‚‹
                 _isYesSelected = false;
                 _prevNavigateX = _inputHandler.Navigate.x;
                 _presentation.OpenConfirm();
@@ -237,7 +243,7 @@ public class ResultScene_StateMachine : MonoBehaviour
     // --------------------------------------------------
     private void UpdateWaitFadeIn()
     {
-        // ƒtƒF[ƒh’†‚Ì“ü—Í‚ÍÌ‚Ä‚é
+        // ãƒ•ã‚§ãƒ¼ãƒ‰ä¸­ã®å…¥åŠ›ã¯æ¨ã¦ã‚‹
         ClearInput();
 
         if (_stateTimer >= _fadeWaitDuration)
@@ -254,7 +260,7 @@ public class ResultScene_StateMachine : MonoBehaviour
             case FadeWaitMode.FadeDurationAndMargin:
                 if (FadeController.Instance == null)
                 {
-                    Debug.LogWarning("[Warning] FadeController Not Found! ƒ}[ƒWƒ“‚ÌŠÔ‚¾‚¯‘Ò‚¿‚Ü‚·B");
+                    Debug.LogWarning("[Warning] FadeController Not Found! ãƒãƒ¼ã‚¸ãƒ³ã®æ™‚é–“ã ã‘å¾…ã¡ã¾ã™ã€‚");
                     return _fadeWaitMargin;
                 }
                 return FadeController.Instance.FadeDuration + _fadeWaitMargin;
@@ -269,7 +275,7 @@ public class ResultScene_StateMachine : MonoBehaviour
 
         if (isSkipped)
         {
-            // ƒXƒLƒbƒvF‘¦ƒvƒŒƒCƒ^ƒCƒ€‚Ü‚Å‘‰Á‚³‚¹‚é
+            // ã‚¹ã‚­ãƒƒãƒ—ï¼šå³ãƒ—ãƒ¬ã‚¤ã‚¿ã‚¤ãƒ ã¾ã§å¢—åŠ ã•ã›ã‚‹
             _presentation.FinishCountUp(_playTime);
             ChangeState(ResultState.ShowRank);
             return;
@@ -287,7 +293,7 @@ public class ResultScene_StateMachine : MonoBehaviour
 
         if (isSkipped)
         {
-            // ƒXƒLƒbƒvF‘¦ƒAƒjƒ[ƒVƒ‡ƒ“I—¹
+            // ã‚¹ã‚­ãƒƒãƒ—ï¼šå³ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†
             _presentation.FinishRankPop();
             ChangeState(ResultState.ShowThanks);
             return;
@@ -305,7 +311,7 @@ public class ResultScene_StateMachine : MonoBehaviour
 
         if (isSkipped)
         {
-            // ƒXƒLƒbƒvF‘¦ƒAƒjƒ[ƒVƒ‡ƒ“I—¹
+            // ã‚¹ã‚­ãƒƒãƒ—ï¼šå³ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†
             _presentation.FinishThanksEntry();
             ChangeState(ResultState.WaitInput);
             return;
@@ -320,7 +326,7 @@ public class ResultScene_StateMachine : MonoBehaviour
     {
         _inputHandler.ConsumeCancelPressed();
 
-        // ƒ}ƒEƒX‚Íuƒ^ƒCƒgƒ‹‚Övƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚¾‚¯ŠJ‚­iOnClick ‘¤‚Åˆ—jB‰æ–Ê‚Ì‹ó‚¢‚Ä‚¢‚éŠ‚ÌƒNƒŠƒbƒN‚Å‚ÍŠJ‚©‚È‚¢
+        // ãƒã‚¦ã‚¹ã¯ã€Œã‚¿ã‚¤ãƒˆãƒ«ã¸ã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸæ™‚ã ã‘é–‹ãï¼ˆOnClick å´ã§å‡¦ç†ï¼‰ã€‚ç”»é¢ã®ç©ºã„ã¦ã„ã‚‹æ‰€ã®ã‚¯ãƒªãƒƒã‚¯ã§ã¯é–‹ã‹ãªã„
         if (_inputHandler.ConsumeSubmitPressed() && !IsMouseClickedThisFrame())
         {
             OpenConfirmOrTransition();
@@ -328,14 +334,14 @@ public class ResultScene_StateMachine : MonoBehaviour
     }
     private void OpenConfirmOrTransition()
     {
-        // Šm”FƒEƒBƒ“ƒhƒE‚ğg‚í‚È‚¢İ’è‚È‚çA‚»‚Ì‚Ü‚Üƒ^ƒCƒgƒ‹‚Ö‘JˆÚ‚·‚é
+        // ç¢ºèªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½¿ã‚ãªã„è¨­å®šãªã‚‰ã€ãã®ã¾ã¾ã‚¿ã‚¤ãƒˆãƒ«ã¸é·ç§»ã™ã‚‹
         ChangeState(_useConfirmWindow ? ResultState.Confirm : ResultState.Transition);
     }
     private void UpdateConfirm()
     {
         _presentation.UpdateConfirmPop(_stateTimer);
 
-        // ¶‰E“ü—Íi“|‚µ‚½uŠÔ‚¾‚¯”½‰‚³‚¹‚éj
+        // å·¦å³å…¥åŠ›ï¼ˆå€’ã—ãŸç¬é–“ã ã‘åå¿œã•ã›ã‚‹ï¼‰
         float navigateX = _inputHandler.Navigate.x;
         if (navigateX <= -NavigateThreshold && _prevNavigateX > -NavigateThreshold)
         {
@@ -352,7 +358,7 @@ public class ResultScene_StateMachine : MonoBehaviour
             CloseConfirm();
             return;
         }
-        // ƒ}ƒEƒXƒNƒŠƒbƒN‚Í Yes / No ƒ{ƒ^ƒ“‘¤iOnClickj‚Åˆ—‚·‚é‚Ì‚ÅA‚±‚±‚Å‚Í–³‹‚·‚é
+        // ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ã¯ Yes / No ãƒœã‚¿ãƒ³å´ï¼ˆOnClickï¼‰ã§å‡¦ç†ã™ã‚‹ã®ã§ã€ã“ã“ã§ã¯ç„¡è¦–ã™ã‚‹
         if (_inputHandler.ConsumeSubmitPressed() && !IsMouseClickedThisFrame())
         {
             DecideConfirm(_isYesSelected);
@@ -399,7 +405,7 @@ public class ResultScene_StateMachine : MonoBehaviour
 
     // --------------------------------------------------
     // ----- OnClick Requests -----
-    // ƒ}ƒEƒX‚Åƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚ÉŒÄ‚Î‚ê‚é
+    // ãƒã‚¦ã‚¹ã§ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹
     // --------------------------------------------------
     public void RequestConfirm()
     {
@@ -409,7 +415,7 @@ public class ResultScene_StateMachine : MonoBehaviour
             OpenConfirmOrTransition();
         }
     }
-    // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ Yes / No ‚Éd‚Ë‚½‚ÉŒÄ‚Î‚ê‚é
+    // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’ Yes / No ã«é‡ã­ãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹
     public void RequestSelect(bool isYes)
     {
         if (_state == ResultState.Confirm)
@@ -444,12 +450,12 @@ public class ResultScene_StateMachine : MonoBehaviour
     }
     private bool IsMouseClickedThisFrame()
     {
-        // ƒ}ƒEƒX¶ƒNƒŠƒbƒN‚à Submit ‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚é‚½‚ßAƒNƒŠƒbƒN‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+        // ãƒã‚¦ã‚¹å·¦ã‚¯ãƒªãƒƒã‚¯ã‚‚ Submit ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ãŸã‚ã€ã‚¯ãƒªãƒƒã‚¯ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
         return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
     }
     private void ClearSelectedButton()
     {
-        // ƒNƒŠƒbƒN‚µ‚½ƒ{ƒ^ƒ“‚ª‘I‘ğó‘Ô‚Ì‚Ü‚Üc‚é‚ÆAŒˆ’èƒ{ƒ^ƒ“‚Å“ñd‚É”½‰‚·‚é‚½‚ß‰ğœ‚·‚é
+        // ã‚¯ãƒªãƒƒã‚¯ã—ãŸãƒœã‚¿ãƒ³ãŒé¸æŠçŠ¶æ…‹ã®ã¾ã¾æ®‹ã‚‹ã¨ã€æ±ºå®šãƒœã‚¿ãƒ³ã§äºŒé‡ã«åå¿œã™ã‚‹ãŸã‚è§£é™¤ã™ã‚‹
         if (EventSystem.current != null)
         {
             EventSystem.current.SetSelectedGameObject(null);

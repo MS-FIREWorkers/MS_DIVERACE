@@ -32,6 +32,20 @@ public class SceneController_Result : SceneController_Base
     public string NameToTitleScene => _nameToTitleScene;
 
     // --------------------------------------------------
+    // ----- ToTitleButton -----
+    // --------------------------------------------------
+    [Header("ボタン参照（手動参照）")]
+    [SerializeField] private UI_ConfirmWindow _confirmWindow;
+    [SerializeField] private UI_Button_Controller _buttonToTitleScene;
+
+    // --------------------------------------------------
+    // ----- RaceResultData -----
+    // --------------------------------------------------
+    [Header("RaceResultData（手動参照）")]
+    [SerializeField] private RaceResultData _raceResultData;
+    public RaceResultData RaceResultData => _raceResultData;
+
+    // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
     private void Awake()
@@ -39,6 +53,16 @@ public class SceneController_Result : SceneController_Base
         _stateMachine = GetComponent<ResultScene_StateMachine>();
         _presentationController = GetComponent<ResultScene_PresentationController>();
         _inputHandler = GetComponent<ResultScene_InputHandler>();
+
+        if (_buttonToTitleScene != null )
+        {
+            _buttonToTitleScene.AddClickListener(OnClick_ToTitle_Hanaue);
+        }
+
+        if (RaceResultData == null)
+        {
+            Debug.LogError("[Error] RaceResultData Is Not Found!!");
+        }
     }
 
 
@@ -67,5 +91,25 @@ public class SceneController_Result : SceneController_Base
             return;
         }
         _stateMachine.RequestConfirm();
+    }
+    public void OnClick_ToTitle_Hanaue()
+    {
+        if (_confirmWindow != null && _buttonToTitleScene != null)
+        {
+            _confirmWindow.Open(_buttonToTitleScene.ConfirmMessage, _buttonToTitleScene, Confirm_ToTitle);
+        }
+        else
+        {
+            Confirm_ToTitle();
+        }
+    }
+
+    // --------------------------------------------------
+    // ----- Confirm Events -----
+    // --------------------------------------------------
+    private void Confirm_ToTitle()
+    {
+        // チュートリアルシーン遷移
+        GameManager.Instance.ChangeScene(_nameToTitleScene);
     }
 }
