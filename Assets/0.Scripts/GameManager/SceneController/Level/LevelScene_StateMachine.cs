@@ -1,15 +1,15 @@
-/*
+Ôªø/*
     LevelScene_StateMachine
     20261104  hanaue sho
-    ÉåÉxÉãÉVÅ[ÉìÇÃèÛë‘Çä«óùÇ∑ÇÈÉXÉNÉäÉvÉg
-    à»â∫ÇÕä«óùÇ∑ÇÈèÛë‘ÉtÉçÅ[
-    ÇPÅDÉIÅ[ÉvÉjÉìÉOÉÄÅ[ÉrÅ[çƒê∂ÅiÉXÉLÉbÉvâ¬Åj
-    ÇQÅDÉQÅ[ÉÄÉvÉåÉC
-    ÇRÅDÉSÅ[Éãë“Çø
-    ÇSÅDÉSÅ[Éãå„ââèo
-    ÇTÅDÉSÅ[Éãå„ÉÄÅ[ÉrÅ[çƒê∂ÅiÉXÉLÉbÉvâ¬Åj
+    „É¨„Éô„É´„Ç∑„Éº„É≥„ÅÆÁä∂ÊÖã„ÇíÁÆ°ÁêÜ„Åô„Çã„Çπ„ÇØ„É™„Éó„Éà
+    ‰ª•‰∏ã„ÅØÁÆ°ÁêÜ„Åô„ÇãÁä∂ÊÖã„Éï„É≠„Éº
+    ÔºëÔºé„Ç™„Éº„Éó„Éã„É≥„Ç∞„É†„Éº„Éì„ÉºÂÜçÁîüÔºà„Çπ„Ç≠„ÉÉ„ÉóÂèØÔºâ
+    ÔºíÔºé„Ç≤„Éº„É†„Éó„É¨„Ç§
+    ÔºìÔºé„Ç¥„Éº„É´ÂæÖ„Å°
+    ÔºîÔºé„Ç¥„Éº„É´ÂæåÊºîÂá∫
+    ÔºïÔºé„Ç¥„Éº„É´Âæå„É†„Éº„Éì„ÉºÂÜçÁîüÔºà„Çπ„Ç≠„ÉÉ„ÉóÂèØÔºâ
 
-    ÉQÅ[ÉÄÉvÉåÉCíÜÇÕàÍéûí‚é~ÇÃèàóùÇ‡â¡Ç¶ÇÈÅB
+    „Ç≤„Éº„É†„Éó„É¨„Ç§‰∏≠„ÅØ‰∏ÄÊôÇÂÅúÊ≠¢„ÅÆÂá¶ÁêÜ„ÇÇÂä†„Åà„Çã„ÄÇ
  */
 using UnityEngine;
 
@@ -19,18 +19,124 @@ public class LevelScene_StateMachine : MonoBehaviour
     // ----- SceneController -----
     // --------------------------------------------------
     private SceneController_Level _controller;
+    private LevelScene_PauseController _pauseController;
 
+    // --------------------------------------------------
+    // ----- State -----
+    // --------------------------------------------------
+    private LevelScene_State_FadeIn _stateFadeIn;
+    private LevelScene_State_Opening _stateOpening;
+    private LevelScene_State_Countdown _stateCountdown;
+    private LevelScene_State_Racing _stateRacing;
+    private LevelScene_State_Goal _stateGoal;
+
+    private LevelScene_State_Base _currentState;
+    public LevelScene_State_Base CurrentState => _currentState;
+
+    public enum StateType
+    {
+        FadeIn,
+        Opening,
+        Countdown,
+        Racing,
+        Goal,
+    }
+    [Header("State")]
+    [SerializeField] private StateType _initialState = StateType.Countdown;
+    [SerializeField] private StateType _currentStateName = StateType.FadeIn;
+    public StateType CurrentStateName => _currentStateName;
 
     // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
-    private void Start()
+    private void Awake()
     {
         _controller = GetComponent<SceneController_Level>();
+        _pauseController = _controller.PauseController;
 
+        // ----- State -----
+        _stateFadeIn = new LevelScene_State_FadeIn(_controller);
+        _stateOpening = new LevelScene_State_Opening(_controller);
+        _stateCountdown = new LevelScene_State_Countdown(_controller);
+        _stateRacing = new LevelScene_State_Racing(_controller);
+        _stateGoal = new LevelScene_State_Goal(_controller);
+
+
+        _currentState = GetState(_initialState);
+        ChangeStateName();
+    }
+    private void Start()
+    {
+        _currentState?.Enter();
     }
     private void Update()
     {
+        // „Éù„Éº„Ç∫„Ç¶„Ç£„É≥„Éâ„Ç¶
+        if (_pauseController.IsPaused)
+        {
+            return;
+        }
 
+        _currentState?.Update();
+    }
+
+    // --------------------------------------------------
+    // ----- ChangeState -----
+    // --------------------------------------------------
+    public void ChangeState(StateType newState)
+    {
+        LevelScene_State_Base state = GetState(newState);
+
+        if (state == null || state == _currentState)
+        {
+            return;
+        }
+
+        _currentState?.Exit();
+
+        _currentState = state;
+
+        _currentState?.Enter();
+
+        ChangeStateName();
+    }
+
+    // --------------------------------------------------
+    // ----- GetState -----
+    // --------------------------------------------------
+    private LevelScene_State_Base GetState(StateType stateType)
+    {
+        switch (stateType)
+        {
+            case StateType.FadeIn:      return _stateFadeIn;
+            case StateType.Opening:     return _stateOpening;
+            case StateType.Countdown:   return _stateCountdown;
+            case StateType.Racing:      return _stateRacing;
+            case StateType.Goal:        return _stateGoal;
+            default: return null;
+        }
+    }
+    private void ChangeStateName()
+    {
+        if (_currentState == _stateFadeIn)
+        {
+            _currentStateName = StateType.FadeIn;
+        }
+        else if (_currentState == _stateOpening)
+        {
+            _currentStateName = StateType.Opening;
+        }
+        else if (_currentState == _stateCountdown)
+        {
+            _currentStateName = StateType.Countdown;
+        }
+        else if (_currentState == _stateRacing)
+        {
+            _currentStateName = StateType.Racing;
+        }
+        else if (_currentState == _stateGoal)
+        {
+            _currentStateName = StateType.Goal;
+        }
     }
 }

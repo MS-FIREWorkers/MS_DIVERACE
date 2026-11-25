@@ -97,5 +97,9 @@ public class Player_CharacterController : MonoBehaviour
     {
         _currentControllerMode = ControllerMode.Manual;
     }
+    public void PausePlay()
+    {
+        _currentControllerMode = ControllerMode.Cutscene;
+    }
 
 }

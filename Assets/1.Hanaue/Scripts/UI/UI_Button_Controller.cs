@@ -17,7 +17,7 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
     // --------------------------------------------------
     // ----- SelectButton -----
     // --------------------------------------------------
-    [Header("References")]
+    [Header("References（手動参照）")]
     [SerializeField] private UI_ButtonSelectionController _selectionController;
     [SerializeField] private UI_ParallelogramEffect _effect;
     [Header("Confirm")]
@@ -48,7 +48,6 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
     {
         _button = GetComponent<Button>();
         _rectTransform = GetComponent<RectTransform>();
-        _selectionController = FindFirstObjectByType<UI_ButtonSelectionController>();
 
         if (_effect == null)
         {

@@ -3,6 +3,7 @@
     20261004  hanaue sho
     PlayerCharacter のステートパターン基底クラス
  */
+
 public abstract class PlayerState_Base
 {
     protected Player_CharacterController _controller;

@@ -6,7 +6,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using TMPro;
 
 public class UI_ConfirmWindow : MonoBehaviour
@@ -99,8 +98,11 @@ public class UI_ConfirmWindow : MonoBehaviour
     // ----- Close -----
     // 確認ウィンドウを閉じ、元の選択を復元する
     // --------------------------------------------------
-    private void Close()
+    public void Close(bool restoredSelection = true)
     {
+        // 登録されていた確認処理を削除
+        _onConfirm = null;
+
         // ----- Selection -----
         if (EventSystem.current != null)
         {
@@ -117,7 +119,7 @@ public class UI_ConfirmWindow : MonoBehaviour
         }
 
         // ----- Restore Selection -----
-        if (_previousButton != null && EventSystem.current != null)
+        if (restoredSelection && _previousButton != null && EventSystem.current != null)
         {
             EventSystem.current.SetSelectedGameObject(_previousButton.gameObject);
         }
