@@ -29,6 +29,11 @@ public class Barrier_FrustumGenerator : MonoBehaviour
     // Collider同士の継ぎ目を埋める
     [SerializeField, Min(0.0f)] private float _overlap = 0.05f;
 
+    // --------------------------------------------------
+    // ----- Generated Mesh -----
+    // --------------------------------------------------
+    [Header("Generated Mesh")]
+    [SerializeField] private Mesh _generatedMesh;
 
     // --------------------------------------------------
     // ----- Generate -----
@@ -126,6 +131,12 @@ public class Barrier_FrustumGenerator : MonoBehaviour
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
 
+        // ----- MeshをAssetとして保存 -----
+#if UNITY_EDITOR
+        mesh = SaveMeshAsset(mesh);
+#endif
+
+        // ----- Modelへ適用 -----
         _modelMeshFilter.sharedMesh = mesh;
     }
 
@@ -235,4 +246,52 @@ public class Barrier_FrustumGenerator : MonoBehaviour
             }
         }
     }
+
+
+
+    // --------------------------------------------------
+    // ----- Save Mesh Asset -----
+    // --------------------------------------------------
+#if UNITY_EDITOR
+    private Mesh SaveMeshAsset(Mesh mesh)
+    {
+        const string folderPath = "Assets/0.Models/Common/Barrier";
+
+        // フォルダがなければ作成
+        if (!UnityEditor.AssetDatabase.IsValidFolder(folderPath))
+        {
+            UnityEditor.AssetDatabase.CreateFolder("Assets/0.Models/Common", "Barrier");
+        }
+
+        // ----- 既存Meshの更新 -----
+        if (_generatedMesh != null && UnityEditor.AssetDatabase.Contains(_generatedMesh))
+        {
+            UnityEditor.EditorUtility.CopySerialized(mesh, _generatedMesh);
+            UnityEditor.EditorUtility.SetDirty(_generatedMesh);
+
+            DestroyImmediate(mesh);
+
+            UnityEditor.AssetDatabase.SaveAssets();
+
+            return _generatedMesh;
+        }
+
+        // ----- 新規Meshアセット作成 -----
+        string assetPath = folderPath + "/" + gameObject.name + "_Mesh.asset";
+
+        // 同名アセットが存在する場合は別名にする
+        assetPath = UnityEditor.AssetDatabase.GenerateUniqueAssetPath(assetPath);
+
+        UnityEditor.AssetDatabase.CreateAsset(mesh, assetPath);
+        UnityEditor.AssetDatabase.SaveAssets();
+
+        _generatedMesh = mesh;
+
+        // Generatorの参照変更をシーンに記録
+        UnityEditor.EditorUtility.SetDirty(this);
+
+        return _generatedMesh;
+    }
+#endif
+
 }
