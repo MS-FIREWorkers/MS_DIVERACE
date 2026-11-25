@@ -39,7 +39,7 @@ public class PlayerMaskRendererFeature : ScriptableRendererFeature
         _maskPass = new PlayerMaskPass();
 
         // 不透明オブジェクトの描画後、透明パーティクルの描画前に歪みを適用する。
-        _maskPass.renderPassEvent = RenderPassEvent.BeforeRenderingTransparents;
+        _maskPass.renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
