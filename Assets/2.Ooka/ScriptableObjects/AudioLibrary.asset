@@ -13,9 +13,49 @@ MonoBehaviour:
   m_Name: AudioLibrary
   m_EditorClassIdentifier: Assembly-CSharp::AudioLibrary
   _entries:
-  - _name: BgmTest
-    _audioData: {fileID: 11400000, guid: 5deb5e18bb180e74282fe5abfde9e31d, type: 2}
-  - _name: BgmFactory
-    _audioData: {fileID: 11400000, guid: 3f53a5114b5f99c4e8948ec045074da8, type: 2}
-  - _name: PlayerJump
-    _audioData: {fileID: 11400000, guid: afc2bbc36bf054847b2565b422b3a97c, type: 2}
+  - _name: BGM_LevelScene
+    _audioData: {fileID: 11400000, guid: 324a8fde7769cfe42b1f131f91f7acea, type: 2}
+  - _name: BGM_ResultScene
+    _audioData: {fileID: 11400000, guid: b80de45292fbea34c9d8cdd6afa1655a, type: 2}
+  - _name: BGM_TitleScene
+    _audioData: {fileID: 11400000, guid: 88967638b414a5b4583d60e0a2f7af62, type: 2}
+  - _name: BGM_TutorialScene
+    _audioData: {fileID: 11400000, guid: 412baaf55a960234787c83efc5d5684f, type: 2}
+  - _name: SE_Accleration
+    _audioData: {fileID: 11400000, guid: 70dd70f6988bac243aafa38837bcd153, type: 2}
+  - _name: SE_BoostRing
+    _audioData: {fileID: 11400000, guid: 46a9f21166d394546a478692268e002a, type: 2}
+  - _name: SE_ButtonPress
+    _audioData: {fileID: 11400000, guid: 5849f25ee26e77447bd4613deee9b102, type: 2}
+  - _name: SE_Cheer
+    _audioData: {fileID: 11400000, guid: 2533560cb29a5d745ad6dade075ea1e2, type: 2}
+  - _name: SE_CursorMove
+    _audioData: {fileID: 11400000, guid: 1df78f91503e7304497d8bb0a1ffcefe, type: 2}
+  - _name: SE_FallingWind
+    _audioData: {fileID: 11400000, guid: 6c6a6be326750954489ce95c42ddebed, type: 2}
+  - _name: SE_FloorPass
+    _audioData: {fileID: 11400000, guid: 93e49bdd2b9014f4a99f7f45a6465e30, type: 2}
+  - _name: SE_Goal
+    _audioData: {fileID: 11400000, guid: 17b529fb60aa51b4495f015f8d3d7edf, type: 2}
+  - _name: SE_ObstacleActivate
+    _audioData: {fileID: 11400000, guid: 27f23f3d385dd8f4da1e77f988d525ce, type: 2}
+  - _name: SE_ObstacleApproach
+    _audioData: {fileID: 11400000, guid: aae6e31f890c8c14cb0ee3cf7a02ada1, type: 2}
+  - _name: SE_ObstacleCollision
+    _audioData: {fileID: 11400000, guid: 70255ea51fee8a3488132993e573ac5d, type: 2}
+  - _name: SE_ObstaclePass
+    _audioData: {fileID: 11400000, guid: 0085349732e8c4342acfd2e1f9396b6f, type: 2}
+  - _name: SE_Presentation
+    _audioData: {fileID: 11400000, guid: 9d17c35813974f044974fdc728bddbc4, type: 2}
+  - _name: SE_StartCountdown
+    _audioData: {fileID: 11400000, guid: 16fff65dd95def949b2e3a84b17f83d4, type: 2}
+  - _name: AMB_Scene_Level
+    _audioData: {fileID: 11400000, guid: 87fc70954bee8bd498eed0ea04317df6, type: 2}
+  - _name: AMB_Scene_Level_2
+    _audioData: {fileID: 11400000, guid: c052d7b50c40fa842bcb201bf04827fc, type: 2}
+  - _name: AMB_Scene_Level_3
+    _audioData: {fileID: 11400000, guid: b2c771409dceb2549b2cdba16463c178, type: 2}
+  - _name: AMB_Scene_Level_4
+    _audioData: {fileID: 11400000, guid: a7aa62b2b0b3cf449930be2c85b2edd3, type: 2}
+  - _name: AMB_Scene_Level_5
+    _audioData: {fileID: 11400000, guid: 0ae3d016e54af604b9dad682f9eb609b, type: 2}
