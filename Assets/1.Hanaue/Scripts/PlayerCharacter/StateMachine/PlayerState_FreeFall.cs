@@ -104,6 +104,7 @@ public class PlayerState_FreeFall : PlayerState_Base
 
         // ----- Animation -----
         _controller.Animation.RotateTo(postureInput);
+        _controller.Animation.SetPose(postureInput);
     }
     public override void Exit() { }
 

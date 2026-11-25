@@ -186,6 +186,10 @@ public class PlayerState_WallSide : PlayerState_Base
             LeaveWall(WallSideExitType.Edge);
             return;
         }
+
+        // ----- Animation -----
+        _controller.Animation.RotateTo(postureInput);
+        _controller.Animation.SetPose(postureInput);
     }
 
     public override void Exit()

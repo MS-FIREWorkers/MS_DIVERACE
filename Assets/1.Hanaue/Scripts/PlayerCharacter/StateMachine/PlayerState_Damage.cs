@@ -111,6 +111,7 @@ public class PlayerState_Damage : PlayerState_Base
 
         // ----- Animation -----
         _controller.Animation.RotateTo(postureInput);
+        _controller.Animation.SetPose(postureInput);
     }
     public override void Exit() { }
 

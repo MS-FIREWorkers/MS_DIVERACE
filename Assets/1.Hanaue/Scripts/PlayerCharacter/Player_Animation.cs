@@ -63,10 +63,19 @@ public class Player_Animation : MonoBehaviour
     public bool HasHandContact => _hasWallIKContact;
 
     // --------------------------------------------------
+    // ----- Animator -----
+    // --------------------------------------------------
+    private Animator _animator;
+    private static readonly int PoseHash = Animator.StringToHash("Pose");
+
+
+
+    // --------------------------------------------------
     // ----- Unity Event -----
     // --------------------------------------------------
     private void Start()
     {
+        _animator = GetComponentInChildren<Animator>();
         _collisionDetector = GetComponent<Player_CollisionDetector>();  
 
         if (_body == null)
@@ -168,6 +177,10 @@ public class Player_Animation : MonoBehaviour
 
         Vector3 euler = new Vector3 (rotationX, 0.0f, 0.0f);
         _body.transform.localRotation = Quaternion.Euler(euler);
+    }
+    public void SetPose(float pose)
+    {
+        _animator.SetFloat(PoseHash, Mathf.Clamp01(pose));
     }
 
     // --------------------------------------------------
