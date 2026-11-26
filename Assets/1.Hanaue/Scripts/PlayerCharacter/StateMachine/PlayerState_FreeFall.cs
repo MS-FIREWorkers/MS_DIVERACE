@@ -44,6 +44,9 @@ public class PlayerState_FreeFall : PlayerState_Base
         // ----- 衝突判定 -----
         if (_controller.CollisionDetector.CheckCollision(displace, out PlayerImpactInfo impactInfo))
         {
+            // イベント発火
+            _controller.NotifyObstacleCollision(impactInfo.ImpactType);
+
             // ----- TopEdgeGraze -----
             if (impactInfo.ImpactType == PlayerImpactType.TopEdgeGraze)
             {

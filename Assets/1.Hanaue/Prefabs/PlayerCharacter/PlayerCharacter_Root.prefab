@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 3477984834800290264}
   - component: {fileID: 4905108710633237922}
   - component: {fileID: 5681565488041259616}
+  - component: {fileID: 6113658938225763286}
   m_Layer: 0
   m_Name: PlayerCharacter_Root
   m_TagString: Player
@@ -322,12 +323,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6614bc1f856522b408fbb94d1bc820f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_CharacterController
-  _input: {fileID: 0}
-  _movement: {fileID: 0}
-  _stateMachine: {fileID: 0}
-  _collisionDetector: {fileID: 0}
-  _animation: {fileID: 0}
-  _effectEmitter: {fileID: 0}
   _currentControllerMode: 1
 --- !u!114 &7560226599281920295
 MonoBehaviour:
@@ -585,6 +580,29 @@ MonoBehaviour:
   _traceEmissionSpacing: 0.5
   _traceParticlesPerEmission: 6
   _traceSpreadRadius: 0.12
+--- !u!114 &6113658938225763286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684849824088822187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bea0aaa52152084c8cfd6c494fed467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player_EffectController
+  _fallShakeData: {fileID: 11400000, guid: b465fea90c320004b934951705ea9c8a, type: 2}
+  _minFallSpeed: 20
+  _maxFallSpeed: 100
+  _minFallIntensity: 0
+  _maxFallIntensity: 1
+  _wallSideShakeData: {fileID: 11400000, guid: ad66b0ebf4c308f4688d201e0f88f6b5, type: 2}
+  _wallSideExitShakeData: {fileID: 11400000, guid: c386e9611f0a32845a946860192f80a0, type: 2}
+  _topCollisionShakeData: {fileID: 11400000, guid: 1b81aefb7e5c0144599ec21d91ec3162, type: 2}
+  _sideCollisionShakeData: {fileID: 11400000, guid: a1d2e94ad109ec44b849f9ed85ae8bb9, type: 2}
+  _topEdgeCollisionShakeData: {fileID: 11400000, guid: c06bbf91c6ac2ab49b7e0c4b1c76d27c, type: 2}
+  _boostShakeData: {fileID: 11400000, guid: ba7f5bd786b5f794e80715fc1a0a628b, type: 2}
 --- !u!1 &5276214163839814971
 GameObject:
   m_ObjectHideFlags: 0

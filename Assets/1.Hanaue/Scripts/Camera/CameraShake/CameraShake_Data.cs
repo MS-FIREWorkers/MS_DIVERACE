@@ -83,6 +83,13 @@ public class CameraShake_Data : ScriptableObject
     [Min(0.0f)]public float FovReleaseTime = 0.3f;
 
     // --------------------------------------------------
+    // ----- Intensity -----
+    // --------------------------------------------------
+    [Header("Intensity")]
+    [Min(0.0f)] public float IntensityIncreaseSpeed = 3.0f;
+    [Min(0.0f)] public float IntensityDecreaseSpeed = 8.0f;
+
+    // --------------------------------------------------
     // ----- Public Property -----
     // --------------------------------------------------
     public float TotalDuration

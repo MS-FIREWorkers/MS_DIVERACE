@@ -1,4 +1,4 @@
-/*
+﻿/*
     CameraShake_Handle
     20261021  hanaue sho
  */
@@ -11,5 +11,9 @@ public class CameraShake_Handle
     internal CameraShake_Handle(CameraShake_Instance instance)
     {
         Instance = instance;
+    }
+    public void SetIntensity(float intensity)
+    {
+        Instance.SetIntensity(intensity);
     }
 }

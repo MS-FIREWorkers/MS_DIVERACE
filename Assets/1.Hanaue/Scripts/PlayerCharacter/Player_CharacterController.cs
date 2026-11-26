@@ -5,6 +5,7 @@
     外部からの窓口
  */
 using UnityEngine;
+using System;
 
 
 public enum ControllerMode
@@ -19,12 +20,12 @@ public class Player_CharacterController : MonoBehaviour
     // ----- Components -----
     // --------------------------------------------------
     [Header("Components")]
-    [SerializeField] private Player_InputHandler _input;
-    [SerializeField] private Player_Movement _movement;
-    [SerializeField] private Player_StateMachine _stateMachine;
-    [SerializeField] private Player_CollisionDetector _collisionDetector;
-    [SerializeField] private Player_Animation _animation;
-    [SerializeField] private Player_EffectEmitter _effectEmitter;
+    private Player_InputHandler _input;
+    private Player_Movement _movement;
+    private Player_StateMachine _stateMachine;
+    private Player_CollisionDetector _collisionDetector;
+    private Player_Animation _animation;
+    private Player_EffectEmitter _effectEmitter;
 
     // --------------------------------------------------
     // ----- Public Property -----
@@ -43,6 +44,15 @@ public class Player_CharacterController : MonoBehaviour
     [Tooltip("現在のコントロール主導権")]
     [SerializeField] private ControllerMode _currentControllerMode = ControllerMode.Manual;
     public ControllerMode CurrentControllerMode => _currentControllerMode;
+
+    // --------------------------------------------------
+    // ----- Events -----
+    // --------------------------------------------------
+    public event Action OnBoostRingEntered; 
+    public event Action<PlayerImpactType> OnObstacleCollision;
+    public event Action OnWallSlideStarted;
+    public event Action OnWallSlideEnded;
+
 
 
     // --------------------------------------------------
@@ -89,6 +99,27 @@ public class Player_CharacterController : MonoBehaviour
     {
         _movement.ApplyBoost(request);
     }
+
+    // --------------------------------------------------
+    // ----- Event Notification -----
+    // --------------------------------------------------
+    public void NotifyBoostRingEntered()
+    {
+        OnBoostRingEntered?.Invoke();
+    }
+    public void NotifyObstacleCollision(PlayerImpactType impactType)
+    {
+        OnObstacleCollision?.Invoke(impactType);
+    }
+    public void NotifyWallSlideStarted()
+    {
+        OnWallSlideStarted?.Invoke();
+    }
+    public void NotifyWallSlideEnded()
+    {
+        OnWallSlideEnded?.Invoke();
+    }
+
 
     // --------------------------------------------------
     // ----- Public Event -----

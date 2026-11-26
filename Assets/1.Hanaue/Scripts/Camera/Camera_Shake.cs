@@ -8,8 +8,8 @@ using System.Collections.Generic;
 
 public enum CameraShakePlayMode
 {
-    Replace,
-    Additive
+    Replace, // 置き換え
+    Additive // 追加
 }
 public struct CameraShakeOffset
 {
