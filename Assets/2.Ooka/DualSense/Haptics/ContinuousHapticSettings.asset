@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ContinuousHapticSettings
   _minAmplitude: 0.05
   _maxAmplitude: 0.7
-  _frequencyHz: 30
+  _frequencyHz: 35
   _waveform: 1
   _noiseGain: 2.5
