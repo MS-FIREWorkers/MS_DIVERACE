@@ -27,6 +27,14 @@ public class BoostRing_Controller : MonoBehaviour
     // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
+    private void Awake()
+    {
+        BoxCollider collider = GetComponent<BoxCollider>();
+        if (collider != null )
+        {
+            _effectiveRadius = collider.size.x / 2.0f;
+        }
+    }
     private void Start()
     {
         if (_data == null)

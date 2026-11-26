@@ -1219,7 +1219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1046390022
 Transform:
   m_ObjectHideFlags: 0
@@ -1480,11 +1480,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_DefaultActionMap
-      value: 8e641907-ecbb-442b-b44d-b927efcedc41
+      value: PalyerCharacterControll
       objectReference: {fileID: 0}
     - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_ActionEvents.Array.size
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_ActionEvents.Array.data[5].m_ActionId
@@ -1519,6 +1519,10 @@ PrefabInstance:
       value: 4e58fa12-cdc7-41e4-a763-17786d2a72ec
       objectReference: {fileID: 0}
     - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[13].m_ActionId
+      value: f326d6c2-1a6f-4345-bc22-636b6dca5ce2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_ActionEvents.Array.data[5].m_ActionName
       value: 'UI/Navigate[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
       objectReference: {fileID: 0}
@@ -1549,6 +1553,10 @@ PrefabInstance:
     - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_ActionEvents.Array.data[12].m_ActionName
       value: 'UI/ScrollWheel[/Mouse/scroll]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477984834800290264, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      propertyPath: m_ActionEvents.Array.data[13].m_ActionName
+      value: 'Scene/Pause[/Keyboard/p,/DualSenseGamepadHID/start]'
       objectReference: {fileID: 0}
     - target: {fileID: 3684849824088822187, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
       propertyPath: m_Name
@@ -1597,7 +1605,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 296929215477752196, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1323731033}
   m_SourcePrefab: {fileID: 100100000, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
 --- !u!114 &1190942448 stripped
 MonoBehaviour:
@@ -2256,6 +2267,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1323731029 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 296929215477752196, guid: 85f64af5c6fb8184e9afb42688ccde81, type: 3}
+  m_PrefabInstance: {fileID: 1190942447}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1323731033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323731029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c7ecdc1c6964ee58b63f348df40168e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineTarget
+  _enableOutline: 1
+  _useParentAsTarget: 1
+  _widthPixels: 6
 --- !u!1 &1433020177
 GameObject:
   m_ObjectHideFlags: 0
@@ -2556,6 +2587,10 @@ PrefabInstance:
     - target: {fileID: 794157791965048796, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
       propertyPath: m_Name
       value: Camera_Root
+      objectReference: {fileID: 0}
+    - target: {fileID: 4571237962466494646, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
+      propertyPath: far clip plane
+      value: 6000
       objectReference: {fileID: 0}
     - target: {fileID: 7549322474151987073, guid: b6ea25efe049afb4ba10c44988f61e14, type: 3}
       propertyPath: _characterController
