@@ -30,6 +30,11 @@ public class LevelSkydome : MonoBehaviour
 
     private MeshRenderer domeRenderer;
 
+
+    // 正式ゲームの階層管理
+    private LevelSceneStreamer levelStreamer;
+    private float nextStreamerSearchTime;
+
     // ==========================================
     // ----- Unity Events -----
     // ==========================================
@@ -68,48 +73,17 @@ public class LevelSkydome : MonoBehaviour
     private void LateUpdate()
     {
         if (!Application.isPlaying ||
-            domeRenderer == null ||
-            !domeRenderer.enabled)
+            domeRenderer == null)
         {
             return;
         }
 
-        if (targetCamera == null)
-        {
-            Camera cam = Camera.main;
+        // 毎フレーム現在の階層を確認
+        RefreshVisibility();
 
-            if (cam != null)
-                targetCamera = cam.transform;
-        }
-
-        if (targetCamera == null)
+        if (!domeRenderer.enabled)
             return;
-
-        // ----- Position -----
-
-        Vector3 position = transform.position;
-
-        if (followCameraXZ)
-        {
-            position.x = targetCamera.position.x;
-            position.z = targetCamera.position.z;
-        }
-
-        if (followCameraY)
-        {
-            position.y = targetCamera.position.y;
-        }
-
-        transform.position = position;
-
-        // ----- Rotation -----
-
-        if (lockWorldRotation)
-        {
-            transform.rotation = Quaternion.identity;
-        }
     }
-
     // ==========================================
     // ----- Scene Change -----
     // ==========================================
@@ -121,30 +95,55 @@ public class LevelSkydome : MonoBehaviour
         RefreshVisibility();
     }
 
+
     private void RefreshVisibility()
     {
         if (domeRenderer == null)
             return;
 
-        // このSkydomeが所属するSceneを取得
+        // 正式ゲームのLevelSceneStreamerを検索
+        if (levelStreamer == null &&
+            Time.unscaledTime >= nextStreamerSearchTime)
+        {
+            nextStreamerSearchTime =
+                Time.unscaledTime + 0.5f;
+
+            levelStreamer =
+                FindFirstObjectByType<LevelSceneStreamer>();
+        }
+
         Scene ownScene = gameObject.scene;
 
-        // 現在のActive Sceneを取得
-        Scene activeScene = SceneManager.GetActiveScene();
+        bool isCurrentLevel = false;
 
-        // 自分のSceneがActiveの場合のみ表示
-        bool isCurrentLevel =
-            ownScene == activeScene;
+        // 正式ゲームの場合
+        if (levelStreamer != null &&
+            levelStreamer.isActiveAndEnabled)
+        {
+            isCurrentLevel =
+                ownScene.name ==
+                levelStreamer.CurrentLevelSceneName;
+        }
+        else
+        {
+            // テストシーンの場合は従来方式
+            isCurrentLevel =
+                ownScene == SceneManager.GetActiveScene();
+        }
+
+        // 表示状態が変わらなければ何もしない
+        if (domeRenderer.enabled == isCurrentLevel)
+            return;
 
         domeRenderer.enabled = isCurrentLevel;
 
         if (debugMode)
         {
             Debug.Log(
-                $"[LevelSkydome] " +
-                $"{ownScene.name} : " +
-                $"{(isCurrentLevel ? "ON" : "OFF")}"
+                $"[LevelSkydome] {ownScene.name} : " +
+                (isCurrentLevel ? "ON" : "OFF")
             );
         }
     }
+
 }
