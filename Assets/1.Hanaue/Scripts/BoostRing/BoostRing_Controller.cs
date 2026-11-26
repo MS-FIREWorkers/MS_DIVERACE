@@ -74,5 +74,6 @@ public class BoostRing_Controller : MonoBehaviour
 
         // リクエスト
         player.ApplyBoost(request);
+        player.NotifyBoostRingEntered(); // イベント発行
     }
 }

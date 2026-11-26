@@ -58,7 +58,7 @@ public class Camera_Controller : MonoBehaviour
     // --------------------------------------------------
     // ----- Unity Events -----
     // --------------------------------------------------
-    void Start()
+    void Awake()
     {
         if (_camera == null)
         {

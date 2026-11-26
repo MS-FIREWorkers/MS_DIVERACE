@@ -125,6 +125,10 @@ public class PlayerState_WallSide : PlayerState_Base
         _slideElapsedTime = 0.0f;
         _exitInputElapsedTime = 0.0f;
 
+
+        // ----- イベント発火 -----
+        _controller.NotifyWallSlideStarted();
+
         Debug.Log("WallSide Enter");
     }
 
@@ -169,6 +173,9 @@ public class PlayerState_WallSide : PlayerState_Base
         // ----- 他の障害物との衝突判定 -----
         if (_controller.CollisionDetector.CheckCollision(displacement, out PlayerImpactInfo impactInfo, _wallCollider))
         {
+            // イベント発火
+            _controller.NotifyObstacleCollision(impactInfo.ImpactType);
+
             Vector3 additionalVelocity = _wallNormal * _wallCollisionExitSpeed;
 
             _controller.StateMachine.StateDamage.SetImpactInfo(impactInfo, additionalVelocity);
@@ -344,6 +351,10 @@ public class PlayerState_WallSide : PlayerState_Base
             float bonusSpeed = CalculateExitBonusSpeed();
             _controller.Movement.ApplyImpulse(Vector3.down * bonusSpeed);
         }
+
+
+        // イベント発火
+        _controller.NotifyWallSlideEnded();
 
         _controller.StateMachine.ChangeState(_controller.StateMachine.StateFreeFall);
     }

@@ -303,7 +303,6 @@ public class Player_CollisionDetector : MonoBehaviour
         // 中心が外側、または内側のマージン以内ならGraze
         if (insideDistance <= _topEdgeGrazeMargin)
         {
-            Debug.Log("[Debug] TopEdgeGraze");
             return PlayerImpactType.TopEdgeGraze;
         }
 

@@ -26,10 +26,12 @@ public class CameraShake_Instance
     private float _stopElapsedTime;
     private float _fadeAtStop;
 
-
     private readonly Vector3 _positionSeed;
     private readonly Vector3 _rotationSeed;
     private readonly float _fovSeed;
+
+    private float _currentIntensity = 1.0f;
+    private float _targetIntensity = 1.0f;
 
     // --------------------------------------------------
     // ----- Public Property -----
@@ -75,6 +77,7 @@ public class CameraShake_Instance
 
         // 時間、状態の更新
         UpdateTime(deltaTime);
+        UpdateIntensity(deltaTime);
 
         // 再生終了
         if (IsFinished)
@@ -108,7 +111,7 @@ public class CameraShake_Instance
     private void UpdateTime(float deltaTime)
     {
         // 波形用の時間は停止中も進める
-        _elapsedTime += deltaTime;
+        //_elapsedTime += deltaTime;
 
         // ----- Stopping ----- 
         if (State == CameraShakeState.Stopping)
@@ -138,11 +141,22 @@ public class CameraShake_Instance
     }
 
     // --------------------------------------------------
+    // ----- UpdateIntensity -----
+    // --------------------------------------------------
+    private void UpdateIntensity(float deltaTime)
+    {
+        float speed = _targetIntensity > _currentIntensity ? _data.IntensityIncreaseSpeed
+                                                           : _data.IntensityDecreaseSpeed;
+
+        _currentIntensity = Mathf.MoveTowards(_currentIntensity, _targetIntensity, speed * deltaTime);
+    }
+
+    // --------------------------------------------------
     // ----- Oscillation -----
     // --------------------------------------------------
     private CameraShakeOffset CalculateOscillation(bool useNoise)
     {
-        float fade = CalculateFade();
+        float fade = CalculateFade() * _currentIntensity;
 
         CameraShakeOffset offset = new CameraShakeOffset();
 
@@ -242,7 +256,7 @@ public class CameraShake_Instance
     }
 
     // --------------------------------------------------
-    // ----- FOv Pulse -----
+    // ----- FOV Pulse -----
     // --------------------------------------------------
     private CameraShakeOffset CalculateFovPulse()
     {
@@ -315,4 +329,11 @@ public class CameraShake_Instance
         State = CameraShakeState.Stopping;
     }
 
+    // --------------------------------------------------
+    // ----- SetIntensity -----
+    // --------------------------------------------------
+    public void SetIntensity(float intensity)
+    {
+        _targetIntensity = Mathf.Max(0.0f, intensity);
+    }
 }

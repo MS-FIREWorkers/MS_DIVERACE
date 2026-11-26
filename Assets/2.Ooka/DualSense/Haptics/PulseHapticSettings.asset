@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PulseHapticSettings
   m_EditorClassIdentifier: Assembly-CSharp::PulseHapticSettings
   _amplitude: 0.25
-  _frequencyHz: 50
+  _frequencyHz: 30
   _duration: 0.12

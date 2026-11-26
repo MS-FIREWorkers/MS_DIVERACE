@@ -87,6 +87,9 @@ public class PlayerState_Damage : PlayerState_Base
         // ----- 衝突判定 -----
         if (_controller.CollisionDetector.CheckCollision(displace, out PlayerImpactInfo impactInfo))
         {
+            // イベント発火
+            _controller.NotifyObstacleCollision(impactInfo.ImpactType);
+
             if (impactInfo.ImpactType == PlayerImpactType.TopEdgeGraze)
             {                
                 // 障害物の外側へ抜けるための補正量
