@@ -186,10 +186,18 @@ public class LevelScene_PauseController : MonoBehaviour
         // 実際はステートを初期化したい。間に合うかどうか。
         string currentSceneName = SceneManager.GetActiveScene().name;
         GameManager.Instance.ChangeScene(currentSceneName);
+
+
+        // 時間再開
+        Time.timeScale = 1.0f;
     }
     private void Confirm_ToTitle()
     {
         GameManager.Instance.ChangeScene(_nameToTitleScene);
+
+
+        // 時間再開
+        Time.timeScale = 1.0f;
     }
 
 }

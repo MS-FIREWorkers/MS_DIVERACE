@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1906514676}
   _effect: {fileID: 0}
   _confirmMessage: Exit ?
   _clickInterval: 0.3
@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1906514676}
   _effect: {fileID: 0}
   _confirmMessage: Level ?
   _clickInterval: 0.3
@@ -2507,7 +2507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1906514676}
   _effect: {fileID: 0}
   _confirmMessage: Tutorial ?
   _clickInterval: 0.3
@@ -2891,7 +2891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1906514676}
   _effect: {fileID: 0}
   _confirmMessage: 
   _clickInterval: 0.3
@@ -3233,7 +3233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5487d9bc9a5b3464c99dd6a1aaeed2e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Button_Controller
-  _selectionController: {fileID: 0}
+  _selectionController: {fileID: 1906514676}
   _effect: {fileID: 0}
   _confirmMessage: 
   _clickInterval: 0.3
