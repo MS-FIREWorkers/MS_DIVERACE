@@ -34,6 +34,22 @@ public class LevelSceneStreamer : MonoBehaviour
 
     // 現在プレイヤーがいる階層番号
     private int currentLevelIndex;
+    // 現在のレベルシーン名を外部に公開
+    public string CurrentLevelSceneName
+    {
+        get
+        {
+            if (levelScenes == null ||
+                currentLevelIndex < 0 ||
+                currentLevelIndex >= levelScenes.Length)
+            {
+                return string.Empty;
+            }
+
+            return levelScenes[currentLevelIndex].sceneName;
+        }
+    }
+
 
     // 前の階層を破棄済みか
     private bool previousUnloaded = true;

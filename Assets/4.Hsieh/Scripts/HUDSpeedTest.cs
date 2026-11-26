@@ -52,6 +52,10 @@ public class HUDSpeedTest : MonoBehaviour
     [SerializeField, Min(1f)]
     private float speedFontSize = 40f;
 
+    [InspectorName("速度單位文字色")]
+    [SerializeField]
+    private Color unitTextColor = new Color32(117, 221, 238, 255);
+
     // ==========================================
     // ----- Speed Bars -----
     // ==========================================
@@ -610,10 +614,11 @@ public class HUDSpeedTest : MonoBehaviour
         }
         else
         {
-            // 数字と単位のサイズを変える
+            string hex = ColorUtility.ToHtmlStringRGB(unitTextColor);
+
             speedText.text =
                 $"{speedKmh:000.0}" +
-                "<size=16><color=#75DDEE> km/h</color></size>";
+                $"<size=16><color=#{hex}> km/h</color></size>";
         }
 
         // 上昇時は文字をオレンジ色にする

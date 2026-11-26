@@ -18,7 +18,7 @@ MonoBehaviour:
   Duration: 1
   FadeIn: 0.05
   FadeOut: 0.2
-  PositionAmplitude: {x: 0.1, y: 0.15, z: 0.05}
+  PositionAmplitude: {x: 0.1, y: 0.15, z: 0.01}
   PositionFrequency: {x: 5, y: 5, z: 5}
   RotationAmplitude: {x: 0, y: 0, z: 0.1}
   RotationFrequency: {x: 0, y: 0, z: 3}
