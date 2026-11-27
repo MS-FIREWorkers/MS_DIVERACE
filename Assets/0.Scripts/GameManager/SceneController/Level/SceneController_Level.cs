@@ -88,10 +88,12 @@ public class SceneController_Level : SceneController_Base
     public override void Enter()
     {
         Debug.Log("Level Enter");
+        AudioManager.Instance.PlayBGM(AudioId.Level);
     }
     public override void Exit()
     {
         Debug.Log("Level Exit");
+        AudioManager.Instance.StopBGM();
     }
 
 

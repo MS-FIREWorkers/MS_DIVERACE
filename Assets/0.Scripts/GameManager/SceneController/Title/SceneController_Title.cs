@@ -88,10 +88,12 @@ public class SceneController_Title : SceneController_Base
     public override void Enter()
     {
         Debug.Log("Title Enter");
+        AudioManager.Instance.PlayBGM(AudioId.Title);
     }
     public override void Exit()
     {
         Debug.Log("Title Exit");
+        AudioManager.Instance.StopBGM();
     }
 
 

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31658d930a8e5334ebb38a526a042bb2, type: 3}
+  m_Name: AudioLibrary_BGM
+  m_EditorClassIdentifier: Assembly-CSharp::AudioLibrary
+  _entries:
+  - _name: Title
+    _audioData: {fileID: 11400000, guid: f389e933c616d0d47ba5c636c1581fa2, type: 2}
+  - _name: Level
+    _audioData: {fileID: 11400000, guid: 5b4595b4a4dab874d814b2095ffa17f2, type: 2}
+  - _name: Result
+    _audioData: {fileID: 11400000, guid: bd73a794939f7644c94196f7e39127b1, type: 2}

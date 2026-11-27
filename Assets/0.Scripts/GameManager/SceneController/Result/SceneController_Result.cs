@@ -72,10 +72,12 @@ public class SceneController_Result : SceneController_Base
     public override void Enter()
     {
         Debug.Log("Result Enter");
+        AudioManager.Instance.PlayBGM(AudioId.Result);
     }
     public override void Exit()
     {
         Debug.Log("Result Exit");
+        AudioManager.Instance.StopBGM();
     }
 
 

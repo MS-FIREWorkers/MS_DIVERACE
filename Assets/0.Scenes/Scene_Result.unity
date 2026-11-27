@@ -3720,7 +3720,9 @@ MonoBehaviour:
   _initialSePoolSize: 8
   _maxSePoolSize: 24
   _libraries:
-  - {fileID: 11400000, guid: 0a379443dec733043937772b28fcb11c, type: 2}
+  - {fileID: 11400000, guid: 3580f23e895aa1e4e959fd8ab1158113, type: 2}
+  - {fileID: 11400000, guid: 4781a77550dd39b40b01c7e4a53ddeb7, type: 2}
+  - {fileID: 11400000, guid: fa0bf6404f636d1498b15411d78f534e, type: 2}
 --- !u!4 &2063279123
 Transform:
   m_ObjectHideFlags: 0

@@ -108,6 +108,9 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
 
 
         eventSystem.SetSelectedGameObject(gameObject);
+
+        // SE
+        AudioManager.Instance.PlaySE(AudioId.SelectButton);
     }
     // --------------------------------------------------
     // ----- On Select -----
@@ -125,6 +128,7 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
         {
             _effect.PlayBorderLight();
         }
+
     }
     // --------------------------------------------------
     // ----- On Deselect -----
@@ -164,6 +168,9 @@ public class UI_Button_Controller : MonoBehaviour, IPointerEnterHandler, ISelect
         {
             _effect.PlayHighlight();
         }
+
+        // ----- SE -----
+        AudioManager.Instance.PlaySE(AudioId.PressButton);
 
         // ----- Interval -----
         yield return new WaitForSecondsRealtime(Mathf.Max(_clickInterval, 0.0f));

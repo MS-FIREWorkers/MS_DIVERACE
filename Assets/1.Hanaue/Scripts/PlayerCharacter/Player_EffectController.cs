@@ -20,6 +20,8 @@ public class Player_EffectController : MonoBehaviour
     // --------------------------------------------------
     private bool _isFreeFalling = true;
     private bool _isWallSliding;
+    private float _seWindTimer = 0.0f;
+    private float _seWindInterval = 3.0f;
 
     // --------------------------------------------------
     // ----- CameraShake -----
@@ -105,7 +107,19 @@ public class Player_EffectController : MonoBehaviour
         }
 
         // 風切りSE
-
+        _seWindTimer += Time.deltaTime;
+        if (_seWindTimer > _seWindInterval)
+        {
+            _seWindTimer -= _seWindInterval;
+            if (ratio > 0.8f)
+            {
+                AudioManager.Instance.PlaySE(AudioId.FallingWind_01);
+            }
+            else
+            {
+                AudioManager.Instance.PlaySE(AudioId.FallingWind_02);
+            }
+        }
 
         // 微弱なコントローラー振動
         _hapticManager?.SetFalling(ratio);
@@ -125,6 +139,7 @@ public class Player_EffectController : MonoBehaviour
     {
         Debug.Log("[Effect] BoostRingEntered");
         _cameraController.PlayShake(_boostShakeData);
+        AudioManager.Instance.PlaySE(AudioId.BoostRingEntry);
     }
     private void HandleObstacleCollision(PlayerImpactType collisionType)
     {
@@ -132,18 +147,21 @@ public class Player_EffectController : MonoBehaviour
         {
             case PlayerImpactType.Top:
                 _cameraController.PlayShake(_topCollisionShakeData);
+                AudioManager.Instance.PlaySE(AudioId.CollideObstacle);
                 break;
 
             case PlayerImpactType.Side:
                 _cameraController.PlayShake(_sideCollisionShakeData);
+                AudioManager.Instance.PlaySE(AudioId.CollideObstacle);
                 break;
 
             case PlayerImpactType.TopEdge:
                 _cameraController.PlayShake(_topEdgeCollisionShakeData);
+                AudioManager.Instance.PlaySE(AudioId.CollideObstacle);
                 break;
 
             case PlayerImpactType.TopEdgeGraze:
-
+                AudioManager.Instance.PlaySE(AudioId.Applause);
                 break;
         }
         _hapticManager?.PlayObstacleCollision();
@@ -160,6 +178,7 @@ public class Player_EffectController : MonoBehaviour
         _wallSideShakeHandle = _cameraController.PlayShake(_wallSideShakeData, CameraShakePlayMode.Additive);
         //_wallSideShakeHandle?.SetIntensity(_minFallIntensity);
 
+        AudioManager.Instance.PlaySE(AudioId.Cheers);
         Debug.Log("[Effect] WallSlideStarted");
     }
     private void HandleWallSlideEnded()
@@ -188,12 +207,17 @@ public class Player_EffectController : MonoBehaviour
         }
         _fallShakeHandle = _cameraController.PlayShake(_fallShakeData);
         _fallShakeHandle?.SetIntensity(_minFallIntensity);
+
+        //AudioManager.Instance.PlaySE(AudioId.FallingWind);
     }
     public void  StopFreeFall()
     {
         _isFreeFalling = false;
         _cameraController.StopShake(_fallShakeHandle);
         _fallShakeHandle = null;
+
+        // SEを止めたい
+        //AudioManager.Instance.PlaySE(AudioId.FallingWind);
     }
 
 }
