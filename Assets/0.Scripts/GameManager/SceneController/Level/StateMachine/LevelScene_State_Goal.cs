@@ -30,6 +30,9 @@ public class LevelScene_State_Goal : LevelScene_State_Base
 
         _controller.RaceResultData.SetResult(_controller.Timer.ElapsedTime);
         Debug.Log("Goal" + _controller.Timer.ElapsedTime);
+
+        // beta
+        _controller.GoalText.gameObject.SetActive(true);
     }
     public override void Update() 
     {

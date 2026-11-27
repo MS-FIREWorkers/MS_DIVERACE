@@ -329,7 +329,8 @@ public class ResultScene_StateMachine : MonoBehaviour
         // マウスは「タイトルへ」ボタンを押した時だけ開く（OnClick 側で処理）。画面の空いている所のクリックでは開かない
         if (_inputHandler.ConsumeSubmitPressed() && !IsMouseClickedThisFrame())
         {
-            OpenConfirmOrTransition();
+            // ベータ版用に一時的に無効化
+            //OpenConfirmOrTransition();
         }
     }
     private void OpenConfirmOrTransition()

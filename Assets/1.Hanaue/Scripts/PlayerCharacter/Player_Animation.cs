@@ -14,6 +14,12 @@ public class Player_Animation : MonoBehaviour
     [SerializeField] private GameObject _body;
 
     // --------------------------------------------------
+    // ----- BodyRotation -----
+    // --------------------------------------------------
+    [Header("Body Rotation")]
+    [SerializeField, Min(0.0f)] private float _bodyRotationSpeed = 180.0f;
+
+    // --------------------------------------------------
     // ----- Animation Rigging -----
     // --------------------------------------------------
     [Header("Animation Rigging（手動参照）")]
@@ -175,8 +181,9 @@ public class Player_Animation : MonoBehaviour
 
         float rotationX = Mathf.Lerp(90.0f, 180.0f, input);
 
-        Vector3 euler = new Vector3 (rotationX, 0.0f, 0.0f);
-        _body.transform.localRotation = Quaternion.Euler(euler);
+        Quaternion targetRotation = Quaternion.Euler(rotationX, 0.0f, 0.0f);
+
+        _body.transform.localRotation = Quaternion.RotateTowards(_body.transform.localRotation, targetRotation, _bodyRotationSpeed * Time.deltaTime);
     }
     public void SetPose(float pose)
     {

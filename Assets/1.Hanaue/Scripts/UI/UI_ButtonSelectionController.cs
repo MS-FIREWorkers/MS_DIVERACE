@@ -88,6 +88,9 @@ public class UI_ButtonSelectionController : MonoBehaviour
             _selectionIcon.gameObject.SetActive(true);
             UpdateIconPosition();
         }
+
+        // SE（ここだと鳴ってほしくない時もなっちゃう）
+        //AudioManager.Instance.PlaySE(AudioId.SelectButton);
     }
 
     // --------------------------------------------------

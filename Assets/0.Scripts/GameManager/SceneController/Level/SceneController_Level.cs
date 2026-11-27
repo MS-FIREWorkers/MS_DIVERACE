@@ -4,6 +4,7 @@
     レベルシーンを管理するスクリプト
     Update の処理は基本的に StateMachine にまとめる。
  */
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
@@ -46,6 +47,15 @@ public class SceneController_Level : SceneController_Base
     [Header("RaceResultData（手動参照）")]
     [SerializeField] private RaceResultData _raceResultData;
     public RaceResultData RaceResultData => _raceResultData;
+
+    // --------------------------------------------------
+    // ----- CountdonwText -----
+    // --------------------------------------------------
+    [Header("BetaData（手動参照）")]
+    [SerializeField] private TextMeshProUGUI _countdownText;
+    public TextMeshProUGUI CountdownText => _countdownText;
+    [SerializeField] private TextMeshProUGUI _goalText;
+    public TextMeshProUGUI GoalText => _goalText;
 
     // --------------------------------------------------
     // ----- Unity Events -----
